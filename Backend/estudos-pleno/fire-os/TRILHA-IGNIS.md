@@ -6,7 +6,7 @@
 - **Três ritmos:** 14 dias intensivo, 30 dias com preparação para vagas, 32 dias completo
 - **Stack:** Node · TypeScript · AI SDK · LangChain.js · LangGraph.js · pgvector
 
-Versão online (com fluxogramas e checklist interativo): https://claude.ai/artifact/K6Y35vqmYDt5bqwVbgYnvB
+Versão online (com fluxogramas e checklist interativo): https://claude.ai/artifact/7mM4pw5fezBWuKZppu3kVq#evolucao
 Análise técnica completa: [`ANALISE-IA-FIRE-OS.md`](./ANALISE-IA-FIRE-OS.md)
 
 ## Sumário
