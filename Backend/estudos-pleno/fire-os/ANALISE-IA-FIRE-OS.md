@@ -4,10 +4,10 @@
 
 ## TL;DR
 
-1. **O que existe hoje é pequeno:** um endpoint `POST /ai/chat` (Groq + Vercel AI SDK) com **2 ferramentas** (total de técnicos, total de OS). O painel do Ígnis no frontend é **100% mockup** — respostas fixas por regex, não chama o backend.
+1. **O que existe hoje é pequeno:** um endpoint `POST /ai/chat` (Groq + Vercel AI SDK) com **2 ferramentas** (total de técnicos, total de OS). O painel do Agnis no frontend é **100% mockup** — respostas fixas por regex, não chama o backend.
 2. **O endpoint atual provavelmente não funciona como deveria.** O código foi escrito para a API do AI SDK v4 (`maxSteps`, `parameters`), mas o projeto tem o **`ai@6.0.177`** instalado. Os `as any` escondem o erro de tipo. Resultado provável: a IA chama a ferramenta e para, sem escrever a resposta — por isso existe o fallback "A IA processou os dados mas não formulou uma frase".
-3. **LangChain: minha recomendação é não trocar o AI SDK por LangChain.** O AI SDK v6 já tem agente (`ToolLoopAgent`), aprovação de ação (`needsApproval`), saída estruturada e embeddings — cobre ~90% do que o mockup do Ígnis precisa. O ponto onde **LangGraph.js** (não LangChain "puro") passa a valer a pena é se você quiser fluxos de várias etapas com estado salvo e pausa para aprovação humana entre requests. Detalhe na seção 4.
-4. **Ordem sugerida:** consertar o que existe → dar ao Ígnis as ~10 ferramentas de leitura que o mockup já promete → ligar o frontend ao backend real → ações com confirmação → só então RAG/LangGraph/voz/visão.
+3. **LangChain: minha recomendação é não trocar o AI SDK por LangChain.** O AI SDK v6 já tem agente (`ToolLoopAgent`), aprovação de ação (`needsApproval`), saída estruturada e embeddings — cobre ~90% do que o mockup do Agnis precisa. O ponto onde **LangGraph.js** (não LangChain "puro") passa a valer a pena é se você quiser fluxos de várias etapas com estado salvo e pausa para aprovação humana entre requests. Detalhe na seção 4.
+4. **Ordem sugerida:** consertar o que existe → dar ao Agnis as ~10 ferramentas de leitura que o mockup já promete → ligar o frontend ao backend real → ações com confirmação → só então RAG/LangGraph/voz/visão.
 
 ---
 
@@ -28,7 +28,7 @@
 
 ### Frontend (`Frontend/`, Next 16 / React 19)
 
-- `src/components/ai/AskPanelModal.tsx` (636 linhas) — o painel do **Ígnis**, aberto pelo `Header.tsx`.
+- `src/components/ai/AskPanelModal.tsx` (636 linhas) — o painel do **Agnis**, aberto pelo `Header.tsx`.
 - É um mockup bem pensado: perguntas agrupadas (Chamados, Técnicos, Clientes, Equipamentos), respostas com "ferramentas usadas", e **ações sugeridas** com confirmação (atribuir técnico, marcar urgente, notificar, redistribuir carga, agendar treinamento → link pro calendário real).
 - **Não chama `/ai/chat`.** Todas as respostas são `cannedAnswers` por regex.
 - O comentário no arquivo cita `docs/GUIA-IA-FIRE-OS.md` como o desenho de tool-calling — **esse arquivo não existe no repo** (este documento pode ocupar esse lugar).
@@ -60,11 +60,11 @@ Em ordem de gravidade:
 3. **`getTecnicos` ignora a role** — qualquer usuário autenticado recebe a lista de nomes de todos os técnicos. Baixo risco, mas inconsistente com o resto do RBAC.
 4. **Sem testes, sem rate limit, sem log de uso/custo.** Um usuário pode disparar chamadas ilimitadas à Groq.
 5. **Sem histórico de conversa** — cada pergunta é isolada (`prompt: question`), então "e no mês passado?" não funciona.
-6. **Nome do sistema no prompt** é "AlltiControl", enquanto o produto/persona é Fire OS / Ígnis.
+6. **Nome do sistema no prompt** é "AlltiControl", enquanto o produto/persona é Fire OS / Agnis.
 
 ---
 
-## 3. Ferramentas primeiro — o que o Ígnis precisa para responder o mockup
+## 3. Ferramentas primeiro — o que o Agnis precisa para responder o mockup
 
 Você pediu para começar pelas ferramentas. A ideia central: **o LLM não consulta o banco; ele escolhe entre funções fixas que nós escrevemos**, cada uma reaproveitando Services/Repositories existentes e respeitando a role do usuário. Assim não existe SQL gerado por IA e a permissão continua no backend.
 
@@ -116,8 +116,8 @@ No AI SDK v6 isso é natural: a ferramenta é marcada com `needsApproval: true`,
 | Encaixe com o padrão do repo (Service + Repository + Zod) | Direto | Abstrações próprias por cima | Grafo por cima dos Services |
 
 **Recomendação:**
-- **Agora:** ficar no AI SDK v6. Trocar por LangChain para fazer o que o Ígnis precisa hoje seria adicionar uma camada sem ganho, e você ainda teria que consertar os mesmos problemas da seção 2.
-- **Quando LangGraph.js entra:** se o Ígnis evoluir para fluxos tipo *"triagem de chamado novo → classifica → sugere técnico → espera aprovação do gestor (horas depois) → atribui → notifica"*. Aí estado persistido + `interrupt` + retomar depois é exatamente o que o LangGraph resolve bem e o AI SDK não. Dá para usar LangGraph **só nesse fluxo**, coexistindo com o AI SDK no chat.
+- **Agora:** ficar no AI SDK v6. Trocar por LangChain para fazer o que o Agnis precisa hoje seria adicionar uma camada sem ganho, e você ainda teria que consertar os mesmos problemas da seção 2.
+- **Quando LangGraph.js entra:** se o Agnis evoluir para fluxos tipo *"triagem de chamado novo → classifica → sugere técnico → espera aprovação do gestor (horas depois) → atribui → notifica"*. Aí estado persistido + `interrupt` + retomar depois é exatamente o que o LangGraph resolve bem e o AI SDK não. Dá para usar LangGraph **só nesse fluxo**, coexistindo com o AI SDK no chat.
 - **Para estudo/portfólio:** se a meta for aprender LangChain/LangGraph (vale para currículo), a fase 5 abaixo é um bom lugar isolado para isso, sem comprometer o chat.
 
 **Sobre Groq:** é rápido e barato, ótimo para o chat. Limitações a saber: **não oferece embeddings** (RAG precisaria de outro provedor — OpenAI, Voyage, Cohere, ou modelo local) e tem rate limit apertado no plano gratuito. Como o AI SDK abstrai o provedor, dá para usar Groq no chat e outro provedor só onde precisar, trocando uma linha.
@@ -132,7 +132,7 @@ No AI SDK v6 isso é natural: a ferramenta é marcada com `needsApproval: true`,
 - Testes unitários do service com o modelo mockado (`MockLanguageModelV3` do `ai/test`).
 - Rate limit por usuário na rota `/ai/chat` usando o Redis existente.
 
-### Fase 2 — Ígnis responde de verdade (≈1 semana)
+### Fase 2 — Agnis responde de verdade (≈1 semana)
 - As ferramentas da seção 3.1, em `src/services/ai/tools/`.
 - Ligar `AskPanelModal` ao backend; trocar `cannedAnswers` pela resposta real (manter as perguntas sugeridas como atalhos).
 - Histórico curto da conversa (enviar `messages` em vez de `prompt`).
@@ -156,7 +156,7 @@ Funcionalidades que não precisam de chat e costumam ter mais impacto no dia a d
 - **RAG sobre o histórico de OS:** "já resolvemos esse defeito antes?" — embeddings de `diagnostico` + `solucao`, buscando OS parecidas para o técnico. Requer pgvector (ou um vector store externo) e provedor de embeddings.
 - **RAG sobre documentação técnica** (`documentacaoTecnica`, manuais em PDF).
 - **Agente de triagem com aprovação** em LangGraph.js (seção 4).
-- **Detecção de padrões** (job agendado): equipamento com defeito recorrente, técnico com tempo médio subindo, secretaria com pico de chamados → alerta proativo do Ígnis.
+- **Detecção de padrões** (job agendado): equipamento com defeito recorrente, técnico com tempo médio subindo, secretaria com pico de chamados → alerta proativo do Agnis.
 
 ---
 
@@ -164,7 +164,7 @@ Funcionalidades que não precisam de chat e costumam ter mais impacto no dia a d
 
 ```mermaid
 flowchart LR
-  UI[AskPanelModal / Ígnis] -- POST /ai/chat (stream) --> R[Rota + isAuthenticated + rate limit Redis]
+  UI[AskPanelModal / Agnis] -- POST /ai/chat (stream) --> R[Rota + isAuthenticated + rate limit Redis]
   R --> S[AIChatService<br/>AI SDK v6 · Groq]
   S -- escolhe ferramenta --> T[src/services/ai/tools/*]
   T -- user_id do servidor --> SV[Services/Repositories existentes<br/>+ regra por role / CASL]

@@ -1,4 +1,4 @@
-# Trilha do Ígnis
+# Trilha do Agnis
 
 > Como o assistente do Fire OS pode evoluir de uma rota com duas ferramentas até um agente com RAG, e o que você aprende em cada etapa para fechar um currículo fullstack com IA em TypeScript.
 
@@ -32,7 +32,7 @@ Analisei as três partes do projeto: a API (82 services, 97 arquivos de teste, C
 | Item | Situação | O que é | Onde |
 |---|---|---|---|
 | Rota `POST /ai/chat` | 🟠 real, com bug | Groq (`llama-3.3-70b-versatile`) com Vercel AI SDK. Duas ferramentas: total de técnicos e total de OS. Escrita na API antiga (v4) rodando no `ai@6`, então para no 1º passo e não escreve resposta. | `Backend/src/services/ai/AIChatService.ts` |
-| Ígnis (painel de perguntas) | 🟡 mockup | Perguntas por grupo, ações sugeridas com confirmação, multi-seleção de técnicos. Respostas fixas, escolhidas por regex. Não chama o backend. | `Frontend/src/components/ai/AskPanelModal.tsx` |
+| Agnis (painel de perguntas) | 🟡 mockup | Perguntas por grupo, ações sugeridas com confirmação, multi-seleção de técnicos. Respostas fixas, escolhidas por regex. Não chama o backend. | `Frontend/src/components/ai/AskPanelModal.tsx` |
 | Triagem com IA | 🟡 mockup | Fluxo em etapas: classificando → **buscando casos parecidos** → sugerindo técnico → aguardando aprovação. É literalmente um pipeline de RAG + agente com aprovação humana. | `Frontend/src/app/dashboard/(admin)/relatorios/triagem-ia` |
 | Relatório mensal (insights) | 🟡 mockup | Números do mês + destaques escritos em texto + pontos de atenção (equipamento recorrente, técnico sobrecarregado). | `Frontend/src/app/dashboard/(admin)/relatorios/insights` |
 | Roteiro inteligente | 🟡 mockup | Ordem de visitas do técnico no dia. A otimização de rota é algoritmo (API de mapas), não LLM. O LLM só explica o porquê de cada parada. | `Frontend/src/app/dashboard/(admin)/relatorios/rota-inteligente` |
@@ -40,7 +40,7 @@ Analisei as três partes do projeto: a API (82 services, 97 arquivos de teste, C
 | Infra que ajuda | 🟢 pronta | Redis (cache e rate limit), BullMQ (jobs de IA fora do request), CASL (permissão por role), Zod (saída estruturada), testes com TestContainers. | `Backend/src/redis` · `queue` · `permissions` |
 | Lacunas | ⚪ não existe | Sem campo de prazo/SLA na OS, sem notificações (push), sem pgvector no Postgres, sem provedor de embeddings (a Groq não oferece), sem rate limit nem testes na rota de IA. | `Backend/prisma/schema.prisma` |
 
-> **Sobre o nome:** no código o assistente se chama **Ígnis** (`ASSISTANT_NAME` no `AskPanelModal.tsx`).
+> **Sobre o nome:** no código o assistente se chama **Agnis** (`ASSISTANT_NAME` no `AskPanelModal.tsx`).
 
 ---
 
@@ -51,7 +51,7 @@ Cada versão é complementar à anterior: nada é jogado fora. Os dois caminhos 
 ```mermaid
 flowchart TD
   V0["v0 · Hoje<br/>1 rota, 2 ferramentas, com bug"] --> V1["v1 · Base consertada<br/>AI SDK v6, testes, rate limit"]
-  V1 --> V2["v2 · Ferramentas reais<br/>Ígnis responde com dados do banco"]
+  V1 --> V2["v2 · Ferramentas reais<br/>Agnis responde com dados do banco"]
   V2 --> V3["v3 · Conversa de verdade<br/>streaming + memória"]
   V3 --> V4["v4 · Ações com aprovação<br/>atribuir, priorizar"]
   V2 --> V5["v5 · IA dentro dos fluxos<br/>triagem e relatório com saída estruturada"]
@@ -90,10 +90,10 @@ Em cada uma: o que você constrói, os conceitos de LLM que aprende, a tecnologi
 - **Você constrói:**
   - ~10 ferramentas que reaproveitam os Services existentes: carga por técnico, OS por secretaria, equipamento recorrente…
   - Permissão por role dentro de cada ferramenta
-  - Painel do Ígnis ligado ao backend
+  - Painel do Agnis ligado ao backend
 - **Você aprende:** desenhar boas ferramentas (nome, descrição, entrada pequena); por que a IA não gera SQL (ela escolhe funções suas); definir regra de negócio (SLA) antes de pedir à IA.
 - **Tecnologia:** AI SDK, Zod, Prisma `groupBy`, Next.js.
-- **Torna real:** o painel do Ígnis (`AskPanelModal`).
+- **Torna real:** o painel do Agnis (`AskPanelModal`).
 - **Currículo:** *Construí um assistente com tool calling sobre dados operacionais reais, respeitando RBAC (CASL) em cada ferramenta.*
 
 ### v3 · Conversa de verdade — dias 10 a 12
@@ -104,7 +104,7 @@ Em cada uma: o que você constrói, os conceitos de LLM que aprende, a tecnologi
   - Resposta estruturada: texto + ferramentas usadas + ação sugerida
 - **Você aprende:** streaming e por que ele resolve o limite de tempo da Vercel; janela de contexto e custo do histórico; saída estruturada com Zod.
 - **Tecnologia:** AI SDK UI, Next.js, Zod.
-- **Torna real:** o Ígnis passa a lembrar a pergunta anterior ("e no mês passado?").
+- **Torna real:** o Agnis passa a lembrar a pergunta anterior ("e no mês passado?").
 - **Currículo:** *Implementei chat com streaming e memória de conversa em Next.js + Node.*
 
 ### v4 · Ações com aprovação — dias 13 a 15
@@ -115,7 +115,7 @@ Em cada uma: o que você constrói, os conceitos de LLM que aprende, a tecnologi
   - Log de auditoria das ações aprovadas
 - **Você aprende:** human-in-the-loop; prompt injection (texto de OS tentando dar ordens à IA); por que toda ação passa pelas mesmas permissões das rotas normais.
 - **Tecnologia:** AI SDK `needsApproval`, CASL, Prisma.
-- **Torna real:** os botões de ação do Ígnis (atribuir, priorizar).
+- **Torna real:** os botões de ação do Agnis (atribuir, priorizar).
 - **Currículo:** *Desenhei ações executadas por IA com aprovação humana obrigatória e trilha de auditoria.*
 
 ### v5 · IA dentro dos fluxos — dias 16 a 19
@@ -134,7 +134,7 @@ Em cada uma: o que você constrói, os conceitos de LLM que aprende, a tecnologi
 - **Você constrói:**
   - pgvector no Postgres e indexação de OS concluídas via job
   - Busca dos casos mais parecidos com filtro por cliente
-  - Ferramenta `buscarCasosParecidos` no Ígnis, com citação das OS
+  - Ferramenta `buscarCasosParecidos` no Agnis, com citação das OS
 - **Você aprende:** embeddings e similaridade de cosseno; chunking, top-k, busca híbrida; medir se a busca acerta (hit rate).
 - **Tecnologia:** **LangChain.js**, pgvector, embeddings, BullMQ.
 - **Torna real:** a etapa "buscando casos parecidos" da triagem.
@@ -172,7 +172,7 @@ Três ritmos para escolher. Se um dia virar dois, tudo bem. Marque com `[x]` o q
 
 Mantém o que mais pesa no currículo (ferramentas, streaming, saída estruturada, RAG com LangChain.js e agente com LangGraph.js) e corta refinamentos.
 
-**Semana 1 · Ígnis funcionando**
+**Semana 1 · Agnis funcionando**
 
 *v1 · Base consertada (dias 1 a 2)*
 - [ ] **Dia 01 · Conceitos + conserto** — LLM, token e system prompt num script com a Groq; migrar `AIChatService` para `tool({ inputSchema })` e `stopWhen`
@@ -194,7 +194,7 @@ Mantém o que mais pesa no currículo (ferramentas, streaming, saída estruturad
 *v6 · RAG (dias 8 a 10)*
 - [ ] **Dia 08 · Embeddings e pgvector** — similaridade de cosseno com 3 frases; imagem pgvector no Docker e migration
 - [ ] **Dia 09 · Indexar com LangChain.js** — text splitter + `PGVectorStore`; job que indexa cada OS concluída
-- [ ] **Dia 10 · RAG no Ígnis** — busca de casos parecidos com filtro por cliente; ferramenta `buscarCasosParecidos` citando #OS
+- [ ] **Dia 10 · RAG no Agnis** — busca de casos parecidos com filtro por cliente; ferramenta `buscarCasosParecidos` citando #OS
 
 *v7 · Agente de triagem, inclui a aprovação da v4 (dias 11 a 13)*
 - [ ] **Dia 11 · LangGraph.js** — grafo, nós e estado; grafo classificar → buscar parecidos → sugerir técnico
@@ -214,9 +214,9 @@ Mantém o que mais pesa no currículo (ferramentas, streaming, saída estruturad
 
 ### Ritmo B · Preparação para vagas · 30 dias (2 a 3 h/dia)
 
-Três semanas construindo o Ígnis, cada uma fechando com um dia de revisão, e uma quarta semana para currículo, portfólio e entrevista. Os dias marcados 📋 são de preparação, não de código.
+Três semanas construindo o Agnis, cada uma fechando com um dia de revisão, e uma quarta semana para currículo, portfólio e entrevista. Os dias marcados 📋 são de preparação, não de código.
 
-**Semana 1 · Fundamentos e Ígnis funcionando** (v1–v3)
+**Semana 1 · Fundamentos e Agnis funcionando** (v1–v3)
 - [ ] **Dia 01 · Conceitos de LLM** — token, prompt, system prompt e janela de contexto; script solto em TS chamando a Groq
 - [ ] **Dia 02 · Conserto da rota** — migrar `AIChatService` para `tool({ inputSchema })` e `stopWhen`; remover os `as any`
 - [ ] **Dia 03 · Testes e custo** — testes com `MockLanguageModel`; rate limit no Redis; log de tokens
@@ -231,7 +231,7 @@ Três semanas construindo o Ígnis, cada uma fechando com um dia de revisão, e 
 - [ ] **Dia 10 · Embeddings na mão** — gerar embeddings de 3 frases e calcular a similaridade de cosseno
 - [ ] **Dia 11 · pgvector** — imagem pgvector no Docker; migration com coluna vector
 - [ ] **Dia 12 · LangChain.js** — text splitter + `PGVectorStore`; job que indexa cada OS concluída
-- [ ] **Dia 13 · RAG no Ígnis** — busca de casos parecidos com filtro por cliente; ferramenta `buscarCasosParecidos` citando #OS
+- [ ] **Dia 13 · RAG no Agnis** — busca de casos parecidos com filtro por cliente; ferramenta `buscarCasosParecidos` citando #OS
 - [ ] **Dia 14 · Revisão da semana** 📋 — gravar um áudio de 2 minutos explicando quando usar RAG e quando usar ferramenta
 
 **Semana 3 · Agente e produção** (v7–v8)
@@ -241,14 +241,14 @@ Três semanas construindo o Ígnis, cada uma fechando com um dia de revisão, e 
 - [ ] **Dia 18 · Front da triagem** — ligar a tela `triagem-ia` ao agente
 - [ ] **Dia 19 · Observabilidade** — tracing com Langfuse ou LangSmith: custo e latência por chamada
 - [ ] **Dia 20 · Um refinamento à escolha** — busca híbrida no RAG ou teste de prompt injection com uma OS maliciosa
-- [ ] **Dia 21 · Revisão da semana** 📋 — desenhar a arquitetura do Ígnis no papel, sem olhar o código
+- [ ] **Dia 21 · Revisão da semana** 📋 — desenhar a arquitetura do Agnis no papel, sem olhar o código
 
 **Semana 4 · Preparação para vagas** (vitrine)
 - [ ] **Dia 22 · README do projeto** 📋 — diagrama da camada de IA, GIF de demo e como rodar
 - [ ] **Dia 23 · Currículo e LinkedIn** 📋 — usar os textos da seção 6; post curto contando como fez o RAG
 - [ ] **Dia 24 · Perguntas de entrevista** 📋 — responder por escrito as perguntas da seção 8
 - [ ] **Dia 25 · Mini RAG fora do Fire OS** 📋 — do zero, num script, sobre um PDF qualquer: prova que você aprendeu e não só adaptou
-- [ ] **Dia 26 · System design do Ígnis** 📋 — como escalar para 100 clientes: custo por pergunta, cache, fila, limites do provedor
+- [ ] **Dia 26 · System design do Agnis** 📋 — como escalar para 100 clientes: custo por pergunta, cache, fila, limites do provedor
 - [ ] **Dia 27 · Comparar provedores** 📋 — trocar a Groq por outro provedor no AI SDK (uma linha) e comparar qualidade, custo e tempo no conjunto de avaliação
 - [ ] **Dia 28 · Entrevista simulada** 📋 — com alguém ou com o Claude, defendendo as escolhas do projeto
 - [ ] **Dia 29 · Candidaturas** 📋 — ajustar o currículo para cada vaga e aplicar
@@ -292,7 +292,7 @@ Cobre as 9 versões. Os dias na seção 3 seguem este ritmo.
 - [ ] **Dia 21 · pgvector** — imagem pgvector no Docker; migration com coluna vector
 - [ ] **Dia 22 · LangChain.js** — text splitter + `PGVectorStore`; indexar OS concluídas num job
 - [ ] **Dia 23 · Busca** — endpoint de casos parecidos com filtro por cliente e role
-- [ ] **Dia 24 · RAG no Ígnis** — ferramenta `buscarCasosParecidos`, respondendo com citação das #OS
+- [ ] **Dia 24 · RAG no Agnis** — ferramenta `buscarCasosParecidos`, respondendo com citação das #OS
 - [ ] **Dia 25 · Qualidade** — medir hit rate; testar busca híbrida (vetor + full-text)
 
 *v7 · Agente de triagem (dias 26 a 29)*
@@ -349,7 +349,7 @@ Em ordem sugerida de implementação. As duas primeiras já têm tela desenhada.
 | 1 | Casos parecidos na triagem | "Impressora HP não puxa papel na EMEF Monteiro Lobato" | Ao abrir uma OS, mostra as 3 a 5 OS concluídas mais parecidas e como foram resolvidas. É a etapa "buscando" da tela de triagem. | torna real `triagem-ia` | inicial |
 | 2 | "Já resolvemos isso antes?" no app | "Nobreak apitando e desligando sozinho" | O técnico, em campo, recebe a solução que funcionou em casos parecidos, com o número das OS de origem para conferir. | nova no app | inicial |
 | 3 | Busca semântica de OS | "problema de rede no laboratório de informática" | Campo de busca no painel que encontra por significado, não só por palavra exata. Bom para aprender busca híbrida. | nova | inicial |
-| 4 | Ígnis consulta o histórico | "Como costumamos resolver estabilizador queimado?" | Vira mais uma ferramenta do Ígnis (`buscarCasosParecidos`). O agente decide sozinho quando usar SQL e quando usar RAG. | amplia o Ígnis | intermediário |
+| 4 | Agnis consulta o histórico | "Como costumamos resolver estabilizador queimado?" | Vira mais uma ferramenta do Agnis (`buscarCasosParecidos`). O agente decide sozinho quando usar SQL e quando usar RAG. | amplia o Agnis | intermediário |
 | 5 | Chat com a documentação técnica | "Qual a tensão de saída do estabilizador modelo X?" | Indexa `documentacaoTecnica` e manuais em PDF. Ensina carregar PDF, chunking e citar página. | nova | intermediário |
 | 6 | Laudo técnico assistido | rascunho a partir de laudos parecidos | Busca laudos de equipamentos do mesmo tipo e gera um rascunho que o técnico revisa e assina. | nova | intermediário |
 | 7 | Detector de chamado duplicado | mesmo problema, mesma unidade, aberto 2 vezes | Antes de salvar, avisa: "parece a OS #48210, aberta ontem". Ensina a escolher um limite de similaridade. | nova | intermediário |
@@ -382,8 +382,8 @@ O Fire OS já mostra uma stack fullstack sólida. A trilha adiciona a camada de 
 | Tecnologia ou prática | O que você faz com ela no Fire OS | Versão | Plano |
 |---|---|---|---|
 | **Vercel AI SDK** | Chamar LLMs, tool calling, streaming e saída estruturada | v1–v5 | 14 e 32 dias |
-| **Groq** (provedor de LLM) | Rodar o modelo do Ígnis com baixa latência e custo | v1 | 14 e 32 dias |
-| **Tool calling** | O Ígnis consulta o banco por funções suas, com permissão por role | v2 | 14 e 32 dias |
+| **Groq** (provedor de LLM) | Rodar o modelo do Agnis com baixa latência e custo | v1 | 14 e 32 dias |
+| **Tool calling** | O Agnis consulta o banco por funções suas, com permissão por role | v2 | 14 e 32 dias |
 | **Streaming + AI SDK UI** (`useChat`) | Chat em Next.js com a resposta aparecendo enquanto é gerada | v3 | 14 e 32 dias |
 | **Saída estruturada** (Zod) | Classificar OS nova em JSON validado, rodando na fila | v5 | 14 e 32 dias |
 | **Embeddings + pgvector** | Busca por significado no histórico de atendimentos | v6 | 14 e 32 dias |
@@ -446,7 +446,7 @@ A ideia é aprender tudo vendo funcionar num único projeto, enquanto esse proje
 
 | Quem usa | Hoje | Com a trilha |
 |---|---|---|
-| **Gestor** | Abre listas e relatórios e tira as conclusões sozinho | Pergunta ao Ígnis (v2), recebe sugestão de ação e aprova (v4), recebe a triagem pronta (v7) e o relatório já analisado (v5) |
+| **Gestor** | Abre listas e relatórios e tira as conclusões sozinho | Pergunta ao Agnis (v2), recebe sugestão de ação e aprova (v4), recebe a triagem pronta (v7) e o relatório já analisado (v5) |
 | **Técnico** | Escreve diagnóstico e solução do zero, no celular | Vê como casos parecidos foram resolvidos (v6), dita em vez de digitar e fotografa a etiqueta do patrimônio (mini apps 4 e 5) |
 | **Solicitante / secretaria** | Liga ou manda mensagem perguntando do chamado | Abre chamado por mensagem e pergunta o status para um assistente que só enxerga a OS dele (mini apps 1 e 2) |
 | **Você, vendendo o Fire OS** | Um sistema de OS entre muitos | Um sistema de OS com IA. Cada versão pronta vira uma seção nova na landing page que já existe no repositório |
@@ -469,7 +469,7 @@ flowchart TB
   M5["5 · Patrimônio por foto<br/>visão computacional"] --> AI
   M6["6 · Fire OS no Claude<br/>servidor MCP"] --> AI
   M7["7 · Laboratório de IA<br/>avaliações e comparação de modelos"] --> AI
-  M8["8 · Ígnis vigia<br/>alertas diários"] --> AI
+  M8["8 · Agnis vigia<br/>alertas diários"] --> AI
 ```
 
 ### Ideias de mini apps e funcionalidades
@@ -483,9 +483,9 @@ Cada uma reaproveita o que a trilha já construiu e ensina pelo menos uma coisa 
 | 3 | **Manual Técnico** | Envie os PDFs de manuais de equipamentos e pergunte "como resetar o estabilizador modelo X?". A resposta cita o manual e a página. | Carregar PDF, chunking de documento longo, citação de página. Funciona sozinho também: boa peça de portfólio separada. | depois da v6 | 3 dias |
 | 4 | **Ditado do técnico** | No app Expo, o técnico grava um áudio do que fez. A transcrição (Whisper, que a Groq oferece) vira diagnóstico e solução no formato da OS, para ele revisar. | Voz para texto, upload de áudio pela mesma fila das fotos, IA no mobile. | depois da v5 | 3 dias |
 | 5 | **Patrimônio por foto** | O técnico fotografa a etiqueta do equipamento. Um modelo com visão lê o número do patrimônio e o modelo, e o app abre o histórico daquele equipamento. | Modelos multimodais, extração de imagem. Reaproveita o envio para o Cloudinary. | depois da v5 | 2 dias |
-| 6 | **Fire OS no Claude (MCP)** | Um servidor MCP com as ferramentas de leitura do Ígnis. O gestor conecta no Claude Desktop e pergunta sobre a operação de lá, com as mesmas permissões. | MCP, assunto em alta em vagas. Pacote pequeno e separado. | depois da v2 | 2 dias |
+| 6 | **Fire OS no Claude (MCP)** | Um servidor MCP com as ferramentas de leitura do Agnis. O gestor conecta no Claude Desktop e pergunta sobre a operação de lá, com as mesmas permissões. | MCP, assunto em alta em vagas. Pacote pequeno e separado. | depois da v2 | 2 dias |
 | 7 | **Laboratório de IA** | Mini app interno que roda o conjunto de avaliação da triagem com prompts e modelos diferentes e mostra acertos, custo e tempo de cada combinação. | Evals de verdade e comparação entre provedores. TypeScript com AI SDK e uma tela em Next.js, sem arriscar o Fire OS. | depois da v5 | 3 a 4 dias |
-| 8 | **Ígnis vigia** | Um job diário procura padrões (equipamento que voltou 3 vezes, técnico acima da média, pico de chamados numa secretaria) e manda um resumo para o gestor de manhã. | Jobs agendados, IA proativa em vez de reativa. Torna real os "pontos de atenção" da tela de insights. | depois da v2 | 2 dias |
+| 8 | **Agnis vigia** | Um job diário procura padrões (equipamento que voltou 3 vezes, técnico acima da média, pico de chamados numa secretaria) e manda um resumo para o gestor de manhã. | Jobs agendados, IA proativa em vez de reativa. Torna real os "pontos de atenção" da tela de insights. | depois da v2 | 2 dias |
 
 > **Suas ideias antigas encaixam aqui.** Em `estudos-pleno/IDEIAS-PROJETOS-PLENO.md`, a Opção B do Extrator ("tickets a partir de mensagens soltas") é o mini app 1 com um cliente real. O Crivo usa o mesmo padrão da triagem: a IA julga e classifica em lote, na fila. Você pode fazê-los dentro do Fire OS e levar o aprendizado para um app separado depois, ou o contrário.
 >
@@ -523,11 +523,11 @@ Está na [seção 6](#6-como-fica-no-seu-currículo): a stack que você já tem,
 
 Entra, nos três planos. É a **v6**: dias 20 a 25 no completo, 8 a 10 no intensivo e 10 a 13 no de preparação. Na seção 6 ele aparece em três linhas da tabela (embeddings + pgvector, LangChain.js, RAG), na linha de habilidades e no segundo bullet do projeto. Fica de fora do intensivo só a busca híbrida, que é um refinamento do RAG.
 
-### Dá para aprender todas essas tecnologias só com o Ígnis, acompanhando a evolução dele?
+### Dá para aprender todas essas tecnologias só com o Agnis, acompanhando a evolução dele?
 
-**Sim, para o perfil de dev fullstack que usa IA.** Cada tecnologia da seção 6 tem uma versão do Ígnis em que você a usa de verdade. Aqui "Ígnis" quer dizer a camada de IA inteira do Fire OS: o chat, a triagem, o relatório e a busca no app, não só o painel de perguntas.
+**Sim, para o perfil de dev fullstack que usa IA.** Cada tecnologia da seção 6 tem uma versão do Agnis em que você a usa de verdade. Aqui "Agnis" quer dizer a camada de IA inteira do Fire OS: o chat, a triagem, o relatório e a busca no app, não só o painel de perguntas.
 
-| Tecnologia | Onde o Ígnis ensina | O que um projeto só não ensina |
+| Tecnologia | Onde o Agnis ensina | O que um projeto só não ensina |
 |---|---|---|
 | AI SDK, tool calling, streaming | v1 a v3: o próprio chat | Comparar provedores. Troque a Groq por outro uma vez (é uma linha) e compare resposta e custo: é o dia 27 do plano de 30 dias. |
 | Saída estruturada | v5: classificação da triagem | Nada relevante. |
@@ -535,7 +535,7 @@ Entra, nos três planos. É a **v6**: dias 20 a 25 no completo, 8 a 10 no intens
 | LangGraph.js, human-in-the-loop | v7: agente de triagem | Nada relevante para o seu objetivo. |
 | Langfuse, evals | v5 e v8 | Volume real. Com poucos usuários os números de custo são pequenos; o que conta é saber medir. |
 
-O Ígnis não cobre duas coisas, e tudo bem, porque nenhuma delas é o seu alvo:
+O Agnis não cobre duas coisas, e tudo bem, porque nenhuma delas é o seu alvo:
 
 - **Treinar ou fazer fine-tuning de modelos.** É outra carreira (engenharia de ML). Para fullstack com IA, usar modelos prontos bem é o que se espera.
 - **Como o modelo funciona por dentro** (transformer, atenção). Um vídeo introdutório basta; não muda o seu código.
@@ -546,16 +546,16 @@ O risco de aprender com um projeto só é saber apenas o que aquele projeto prec
 
 ### Tem um plano de 30 dias de preparação?
 
-Tem: o **Ritmo B · Preparação para vagas · 30 dias** na [seção 4](#4-plano-por-dias). São três semanas construindo o Ígnis (v1 a v8, no mesmo escopo do intensivo, mais um refinamento à escolha) a 2 ou 3 horas por dia, cada uma fechando com um dia de revisão. A quarta semana é só para a vaga: README com demo, currículo e LinkedIn, perguntas de entrevista, um mini RAG fora do projeto, system design, comparação de provedores, entrevista simulada e candidaturas. Tudo em TypeScript.
+Tem: o **Ritmo B · Preparação para vagas · 30 dias** na [seção 4](#4-plano-por-dias). São três semanas construindo o Agnis (v1 a v8, no mesmo escopo do intensivo, mais um refinamento à escolha) a 2 ou 3 horas por dia, cada uma fechando com um dia de revisão. A quarta semana é só para a vaga: README com demo, currículo e LinkedIn, perguntas de entrevista, um mini RAG fora do projeto, system design, comparação de provedores, entrevista simulada e candidaturas. Tudo em TypeScript.
 
 Perguntas para treinar na semana 4:
 
 - Quando você usa RAG e quando usa uma ferramenta que consulta o banco?
-- Como você garante que o Ígnis não mostra dados de outro cliente?
+- Como você garante que o Agnis não mostra dados de outro cliente?
 - Por que a IA não gera SQL direto no seu projeto?
 - O que acontece se o texto de uma OS tentar dar ordens à IA?
 - Como você sabe se uma mudança no prompt melhorou ou piorou o resultado?
-- Quanto custa uma pergunta ao Ígnis e como você reduziria esse custo?
+- Quanto custa uma pergunta ao Agnis e como você reduziria esse custo?
 - Por que usou LangGraph na triagem e não um loop simples do AI SDK?
 - Como você escolheu o tamanho dos pedaços e quantos resultados buscar no RAG?
 
@@ -567,7 +567,7 @@ Perguntas para treinar na semana 4:
 |---|---|
 | **LLM** | Modelo de linguagem grande. Recebe texto e prevê a continuação. Ex.: o Llama que roda na Groq. |
 | **Token** | Pedaço de palavra. É a unidade de custo e de limite do modelo. |
-| **System prompt** | Instrução fixa que define o papel do modelo ("você é o Ígnis do Fire OS…"). |
+| **System prompt** | Instrução fixa que define o papel do modelo ("você é o Agnis do Fire OS…"). |
 | **Janela de contexto** | Quanto texto o modelo enxerga de uma vez: pergunta + histórico + dados das ferramentas. |
 | **Tool calling** | O modelo pede para executar uma função sua (`cargaPorTecnico`), recebe o resultado e responde com base nele. |
 | **Agente** | Loop em que o modelo chama ferramentas várias vezes até ter a resposta. |

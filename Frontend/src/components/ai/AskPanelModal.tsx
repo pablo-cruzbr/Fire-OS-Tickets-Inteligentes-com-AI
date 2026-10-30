@@ -17,7 +17,7 @@ import {
 import { Badge, Button, Modal, Spinner } from "@/components/ui";
 
 /** Fictitious name for the assistant persona — Fire OS's own AI, not a generic "IA". */
-const ASSISTANT_NAME = "Ígnis";
+const ASSISTANT_NAME = "Agnis";
 
 const tecnicosDisponiveis = ["Carlos Souza", "Mariana Lima", "Rafael Pereira", "Juliana Rocha"];
 
@@ -27,7 +27,7 @@ type ConfirmResult = string | { text: string; action?: NextAction; link?: { labe
 type NextAction = {
   label: string;
   options: string[];
-  /** Checkboxes instead of single-pick buttons — Ígnis waits for a "Confirmar" click. */
+  /** Checkboxes instead of single-pick buttons — Agnis waits for a "Confirmar" click. */
   multi?: boolean;
   /** Confirmation message once the gestor finishes picking — not a generic "Feito: X". */
   confirm: (selected: string[]) => ConfirmResult;
@@ -259,7 +259,7 @@ function answerFor(question: string) {
 }
 
 /**
- * Generic "analyze again" — the gestor can ask Ígnis to re-read any answer and propose
+ * Generic "analyze again" — the gestor can ask Agnis to re-read any answer and propose
  * what to do next, even ones whose original action already ran its course. Keyed off the
  * answer's own text so it still feels specific to the case, with a generic fallback.
  */
@@ -345,7 +345,7 @@ export function AskPanelModal({ open, onClose }: { open: boolean; onClose: () =>
     }, 900);
   }
 
-  /** Marks the action as resolved and schedules Ígnis's confirmation message. */
+  /** Marks the action as resolved and schedules Agnis's confirmation message. */
   function finishAction(messageIndex: number, action: NextAction, selected: string[], resultLabel: string) {
     setMessages((prev) => {
       const next = [...prev];
@@ -414,7 +414,7 @@ export function AskPanelModal({ open, onClose }: { open: boolean; onClose: () =>
     });
   }
 
-  /** Gestor asks Ígnis to look at an answer again and propose what to do next — works on any ai message, repeatably. */
+  /** Gestor asks Agnis to look at an answer again and propose what to do next — works on any ai message, repeatably. */
   function suggestNextStep(messageIndex: number) {
     const message = messages[messageIndex];
     if (!message || message.role !== "ai") return;
