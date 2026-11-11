@@ -12,6 +12,27 @@ const STORAGE_KEY = "ordemnext-theme";
  */
 export const themeScript = `(function(){var d=true;try{d=localStorage.getItem("${STORAGE_KEY}")!=="light"}catch(e){}if(d){document.documentElement.classList.add("dark")}})();`;
 
+function storedDark() {
+  try {
+    return localStorage.getItem(STORAGE_KEY) !== "light";
+  } catch {
+    return true;
+  }
+}
+
+/**
+ * Re-applies the saved theme after hydration. If React ever has to recover
+ * from a hydration mismatch it re-renders <html> from scratch, which wipes
+ * the `dark` class the head script added (the page flipped to light). Mount
+ * once in the root layout; it renders nothing.
+ */
+export function ThemeSync() {
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", storedDark());
+  }, []);
+  return null;
+}
+
 type ThemeToggleProps = {
   className?: string;
   /** "segmented" (default): moon/sun pill. "icon": a single round icon button. */

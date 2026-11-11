@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
-import { Toaster } from "sonner";
 import { GlobalModalProvider } from "@/provider/GlobalModalProvider";
 import GlobalModal from "@/app/components/GlobalModal";
-import { themeScript } from "@/components/layout/ThemeToggle";
+import { AppToaster } from "@/components/layout/AppToaster";
+import { ThemeSync, themeScript } from "@/components/layout/ThemeToggle";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -38,11 +38,12 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body>
+        <ThemeSync />
         <GlobalModalProvider>
           {children}
           <GlobalModal />
         </GlobalModalProvider>
-        <Toaster position="top-right" richColors closeButton />
+        <AppToaster />
       </body>
     </html>
   );
