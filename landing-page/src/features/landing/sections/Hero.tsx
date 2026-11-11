@@ -115,7 +115,7 @@ export function Hero() {
                 poster={video.poster}
                 mode="manual"
                 playing={isActive && !paused}
-                preload={index === 0 ? "auto" : index === next ? "metadata" : "none"}
+                preload={isActive ? "auto" : index === next ? "metadata" : "none"}
                 label={video.title}
                 className="absolute inset-0"
               />

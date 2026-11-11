@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TbCalendarEvent, TbChartBar, TbLayoutDashboard, TbSparkles, TbTicket } from "react-icons/tb";
 import { SectionHeading } from "@/components/ui";
 import { AutoVideo } from "@/components/media/AutoVideo";
@@ -44,9 +44,13 @@ const lerp = (from: number, to: number, t: number) => from + (to - from) * t;
  * page scrolls. Desktop pins the stage inside a tall track and also lifts and
  * zooms the laptop while the heading fades out; mobile just opens the lid as
  * the laptop scrolls into view. Transforms are written straight to the DOM
- * from a rAF-throttled passive scroll listener (no React re-renders).
+ * from a rAF-throttled passive scroll listener (React only re-renders when the
+ * screen flips between "may play" and "still animating").
  */
 function useLaptopMontage() {
+  // Whether the screen may load/play: always on the pinned desktop path; on
+  // mobile only once the lid is fully open and the laptop has been flattened.
+  const [screenReady, setScreenReady] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLDivElement>(null);
   const liftRef = useRef<HTMLDivElement>(null);
@@ -58,6 +62,22 @@ function useLaptopMontage() {
     const pinnedMq = window.matchMedia(PINNED_QUERY);
     const reducedMq = window.matchMedia(REDUCED_QUERY);
     let frame = 0;
+    let ready: boolean | null = null;
+    const setReady = (value: boolean) => {
+      if (value !== ready) setScreenReady((ready = value));
+    };
+    /**
+     * iOS Safari often stops painting a <video> inside a preserve-3d / 3D-transformed
+     * subtree (frozen frame, then a blank layer). Off the pinned path, once the lid is
+     * open, drop the 3D context entirely so the screen is a plain 2D layer.
+     */
+    const flatten = (device: HTMLElement, lid: HTMLElement, flat: boolean) => {
+      for (const el of [device, lid]) {
+        el.style.transformStyle = flat ? "flat" : "";
+        if (flat) el.style.transform = "none";
+      }
+      lid.toggleAttribute("data-flat", flat);
+    };
 
     const apply = () => {
       frame = 0;
@@ -77,6 +97,8 @@ function useLaptopMontage() {
           el.style.transform = "";
           el.style.opacity = "";
         }
+        flatten(device, lid, true);
+        setReady(true);
         return;
       }
 
@@ -97,6 +119,8 @@ function useLaptopMontage() {
         device.style.transform = `rotateX(${lerp(-22, 0, open).toFixed(2)}deg) scale(${(lerp(0.8, 1, open) * lerp(1, 1.06, zoom)).toFixed(4)})`;
         lid.style.transform = `rotateX(${lerp(-88, 0, lidOpen).toFixed(2)}deg)`;
         notes.style.opacity = phase(p, 0.7, 0.86).toFixed(3);
+        flatten(device, lid, false);
+        setReady(true);
         return;
       }
 
@@ -107,6 +131,13 @@ function useLaptopMontage() {
       heading.style.transform = "";
       heading.style.opacity = "";
       lift.style.transform = "";
+      if (q >= 1) {
+        flatten(device, lid, true);
+        setReady(true);
+        return;
+      }
+      flatten(device, lid, false);
+      setReady(false);
       device.style.transform = `rotateX(${lerp(-26, 0, open).toFixed(2)}deg) scale(${lerp(0.88, 1, open).toFixed(4)})`;
       lid.style.transform = `rotateX(${lerp(-70, 0, phase(q, 0.05, 1)).toFixed(2)}deg)`;
     };
@@ -129,7 +160,7 @@ function useLaptopMontage() {
     };
   }, []);
 
-  return { trackRef, headingRef, liftRef, deviceRef, lidRef, notesRef };
+  return { screenReady, trackRef, headingRef, liftRef, deviceRef, lidRef, notesRef };
 }
 
 /**
@@ -138,11 +169,19 @@ function useLaptopMontage() {
  * The laptop itself stays space-grey in both themes.
  */
 export function DashboardTour() {
-  const { trackRef, headingRef, liftRef, deviceRef, lidRef, notesRef } = useLaptopMontage();
+  const { screenReady, trackRef, headingRef, liftRef, deviceRef, lidRef, notesRef } = useLaptopMontage();
 
   return (
-    <section id="produto" aria-labelledby="produto-titulo" // Light theme: fade the clipped horizon/glow out over the bottom padding so it meets the white page softly.
-      className="relative isolate overflow-clip pb-24 [mask-image:linear-gradient(180deg,#000_calc(100%-6rem),transparent)] lg:pb-32 dark:[mask-image:none]">
+    <section id="produto" aria-labelledby="produto-titulo" className="relative isolate overflow-clip pb-24 lg:pb-32">
+      {/*
+        Light theme: fade the clipped horizon/glow into the white page over the bottom padding.
+        An overlay, not a mask-image on the section: iOS Safari stops painting the <video>
+        (frozen frame, then blank) when it sits inside a masked ancestor with 3D transforms.
+      */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-30 h-24 bg-[linear-gradient(180deg,transparent,var(--background))] dark:hidden"
+      />
       <style href="dashboard-tour-float" precedence="default">{`
         @keyframes dashboard-tour-float {
           0%, 100% { transform: translateY(0); }
@@ -188,9 +227,10 @@ export function DashboardTour() {
                   src={dashboardTour.src}
                   poster={dashboardTour.poster}
                   mode="inview"
+                  ready={screenReady}
                   showToggle
                   label={dashboardTour.title}
-                  className="aspect-[16/10] bg-frame"
+                  className="aspect-[16/10]"
                   videoClassName="object-top"
                 />
               </LaptopFrame>

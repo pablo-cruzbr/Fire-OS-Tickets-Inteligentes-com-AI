@@ -16,7 +16,8 @@ type LaptopFrameProps = {
  * aluminium back with the app mark) hinged on a keyboard deck that lies flat
  * toward the viewer, with a front lip. Untransformed it renders fully open,
  * seen straight on; animate it by setting `transform` on `deviceRef` and
- * `lidRef` (rotateX on the lid, from about -85deg closed to 0deg open).
+ * `lidRef` (rotateX on the lid, from about -85deg closed to 0deg open). Set
+ * `data-flat` on the lid to drop its back face once it is flattened to 2D.
  */
 export function LaptopFrame({ children, className, deviceRef, lidRef }: LaptopFrameProps) {
   return (
@@ -43,7 +44,7 @@ export function LaptopFrame({ children, className, deviceRef, lidRef }: LaptopFr
         {/* Lid */}
         <div
           ref={lidRef}
-          className="relative origin-bottom [transform-style:preserve-3d] will-change-transform"
+          className="relative origin-bottom [transform-style:preserve-3d] lg:motion-safe:will-change-transform"
         >
           {/* Front: bezel, notch and screen. */}
           <div className="relative rounded-t-[2.2%_3.5%] bg-[#07080d] px-[2%] pb-[3.2%] pt-[2.4%] ring-1 ring-inset ring-white/12 shadow-[0_0_0_1px_rgba(0,0,0,0.6)] [backface-visibility:hidden]">
@@ -53,7 +54,8 @@ export function LaptopFrame({ children, className, deviceRef, lidRef }: LaptopFr
             >
               <span className="h-[5px] w-[5px] rounded-full bg-[#1b2333] ring-1 ring-[#2d3a55]" />
             </span>
-            <div className="relative overflow-hidden rounded-[0.6%] bg-frame">{children}</div>
+            {/* Screen: dark in both themes so an undecoded/stalled video never shows white. */}
+            <div className="relative overflow-hidden rounded-[0.6%] bg-[#000214]">{children}</div>
             {/* Hinge band at the bottom of the chin. */}
             <span
               aria-hidden
@@ -63,7 +65,9 @@ export function LaptopFrame({ children, className, deviceRef, lidRef }: LaptopFr
           {/* Back: aluminium shell with the app mark. */}
           <div
             aria-hidden
-            className="absolute inset-0 flex items-center justify-center rounded-t-[2.2%_3.5%] [backface-visibility:hidden] [transform:rotateY(180deg)]"
+            // Removed outright once the lid is flattened (data-flat): without a 3D context some
+            // WebKit builds ignore backface-visibility and paint the back over the screen.
+            className="absolute inset-0 flex items-center justify-center rounded-t-[2.2%_3.5%] [backface-visibility:hidden] [transform:rotateY(180deg)] in-data-flat:hidden"
             style={{
               background: "linear-gradient(160deg, #474f63 0%, #2b3141 45%, #1b1f2b 100%)",
               boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.12)",
