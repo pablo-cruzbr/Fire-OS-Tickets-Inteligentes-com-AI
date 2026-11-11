@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { TbArrowUpRight, TbCalendarEvent, TbCamera, TbClockPlay, TbDeviceMobile, TbSignature } from "react-icons/tb";
+import { TbArrowRight, TbArrowUpRight, TbCalendarEvent, TbCamera, TbClockPlay, TbDeviceMobile, TbSignature } from "react-icons/tb";
 import { AutoVideo } from "@/components/media/AutoVideo";
 import { SectionHeading } from "@/components/ui";
 import { agnis, features, featuresSection } from "../content";
@@ -50,6 +50,13 @@ export function FeatureBento() {
               </span>
               <h3 className="mt-5 text-2xl font-semibold text-link sm:text-[32px]">{agnis.title}</h3>
               <p className="mt-3 max-w-md text-base leading-normal text-bodytext sm:text-lg">{agnis.text}</p>
+              <Link
+                href="/agnis"
+                className="group/agnis mt-5 inline-flex items-center gap-1.5 rounded-btn text-sm font-semibold text-link focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-2"
+              >
+                Conhecer a Agnis
+                <TbArrowRight aria-hidden className="text-periwinkle transition-transform duration-200 group-hover/agnis:translate-x-0.5" />
+              </Link>
               <AgnisDemo />
             </div>
           </article>

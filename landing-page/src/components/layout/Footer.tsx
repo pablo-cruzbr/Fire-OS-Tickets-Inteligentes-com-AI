@@ -22,6 +22,7 @@ export function Footer() {
           <h3 className={headingClass}>Produto</h3>
           <ul className="mt-6 flex flex-col gap-4">
             <li><Link href="/#recursos" className={linkClass}>Recursos</Link></li>
+            <li><Link href="/agnis" className={linkClass}>Agnis (IA)</Link></li>
             <li><Link href="/#como-funciona" className={linkClass}>Como funciona</Link></li>
             <li><Link href="/#segmentos" className={linkClass}>Segmentos</Link></li>
             <li><Link href="/download" className={linkClass}>App mobile</Link></li>

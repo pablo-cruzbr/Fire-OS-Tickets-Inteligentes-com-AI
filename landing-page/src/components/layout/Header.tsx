@@ -10,14 +10,25 @@ import { ThemeToggle } from "./ThemeToggle";
  * to "/#secao" instead of "#secao" so they work the same whether you're
  * already on the homepage or navigating in from a subpage.
  */
-const nav = [
+type NavItem = { href: string; label: string; badge?: string };
+
+const nav: NavItem[] = [
   { href: "/#produto", label: "Produto" },
   { href: "/#segmentos", label: "Segmentos" },
   { href: "/#como-funciona", label: "Como funciona" },
   { href: "/#recursos", label: "Recursos" },
+  { href: "/agnis", label: "Agnis", badge: "novo" },
   { href: "/download", label: "App mobile" },
   { href: appUrl("/AreadeUsuario"), label: "Área do usuário" },
 ];
+
+function NewBadge({ children }: { children: string }) {
+  return (
+    <span className="rounded-full bg-(image:--gradient-brand) px-1.5 py-px text-[10px] font-semibold uppercase leading-4 tracking-[0.04em] text-white">
+      {children}
+    </span>
+  );
+}
 
 export function Header() {
   return (
@@ -32,9 +43,10 @@ export function Header() {
             <Link
               key={item.label}
               href={item.href}
-              className="rounded-btn px-3 py-2 text-sm font-semibold tracking-[-0.02em] text-link/85 transition-colors hover:bg-fill-2 hover:text-link"
+              className="inline-flex items-center gap-1.5 rounded-btn px-3 py-2 text-sm font-semibold tracking-[-0.02em] text-link/85 transition-colors hover:bg-fill-2 hover:text-link"
             >
               {item.label}
+              {item.badge ? <NewBadge>{item.badge}</NewBadge> : null}
             </Link>
           ))}
         </nav>
@@ -65,9 +77,10 @@ export function Header() {
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="rounded-btn px-3 py-2.5 text-sm font-semibold text-link/85 hover:bg-fill-2 hover:text-link"
+                  className="flex items-center gap-2 rounded-btn px-3 py-2.5 text-sm font-semibold text-link/85 hover:bg-fill-2 hover:text-link"
                 >
                   {item.label}
+                  {item.badge ? <NewBadge>{item.badge}</NewBadge> : null}
                 </Link>
               ))}
               <ButtonLink href={appUrl("/login")} variant="secondary" className="mt-2 sm:hidden">
