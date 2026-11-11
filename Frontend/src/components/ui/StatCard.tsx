@@ -26,11 +26,11 @@ export type Stat = {
 /** KPI tile: landing-style card (bg-card + hairline) with a tinted icon square. */
 export function StatCard({ label, value, tone = "primary", icon }: Stat) {
   return (
-    <div className="flex items-center gap-4 rounded-card border border-border bg-card px-5 py-5 shadow-md dark:shadow-none">
+    <div className="flex items-center gap-3 rounded-card border border-border bg-card px-4 py-4 shadow-md sm:gap-4 sm:px-5 sm:py-5 dark:shadow-none">
       {icon && (
         <span
           className={cn(
-            "flex h-11 w-11 shrink-0 items-center justify-center rounded-btn text-xl ring-1 ring-inset",
+            "flex h-9 w-9 shrink-0 items-center justify-center rounded-btn text-lg ring-1 ring-inset sm:h-11 sm:w-11 sm:text-xl",
             tones[tone],
           )}
         >
@@ -38,7 +38,7 @@ export function StatCard({ label, value, tone = "primary", icon }: Stat) {
         </span>
       )}
       <div className="min-w-0">
-        <p className="text-sm font-medium leading-snug text-bodytext">{label}</p>
+        <p className="text-xs font-medium leading-snug break-words text-bodytext sm:text-sm">{label}</p>
         <p className="text-2xl font-semibold text-link">{value}</p>
       </div>
     </div>
