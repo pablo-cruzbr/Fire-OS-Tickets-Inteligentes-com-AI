@@ -70,3 +70,14 @@ export const agnisDemo = {
   poster: "/videos/agnis-ai.png",
   title: "Agnis respondendo perguntas sobre chamados e técnicos",
 } as const;
+
+/**
+ * Screen recording of the mobile app (portrait, recorded separately). The
+ * files may not exist yet: <AppDemoPhone> checks for them at build time and
+ * falls back to the poster, then to a static app-screen placeholder.
+ */
+export const appDemo = {
+  src: "/videos/app-os.webm",
+  poster: "/videos/app-os.png",
+  title: "Técnico preenchendo uma OS no app Fire OS",
+} as const;

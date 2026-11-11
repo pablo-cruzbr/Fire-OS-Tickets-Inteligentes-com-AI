@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import {
   TbCheck,
   TbCloudUpload,
@@ -12,6 +11,7 @@ import { Badge, ButtonLink, Eyebrow, SectionHeading, buttonClasses } from "@/com
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { appUrl } from "@/lib/appUrl";
+import { AppDemoPhone } from "@/features/landing/AppDemoPhone";
 
 export const metadata: Metadata = {
   title: "Fire OS App — aplicativo mobile para técnicos de campo",
@@ -86,17 +86,12 @@ export default function AppDownloadPage() {
 
             <div className="flex justify-center lg:col-span-5 lg:justify-end">
               <div className="relative">
-                <div className="absolute inset-0 scale-95 rounded-[2rem] bg-primary/40 blur-[80px]" aria-hidden />
-                <div className="relative z-10 w-full max-w-[320px] overflow-hidden rounded-[2rem] border border-border">
-                  <Image
-                    src="/app/tecnico-campo.jpg"
-                    alt="Técnico em campo consultando a ordem de serviço pelo celular"
-                    width={640}
-                    height={800}
-                    priority
-                    className="h-auto w-full object-cover"
-                  />
-                </div>
+                <div
+                  aria-hidden
+                  className="absolute inset-x-[-15%] inset-y-[10%] -z-10 rounded-full bg-primary/40 blur-[90px]"
+                  style={{ opacity: "var(--glow-strength)" }}
+                />
+                <AppDemoPhone priority className="w-[min(72vw,280px)] sm:w-[300px] lg:w-[320px]" />
               </div>
             </div>
           </div>

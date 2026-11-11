@@ -1,10 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
-import { TbArrowUpRight, TbDeviceMobile } from "react-icons/tb";
+import { TbArrowUpRight, TbCalendarEvent, TbCamera, TbClockPlay, TbDeviceMobile, TbSignature } from "react-icons/tb";
 import { AutoVideo } from "@/components/media/AutoVideo";
 import { SectionHeading } from "@/components/ui";
 import { agnis, features, featuresSection } from "../content";
+import { AppDemoPhone } from "../AppDemoPhone";
 import { agnisDemo } from "../media";
+
+const appHighlights = [
+  { icon: <TbCalendarEvent />, label: "Agenda do dia" },
+  { icon: <TbClockPlay />, label: "Timer da OS" },
+  { icon: <TbCamera />, label: "Fotos" },
+  { icon: <TbSignature />, label: "Assinatura" },
+];
 
 /** Real recording of the Agnis panel, cropped to the chat, inside a glass frame. */
 function AgnisDemo() {
@@ -46,21 +54,22 @@ export function FeatureBento() {
             </div>
           </article>
 
-          {/* Field-technician app tile */}
-          <Link
-            href="/download"
-            className="dark group relative flex min-h-[420px] flex-col justify-end overflow-hidden rounded-card border border-border bg-card p-6 transition-colors duration-200 hover:border-border-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-2 sm:p-10"
-          >
+          {/*
+            Field-technician app tile: copy on the left, the app recording in a phone on the right.
+            The link is stretched (its ::after covers the tile) so the video toggle isn't nested in an <a>.
+          */}
+          <article className="dark group relative isolate flex flex-col overflow-hidden rounded-card border border-border bg-card p-6 transition-colors duration-200 hover:border-border-strong has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-accent-2 sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-8 sm:p-10">
+            {/* The field photo, blurred and dimmed, as ambient background. */}
             <Image
               src="/app/tecnico-campo.jpg"
               alt=""
               fill
               sizes="(min-width: 1024px) 672px, 100vw"
-              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+              className="-z-10 scale-110 object-cover opacity-45 blur-2xl"
             />
-            <div aria-hidden className="absolute inset-0 bg-[linear-gradient(180deg,rgba(1,1,13,0.1)_0%,rgba(1,1,13,0.55)_45%,#01010d_92%)]" />
-            <div aria-hidden className="absolute inset-0 bg-[radial-gradient(60%_50%_at_80%_10%,rgba(21,48,234,0.35),transparent)]" />
-            <div className="relative">
+            <div aria-hidden className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(1,1,13,0.55)_0%,rgba(1,1,13,0.8)_55%,#01010d_100%)]" />
+            <div aria-hidden className="absolute inset-0 -z-10 bg-[radial-gradient(55%_45%_at_78%_62%,rgba(21,48,234,0.45),transparent)]" />
+            <div className="flex flex-col sm:h-full">
               <span className="flex h-12 w-12 items-center justify-center rounded-btn border border-border-accent bg-badge text-2xl text-periwinkle backdrop-blur-[8px]">
                 <TbDeviceMobile />
               </span>
@@ -68,15 +77,32 @@ export function FeatureBento() {
               <p className="mt-3 max-w-md text-base leading-normal text-bodytext sm:text-lg">
                 A equipe vê a agenda, atualiza o status da OS, tira fotos e colhe a assinatura direto do celular.
               </p>
-              <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-white">
+              <Link
+                href="/download"
+                className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-white outline-none after:absolute after:inset-0 after:content-['']"
+              >
                 Baixar o app
                 <TbArrowUpRight
                   aria-hidden
                   className="text-periwinkle transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                 />
-              </span>
+              </Link>
+              <ul className="mt-8 hidden flex-wrap gap-2 sm:mt-auto sm:flex sm:pt-8">
+                {appHighlights.map((item) => (
+                  <li
+                    key={item.label}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border bg-fill-2 px-3 py-1.5 text-xs font-medium text-bodytext backdrop-blur-[8px]"
+                  >
+                    <span aria-hidden className="text-sm text-periwinkle">{item.icon}</span>
+                    {item.label}
+                  </li>
+                ))}
+              </ul>
             </div>
-          </Link>
+
+            {/* Clicks on the phone fall through to the tile link; only the play/pause button is interactive. */}
+            <AppDemoPhone className="relative mx-auto mt-10 w-[min(66vw,250px)] transition-transform duration-500 group-hover:-translate-y-1 sm:mx-0 sm:mt-0 sm:w-[230px] sm:self-end lg:w-[210px] xl:w-[250px] pointer-events-none [&_button]:pointer-events-auto" />
+          </article>
         </div>
 
         <ul className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
