@@ -15,6 +15,7 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { api } from "../../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { font, radii, ThemeColors, useTheme, useThemedStyles } from "../../theme";
 
 interface ModalDetailOrderTecnicoProps {
   ordemId: string;
@@ -48,6 +49,8 @@ export function ModalEditFormTicketInterno({
   handleCloseModal,
 }: ModalDetailOrderTecnicoProps) {
   const { width: WIDTH, height: HEIGHT } = Dimensions.get("window");
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
 
   const [solucao, setSolucao] = useState("");
   const [descricaodoProblemaouSolicitacao, setDescricaoProblemaouSolicitacao] =
@@ -232,16 +235,18 @@ const handlePesquisarUsuario = async () => {
     container: {
       width: WIDTH - 30,
       maxHeight: HEIGHT - 100,
-      backgroundColor: "#fff",
+      backgroundColor: colors.card,
+      borderWidth: 1,
+      borderColor: colors.border,
       padding: 20,
-      borderRadius: 12,
+      borderRadius: radii.card,
     },
   });
 
   if (loadingData) {
     return (
       <View style={styles.overlay}>
-        <ActivityIndicator size="large" color="#fff" />
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
@@ -261,6 +266,7 @@ const handlePesquisarUsuario = async () => {
 
             <TextInput
               placeholder="Descrição ou Problema / Solicitação"
+            placeholderTextColor={colors.placeholder}
               style={[styles.input, styles.textArea]}
               value={descricaodoProblemaouSolicitacao}
               onChangeText={setDescricaoProblemaouSolicitacao}
@@ -270,6 +276,7 @@ const handlePesquisarUsuario = async () => {
 
             <TextInput
               placeholder="Solução"
+            placeholderTextColor={colors.placeholder}
               style={[styles.input, styles.textArea]}
               value={solucao}
               onChangeText={setSolucao}
@@ -280,6 +287,7 @@ const handlePesquisarUsuario = async () => {
             <View style={styles.row}>
           <TextInput
             placeholder="Busque o Ramal"
+            placeholderTextColor={colors.placeholder}
             style={[styles.input, { flex: 1, marginRight: 8 }]}
             value={ramal}
             onChangeText={setRamal}
@@ -288,6 +296,7 @@ const handlePesquisarUsuario = async () => {
 
           <TextInput
             placeholder="Nome do usuário"
+            placeholderTextColor={colors.placeholder}
             style={[styles.input, { flex: 1 }]}
             value={name}
             onChangeText={setName}
@@ -306,17 +315,19 @@ const handlePesquisarUsuario = async () => {
 </View>
 
 {setorInfo && (
-  <View>
-    <Text>Setor: {setorInfo?.setor.name}</Text>
-    <Text>Ramal: {setorInfo?.ramal}</Text>
-    <Text>Usuário: {setorInfo?.usuario}</Text>
-    <Text>Andar: {setorInfo?.andar}</Text>
+  <View style={styles.infoBox}>
+    <Text style={styles.infoText}>Setor: {setorInfo?.setor.name}</Text>
+    <Text style={styles.infoText}>Ramal: {setorInfo?.ramal}</Text>
+    <Text style={styles.infoText}>Usuário: {setorInfo?.usuario}</Text>
+    <Text style={styles.infoText}>Andar: {setorInfo?.andar}</Text>
   </View>
 )}         
         
             <Text style={styles.label}>Tipo de Chamado</Text>
             <View style={styles.pickerWrapper}>
               <Picker
+                style={styles.pickerInner}
+                dropdownIconColor={colors.muted}
                 selectedValue={tipodeChamado}
                 onValueChange={(itemValue) => setTipodeChamado(itemValue)}
               >
@@ -331,6 +342,8 @@ const handlePesquisarUsuario = async () => {
             <Text style={styles.label}>Status</Text>
             <View style={styles.pickerWrapper}>
               <Picker
+                style={styles.pickerInner}
+                dropdownIconColor={colors.muted}
                 selectedValue={statusOrdemdeServico}
                 onValueChange={(itemValue) => setStatusOrdemdeServico(itemValue)}
               >
@@ -347,14 +360,14 @@ const handlePesquisarUsuario = async () => {
               disabled={loading}
             >
               {loading ? (
-                <ActivityIndicator color="#fff" />
+                <ActivityIndicator color={colors.onPrimary} />
               ) : (
                 <Text style={styles.buttonText}>Salvar Ordem</Text>
               )}
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.buttonClose} onPress={handleCloseModal}>
-              <Text style={styles.buttonText}>Fechar</Text>
+              <Text style={styles.buttonCloseText}>Fechar</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -363,99 +376,98 @@ const handlePesquisarUsuario = async () => {
   );
 }
 
-const styles = StyleSheet.create({
-  overlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  scrollContent: {
-    flexGrow: 1,
-    justifyContent: "center",
-    paddingVertical: 20,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 15,
-    color: "#111111",
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: "bold",
-    marginBottom: 5,
-    color: "#333",
-  },
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 12,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 6,
-    padding: 10,
-    marginBottom: 12,
-    fontSize: 14,
-    backgroundColor: "#fff",
-  },
-  textArea: {
-    height: 80,
-    textAlignVertical: "top",
-  },
-  pickerWrapper: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 6,
-    marginBottom: 12,
-    backgroundColor: "#fff",
-  },
-  infoCard: {
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    marginBottom: 12,
-    backgroundColor: "#fafafa",
-  },
-  infoTitle: {
-    fontWeight: "bold",
-    marginBottom: 6,
-  },
-  button: {
-    backgroundColor: "#4E3182",
-    padding: 12,
-    borderRadius: 6,
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  buttonSmall: {
-    backgroundColor: "#4E3182",
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    borderRadius: 6,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonTextSmall: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 13,
-  },
-  buttonClose: {
-    backgroundColor: "#888",
-    padding: 12,
-    borderRadius: 6,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-});
+const makeStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    overlay: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: c.overlay,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    title: { fontSize: 18, marginBottom: 15, color: c.text, ...font("bold") },
+    label: { fontSize: 13, marginBottom: 6, color: c.body, ...font("medium") },
+    row: { flexDirection: "row", alignItems: "center", marginBottom: 12 },
+    input: {
+      borderWidth: 1,
+      borderColor: c.inputBorder,
+      borderRadius: radii.btn,
+      padding: 11,
+      marginBottom: 12,
+      fontSize: 14,
+      color: c.text,
+      backgroundColor: c.inputBg,
+      ...font("regular"),
+    },
+    textArea: { height: 80, textAlignVertical: "top" },
+    pickerWrapper: {
+      borderWidth: 1,
+      borderColor: c.inputBorder,
+      borderRadius: radii.btn,
+      marginBottom: 12,
+      backgroundColor: c.inputBg,
+      overflow: "hidden",
+    },
+    picker: {
+      color: c.text,
+      backgroundColor: c.inputBg,
+      borderWidth: 1,
+      borderColor: c.inputBorder,
+      borderRadius: radii.btn,
+      marginBottom: 12,
+      minHeight: 48,
+      paddingHorizontal: 8,
+      fontSize: 14,
+    },
+    pickerInner: { color: c.text, backgroundColor: c.inputBg, borderWidth: 0, minHeight: 48, paddingHorizontal: 8, fontSize: 14 },
+    infoBox: {
+      backgroundColor: c.primarySoft,
+      borderWidth: 1,
+      borderColor: c.borderAccent,
+      padding: 12,
+      borderRadius: radii.btn,
+      marginBottom: 12,
+      gap: 2,
+    },
+    infoText: { color: c.body, fontSize: 13, ...font("regular") },
+    infoCard: {
+      padding: 10,
+      borderWidth: 1,
+      borderColor: c.border,
+      borderRadius: radii.btn,
+      marginBottom: 12,
+      backgroundColor: c.surface,
+    },
+    infoTitle: { color: c.text, marginBottom: 6, ...font("bold") },
+    button: {
+      backgroundColor: c.brand,
+      padding: 13,
+      borderRadius: radii.btn,
+      alignItems: "center",
+      marginBottom: 10,
+    },
+    buttonSmall: {
+      backgroundColor: c.brand,
+      paddingVertical: 11,
+      paddingHorizontal: 12,
+      borderRadius: radii.btn,
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 12,
+    },
+    buttonTextSmall: { color: c.onPrimary, fontSize: 13, ...font("bold") },
+    buttonClose: {
+      backgroundColor: "transparent",
+      borderWidth: 1,
+      borderColor: c.borderStrong,
+      padding: 12,
+      borderRadius: radii.btn,
+      alignItems: "center",
+    },
+    buttonText: { color: c.onPrimary, ...font("bold") },
+    buttonCloseText: { color: c.text, ...font("semibold") },
+    scrollContent: { flexGrow: 1, justifyContent: "center", paddingVertical: 20 },
+  });

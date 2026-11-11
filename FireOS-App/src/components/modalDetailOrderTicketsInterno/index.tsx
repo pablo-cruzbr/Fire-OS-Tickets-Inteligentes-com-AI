@@ -15,6 +15,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { OrdensDeServico } from "../../pages/Dashboard";
 import { api } from "../../services/api";
 import { ModalEditFormTicketInterno } from "../modalFormEditTicketInterno";
+import { font, radii, ThemeColors, useTheme, useThemedStyles } from "../../theme";
 
 interface ModalDetailOsProps {
   ordem: OrdensDeServico | null;
@@ -49,6 +50,8 @@ export function ModalDetailTicketInterno({
   visible,
   handleCloseModal,
 }: ModalDetailOsProps) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const [ordemAtual, setOrdemAtual] = useState<OrdensDeServico | null>(ordem);
   const [setorInfo, setSetorInfo] = useState<Setor | null>(null);
   const [modalTecnicoOpen, setModalTecnicoOpen] = useState(false);
@@ -123,15 +126,15 @@ export function ModalDetailTicketInterno({
               <View style={styles.header}>
                 <Text style={styles.title}>Detalhes do Ticket</Text>
                  <TouchableOpacity onPress={atualizarOrdem} style={styles.refreshIcon}>
-                                <MaterialIcons name="refresh" size={24} color="#0F1431" />
+                                <MaterialIcons name="refresh" size={24} color={colors.text} />
                               </TouchableOpacity>
                 <TouchableOpacity onPress={handleCloseModal}>
-                  <MaterialIcons name="close" size={24} color="#0F1431" />
+                  <MaterialIcons name="close" size={24} color={colors.text} />
                 </TouchableOpacity>
               </View>
 
               <Text style={styles.label}>Data e Hora:</Text>
-              <Text>
+              <Text style={styles.value}>
                 {ordemAtual.created_at
                   ? new Date(ordemAtual.created_at).toLocaleString("pt-BR", {
                       day: "2-digit",
@@ -156,44 +159,44 @@ export function ModalDetailTicketInterno({
                   <Text style={styles.label}>Local do Chamado: </Text>
 
                   {ordemAtual?.informacoesSetor?.instituicaoUnidade?.name ? (
-                    <Text>{ordemAtual.informacoesSetor.instituicaoUnidade.name}</Text>
+                    <Text style={styles.value}>{ordemAtual.informacoesSetor.instituicaoUnidade.name}</Text>
                   ) : ordemAtual?.informacoesSetor?.cliente?.name ? (
-                    <Text>{ordemAtual.informacoesSetor.cliente.name}</Text>
+                    <Text style={styles.value}>{ordemAtual.informacoesSetor.cliente.name}</Text>
                   ) : (
-                    <Text>Não informado</Text>
+                    <Text style={styles.value}>Não informado</Text>
                   )}
 
                   <Text style={styles.label}>
                     Informações do usuário que solicitou o chamado
                   </Text>
                   
-                  <Text>Setor: {ordemAtual.informacoesSetor.setor.name}</Text>
-                  <Text>Usuário: {ordemAtual.informacoesSetor.usuario}</Text>
-                  <Text>Ramal: {ordemAtual.informacoesSetor.ramal}</Text>
-                  <Text>Andar: {ordemAtual.informacoesSetor.andar}</Text>
+                  <Text style={styles.value}>Setor: {ordemAtual.informacoesSetor.setor.name}</Text>
+                  <Text style={styles.value}>Usuário: {ordemAtual.informacoesSetor.usuario}</Text>
+                  <Text style={styles.value}>Ramal: {ordemAtual.informacoesSetor.ramal}</Text>
+                  <Text style={styles.value}>Andar: {ordemAtual.informacoesSetor.andar}</Text>
                 </View>
               )}
 
               <Text style={styles.label}>Descrição do Problema</Text>
-              <Text>
+              <Text style={styles.value}>
                 {ordemAtual.descricaodoProblemaouSolicitacao || "-"}
               </Text>
 
               <Text style={styles.label}>Solução</Text>
-              <Text>{ordemAtual.solucao || "-"}</Text>
+              <Text style={styles.value}>{ordemAtual.solucao || "-"}</Text>
 
               <Text style={styles.label}>Tipo de Chamado</Text>
-              <Text>{ordemAtual.tipodeChamado?.name || "-"}</Text>
+              <Text style={styles.value}>{ordemAtual.tipodeChamado?.name || "-"}</Text>
 
               <Text style={styles.label}>Quem abriu e Fechou o Ticket</Text>
-              <Text>{ordemAtual.user?.name || "-"}</Text>
+              <Text style={styles.value}>{ordemAtual.user?.name || "-"}</Text>
 
               <TouchableOpacity
                 style={styles.buttonClose}
                 onPress={() => setModalTecnicoOpen(true)}
               >
                 <View style={styles.buttonContent}>
-                  <MaterialIcons name="description" size={20} color="#FFF" />
+                  <MaterialIcons name="description" size={20} color={colors.onPrimary} />
                   <Text style={styles.textButtonClose}>
                     EDITAR DESCRIÇÃO TÉCNICA
                   </Text>
@@ -233,52 +236,51 @@ export function ModalDetailTicketInterno({
   );
 }
 
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalContainer: {
-    width: WIDTH - 30,
-    maxHeight: HEIGHT - 100,
-    backgroundColor: "#FFF",
-    borderRadius: 8,
-    padding: 20,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  label: {
-    marginTop: 10,
-    fontWeight: "bold",
-  },
-  buttonClose: {
-    marginTop: 15,
-    backgroundColor: "#4E3182",
-    padding: 12,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  
-  refreshIcon: {
-    left: 40,
-  },
-  textButtonClose: {
-    color: "#FFF",
-    fontWeight: "bold",
-  },
-  buttonContent: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+const makeStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    overlay: {
+      flex: 1,
+      backgroundColor: c.overlay,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    modalContainer: {
+      width: WIDTH - 30,
+      maxHeight: HEIGHT - 100,
+      backgroundColor: c.card,
+      borderWidth: 1,
+      borderColor: c.border,
+      borderRadius: radii.card,
+      padding: 20,
+    },
+    header: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 10,
+      paddingBottom: 12,
+      borderBottomWidth: 1,
+      borderBottomColor: c.border,
+    },
+    title: { fontSize: 18, color: c.text, ...font("bold") },
+    label: {
+      marginTop: 14,
+      marginBottom: 2,
+      fontSize: 11,
+      color: c.eyebrow,
+      letterSpacing: 1,
+      textTransform: "uppercase",
+      ...font("semibold"),
+    },
+    value: { color: c.body, fontSize: 14, lineHeight: 20, ...font("regular") },
+    buttonClose: {
+      marginTop: 14,
+      backgroundColor: c.brand,
+      padding: 13,
+      borderRadius: radii.btn,
+      alignItems: "center",
+    },
+    refreshIcon: { left: 40 },
+    textButtonClose: { color: c.onPrimary, fontSize: 13, letterSpacing: 0.3, marginLeft: 6, ...font("bold") },
+    buttonContent: { flexDirection: "row", alignItems: "center", justifyContent: "center" },
+  });

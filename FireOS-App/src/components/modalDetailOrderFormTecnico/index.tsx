@@ -16,9 +16,10 @@ import {
 } from 'react-native';
 import { api } from '../../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import SignatureScreen, { SignatureViewRef } from 'react-native-signature-canvas';
+import SignatureScreen, { SignatureViewRef } from '../SignaturePad';
 import { MultiSelect } from 'react-native-element-dropdown';
 import { MaterialIcons } from '@expo/vector-icons';
+import { font, radii, ThemeColors, useTheme, useThemedStyles, withAlpha } from '../../theme';
 
 interface ModalDetailOrderTecnicoProps {
   ordemId: string;
@@ -36,6 +37,9 @@ export function ModalDetailOrderFormTecnico({
   handleCloseModal,
   tempoFinal,
 }: ModalDetailOrderTecnicoProps) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
+  const [focusedField, setFocusedField] = useState<string | null>(null);
   const [nameTecnico, setNameTecnico] = useState('');
   const [assinante, setAssinante] = useState('');
   const [solucao, setSolucao] = useState('');
@@ -121,11 +125,15 @@ useEffect(() => {
       >
         <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
           <View style={styles.container}>
+            <Text style={styles.eyebrow}>ORDEM DE SERVIÇO</Text>
             <Text style={styles.title}>Descrição Técnica</Text>
 
             <TextInput
               placeholder="Nome do Técnico"
-              style={styles.input}
+              placeholderTextColor={colors.placeholder}
+              onFocus={() => setFocusedField("tecnico")}
+              onBlur={() => setFocusedField(null)}
+              style={[styles.input, focusedField === "tecnico" && styles.inputFocused]}
               value={nameTecnico}
               onChangeText={setNameTecnico}
             />
@@ -140,12 +148,21 @@ useEffect(() => {
               value={selectedItems}
               onChange={item => setSelectedItems(item)}
               selectedStyle={styles.selectedBadge}
-              placeholderStyle={{ color: '#999', fontSize: 14 }}
+              selectedTextStyle={styles.selectedBadgeText}
+              placeholderStyle={styles.dropdownPlaceholder}
+              containerStyle={styles.dropdownContainer}
+              itemContainerStyle={styles.dropdownItem}
+              itemTextStyle={styles.dropdownItemText}
+              activeColor={colors.primarySoft}
+              iconColor={colors.muted}
             />
 
             <TextInput
               placeholder="Solução"
-              style={[styles.input, styles.textArea]}
+              placeholderTextColor={colors.placeholder}
+              onFocus={() => setFocusedField("solucao")}
+              onBlur={() => setFocusedField(null)}
+              style={[styles.input, styles.textArea, focusedField === "solucao" && styles.inputFocused]}
               value={solucao}
               onChangeText={setSolucao}
               multiline
@@ -154,7 +171,10 @@ useEffect(() => {
             <Text style={styles.label}>Responsável que assinou:</Text>
             <TextInput
               placeholder="Nome de quem está assinando"
-              style={styles.input}
+              placeholderTextColor={colors.placeholder}
+              onFocus={() => setFocusedField("assinante")}
+              onBlur={() => setFocusedField(null)}
+              style={[styles.input, focusedField === "assinante" && styles.inputFocused]}
               value={assinante}
               onChangeText={setAssinante}
             />
@@ -168,7 +188,7 @@ useEffect(() => {
                   resizeMode="contain" 
                 />
                 <TouchableOpacity style={styles.reSignButton} onPress={() => setShowSignatureModal(true)}>
-                  <MaterialIcons name="refresh" size={16} color="#4E3182" />
+                  <MaterialIcons name="refresh" size={16} color={colors.primaryText} />
                   <Text style={styles.reSignText}>Refazer assinatura</Text>
                 </TouchableOpacity>
               </View>
@@ -177,8 +197,8 @@ useEffect(() => {
                 style={styles.buttonSignatureOpen} 
                 onPress={() => setShowSignatureModal(true)}
               >
-                <MaterialIcons name="edit" size={20} color="#fff" />
-                <Text style={styles.buttonText}>COLETAR ASSINATURA</Text>
+                <MaterialIcons name="edit" size={20} color={colors.primaryText} />
+                <Text style={styles.buttonSignatureText}>COLETAR ASSINATURA</Text>
               </TouchableOpacity>
             )}
 
@@ -187,7 +207,7 @@ useEffect(() => {
               onPress={handleSubmit}
               disabled={loading || !signature || !assinante}
             >
-              {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Salvar PROGRESSO</Text>}
+              {loading ? <ActivityIndicator color={colors.onPrimary} /> : <Text style={styles.buttonText}>Salvar PROGRESSO</Text>}
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.buttonClose} onPress={handleCloseModal}>
@@ -202,10 +222,11 @@ useEffect(() => {
           <View style={styles.modalSignatureHeader}>
             <Text style={styles.modalSignatureTitle}>Assinatura Digital</Text>
             <TouchableOpacity onPress={() => setShowSignatureModal(false)}>
-              <MaterialIcons name="close" size={28} color="#4E3182" />
+              <MaterialIcons name="close" size={28} color={colors.text} />
             </TouchableOpacity>
           </View>
 
+          <Text style={styles.padHint}>Assine no quadro abaixo</Text>
           <View style={styles.canvasWrapper}>
             <SignatureScreen
               ref={signatureRef}
@@ -220,7 +241,7 @@ useEffect(() => {
 
           <View style={styles.modalSignatureFooter}>
             <TouchableOpacity style={styles.modalButtonClear} onPress={() => signatureRef.current?.clearSignature()}>
-              <Text style={styles.buttonText}>Limpar</Text>
+              <Text style={styles.buttonClearText}>Limpar</Text>
             </TouchableOpacity>
             
             <TouchableOpacity style={styles.modalButtonSave} onPress={() => signatureRef.current?.readSignature()}>
@@ -234,82 +255,142 @@ useEffect(() => {
 }
 
 
-const styles = StyleSheet.create({
-  overlay: { flex: 1, backgroundColor: '#fff' },
-  scrollContent: { flexGrow: 1, paddingHorizontal: 20, paddingTop: 40, paddingBottom: 40 },
-  container: { flex: 1 },
-  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 20, color: '#111' },
-  label: { marginBottom: 8, fontWeight: '600', fontSize: 14, color: '#4E3182' },
-  input: { borderWidth: 1, borderColor: '#ddd', borderRadius: 8, padding: 12, marginBottom: 15, fontSize: 16 },
-  textArea: { height: 90, textAlignVertical: 'top' },
-  dropdown: { height: 55, borderColor: '#ddd', borderWidth: 1, borderRadius: 8, paddingHorizontal: 12, marginBottom: 15 },
-  selectedBadge: { borderRadius: 20, backgroundColor: '#eee' },
-  
-  signaturePreviewContainer: {
-    width: '100%',
-    height: 150,
-    borderWidth: 1,
-    borderColor: '#28a745',
-    borderRadius: 8,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 25,
-    overflow: 'hidden'
-  },
-  signatureImage: { width: '100%', height: '100%' },
-  reSignButton: {
-    position: 'absolute',
-    bottom: 5,
-    right: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    padding: 6,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: '#eee'
-  },
-  reSignText: { color: '#4E3182', fontSize: 12, fontWeight: '600' },
-  
-  buttonSignatureOpen: {
-    backgroundColor: '#6c757d',
-    flexDirection: 'row',
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 25,
-    gap: 10
-  },
+const makeStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    overlay: { flex: 1, backgroundColor: c.background },
+    scrollContent: { flexGrow: 1, paddingHorizontal: 20, paddingTop: 40, paddingBottom: 40 },
+    container: { flex: 1 },
+    eyebrow: { color: c.eyebrow, fontSize: 11, letterSpacing: 1.6, ...font('semibold') },
+    title: { fontSize: 22, marginBottom: 20, color: c.text, letterSpacing: -0.4, ...font('bold') },
+    label: { marginBottom: 8, fontSize: 13, color: c.body, ...font('medium') },
+    input: {
+      borderWidth: 1,
+      borderColor: c.inputBorder,
+      backgroundColor: c.inputBg,
+      borderRadius: radii.btn,
+      padding: 12,
+      marginBottom: 15,
+      fontSize: 15,
+      color: c.text,
+      ...font('regular'),
+      ...(Platform.OS === 'web' ? ({ outlineStyle: 'none' } as any) : null),
+    },
+    inputFocused: { borderColor: c.inputFocus },
+    textArea: { height: 90, textAlignVertical: 'top' },
+    dropdown: {
+      minHeight: 52,
+      borderColor: c.inputBorder,
+      backgroundColor: c.inputBg,
+      borderWidth: 1,
+      borderRadius: radii.btn,
+      paddingHorizontal: 12,
+      marginBottom: 15,
+    },
+    dropdownPlaceholder: { color: c.placeholder, fontSize: 14, ...font('regular') },
+    dropdownContainer: { borderRadius: radii.btn, borderColor: c.border, backgroundColor: c.surface, overflow: 'hidden' },
+    dropdownItem: { backgroundColor: c.surface },
+    dropdownItemText: { color: c.text, fontSize: 14, ...font('regular') },
+    selectedBadge: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+      borderRadius: radii.pill,
+      backgroundColor: c.primarySoft,
+      borderColor: c.borderAccent,
+      borderWidth: 1,
+      paddingHorizontal: 10,
+      paddingVertical: 4,
+      marginTop: 8,
+      marginRight: 8,
+    },
+    selectedBadgeText: { color: c.primaryText, fontSize: 12, ...font('semibold') },
 
-  modalSignatureContainer: { flex: 1, backgroundColor: '#fff' },
-  modalSignatureHeader: { 
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    padding: 20, 
-    alignItems: 'center', 
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0'
-  },
-  modalSignatureTitle: { fontSize: 18, fontWeight: 'bold' },
-  canvasWrapper: { 
-    flex: 1, 
-    backgroundColor: '#fff' 
-  },
-  modalSignatureFooter: { 
-    flexDirection: 'row', 
-    padding: 20, 
-    gap: 15, 
-    borderTopWidth: 1,
-    borderTopColor: '#f0f0f0'
-  },
-  modalButtonClear: { flex: 1, backgroundColor: '#6c757d', padding: 16, borderRadius: 8, alignItems: 'center' },
-  modalButtonSave: { flex: 2, backgroundColor: '#28a745', padding: 16, borderRadius: 8, alignItems: 'center' },
+    signaturePreviewContainer: {
+      width: '100%',
+      height: 150,
+      borderWidth: 1,
+      borderColor: withAlpha(c.success, 0.6),
+      borderRadius: radii.btn,
+      backgroundColor: c.paper,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 25,
+      overflow: 'hidden',
+    },
+    signatureImage: { width: '100%', height: '100%' },
+    reSignButton: {
+      position: 'absolute',
+      bottom: 6,
+      right: 8,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+      backgroundColor: c.card,
+      paddingVertical: 6,
+      paddingHorizontal: 8,
+      borderRadius: radii.btn,
+      borderWidth: 1,
+      borderColor: c.border,
+    },
+    reSignText: { color: c.primaryText, fontSize: 12, ...font('semibold') },
 
-  buttonPrimary: { backgroundColor: '#4E3182', padding: 18, borderRadius: 8, alignItems: 'center', marginBottom: 12 },
-  buttonClose: { padding: 10, alignItems: 'center' },
-  buttonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
-  buttonTextClose: { color: '#888', fontWeight: '600' },
-});
+    buttonSignatureOpen: {
+      backgroundColor: c.primarySoft,
+      borderWidth: 1,
+      borderStyle: 'dashed',
+      borderColor: c.primary,
+      flexDirection: 'row',
+      padding: 16,
+      borderRadius: radii.btn,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 25,
+      gap: 10,
+    },
+    buttonSignatureText: { color: c.primaryText, fontSize: 14, letterSpacing: 0.4, ...font('bold') },
+
+    modalSignatureContainer: { flex: 1, backgroundColor: c.background },
+    modalSignatureHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      padding: 20,
+      alignItems: 'center',
+      borderBottomWidth: 1,
+      borderBottomColor: c.border,
+    },
+    modalSignatureTitle: { fontSize: 18, color: c.text, ...font('bold') },
+    padHint: { color: c.body, fontSize: 13, paddingHorizontal: 20, paddingTop: 16, paddingBottom: 8, ...font('medium') },
+    canvasWrapper: {
+      flex: 1,
+      marginHorizontal: 20,
+      borderRadius: radii.card,
+      borderWidth: 1,
+      borderColor: c.border,
+      overflow: 'hidden',
+      backgroundColor: c.paper,
+    },
+    modalSignatureFooter: {
+      flexDirection: 'row',
+      padding: 20,
+      gap: 12,
+      borderTopWidth: 1,
+      borderTopColor: c.border,
+      marginTop: 16,
+    },
+    modalButtonClear: { flex: 1, backgroundColor: 'transparent', borderWidth: 1, borderColor: c.borderStrong, padding: 16, borderRadius: radii.btn, alignItems: 'center' },
+    modalButtonSave: { flex: 2, backgroundColor: c.brand, padding: 16, borderRadius: radii.btn, alignItems: 'center' },
+
+    buttonPrimary: {
+      backgroundColor: c.brand,
+      borderWidth: 1,
+      borderColor: withAlpha(c.periwinkle, 0.6),
+      padding: 17,
+      borderRadius: radii.btn,
+      alignItems: 'center',
+      marginBottom: 12,
+    },
+    buttonClose: { padding: 10, alignItems: 'center' },
+    buttonText: { color: c.onPrimary, fontSize: 16, ...font('bold') },
+    buttonClearText: { color: c.text, fontSize: 16, ...font('semibold') },
+    buttonTextClose: { color: c.muted, fontSize: 14, ...font('semibold') },
+  });

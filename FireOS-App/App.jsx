@@ -1,82 +1,74 @@
-import React, {useState, useContext}from 'react';
-import Signin from './src/pages/Signin' ;
-import { NavigationContainer } from '@react-navigation/native';
+import React, { useMemo } from 'react';
+import { ActivityIndicator, View } from 'react-native';
+import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/native';
+import { StatusBar } from 'expo-status-bar';
+import {
+  useFonts,
+  PlusJakartaSans_400Regular,
+  PlusJakartaSans_500Medium,
+  PlusJakartaSans_600SemiBold,
+  PlusJakartaSans_700Bold,
+  PlusJakartaSans_800ExtraBold,
+} from '@expo-google-fonts/plus-jakarta-sans';
 import Routes from './src/routes';
-import { 
-    Text, 
-    View, 
-    StyleSheet, 
-    Image, 
-    TextInput,
-    TouchableOpacity,
-    ActivityIndicator
-} from 'react-native';
-import { StatusBar } from 'react-native';
 import { AuthProvider } from './src/contexts/AuthContext';
+import { ThemeProvider, useTheme, setFontsAvailable, darkColors } from './src/theme';
+import { WebAlertHost } from './src/components/WebAlertHost';
 
-export default function App(){
-    return(
-        <AuthProvider> 
-      <NavigationContainer>
-        <StatusBar backgroundColor="#1d1d1d" barStyle="light-content" translucent={false} />
-        <Routes />
-      </NavigationContainer>
-    </AuthProvider>
-    )
+function ThemedApp() {
+  const { colors, isDark } = useTheme();
+
+  const navigationTheme = useMemo(() => {
+    const base = isDark ? DarkTheme : DefaultTheme;
+    return {
+      ...base,
+      dark: isDark,
+      colors: {
+        ...base.colors,
+        primary: colors.primary,
+        background: colors.background,
+        card: colors.card,
+        text: colors.text,
+        border: colors.border,
+        notification: colors.error,
+      },
+    };
+  }, [colors, isDark]);
+
+  return (
+    <NavigationContainer theme={navigationTheme}>
+      <StatusBar style={isDark ? 'light' : 'dark'} backgroundColor={colors.background} translucent={false} />
+      <Routes />
+      <WebAlertHost />
+    </NavigationContainer>
+  );
 }
 
-const styles = StyleSheet.create({
-    container:{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: "#0F1431"
-    },
-    text:{
-        fontSize: 18,
-        color: '#FFFF'
-    },
-    logo: {
-        width: 280,
-        height: 100,     
-        resizeMode: 'contain', 
-        marginBottom: 18,
-      },
-      
-    inputContainer:{
-        width: '90%',
-        alignItems: 'center',
-        justifyContent: 'center',
-       paddingVertical:3        
-    },
-    input:{
-        width: '95%',
-        height: 40,
-        backgroundColor: '#101026',
-        marginBottom: 12,
-        borderRadius: 4,
-        paddingHorizontal: 15,
-        paddingVertical: 10,
-        color: '#FFFF'
+export default function App() {
+  const [fontsLoaded, fontError] = useFonts({
+    PlusJakartaSans_400Regular,
+    PlusJakartaSans_500Medium,
+    PlusJakartaSans_600SemiBold,
+    PlusJakartaSans_700Bold,
+    PlusJakartaSans_800ExtraBold,
+  });
 
-    },
-    button:{
-        width:'95%',
-        height: 40,
-        backgroundColor: '#3fffa3',
-        borderRadius: 4,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 17
-    },
-    buttonText:{
-        color: '#FFFFF',
-        fontSize: 17,
-        fontWeight: 700
-    },
-    message:{
-        color: '#FF3F4B',
-        marginBottom: 10,
-        fontWeight: 'bold',
-    }
-})
+  if (!fontsLoaded && !fontError) {
+    // Splash fallback while the brand font loads.
+    return (
+      <View style={{ flex: 1, backgroundColor: darkColors.background, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={darkColors.primary} />
+      </View>
+    );
+  }
+
+  setFontsAvailable(!!fontsLoaded && !fontError);
+
+  return (
+    <ThemeProvider>
+      <AuthProvider>
+        <ThemedApp />
+      </AuthProvider>
+    </ThemeProvider>
+  );
+}

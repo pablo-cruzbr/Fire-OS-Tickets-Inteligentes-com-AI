@@ -1,8 +1,10 @@
 import { View, Animated } from "react-native";
 import { useRef } from "react";
-import { styles } from "./styles";
+import { makeScrollStyles } from "./styles";
+import { useThemedStyles } from "../theme";
 
 export const ScrollComIndicador = ({ children }) => {
+  const styles = useThemedStyles(makeScrollStyles);
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const CONTAINER_HEIGHT = 700;

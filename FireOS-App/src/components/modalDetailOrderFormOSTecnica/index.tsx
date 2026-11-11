@@ -14,8 +14,9 @@ import {
 } from 'react-native';
 import { api } from '../../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import SignatureScreen, { SignatureViewRef } from 'react-native-signature-canvas';
+import SignatureScreen, { SignatureViewRef } from '../SignaturePad';
 import { MaterialIcons } from '@expo/vector-icons'; // Importação adicionada
+import { font, radii, ThemeColors, useTheme, useThemedStyles } from '../../theme';
 
 interface ModalDetailOrderTecnicoProps {
   ordemId: string;
@@ -27,6 +28,8 @@ export function ModalDetailOrderFormOSTecnica({
   handleCloseModal,
 }: ModalDetailOrderTecnicoProps) {
   const { width: WIDTH, height: HEIGHT } = Dimensions.get('window');
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
 
   // Estados dos inputs
   const [nameTecnico, setNameTecnico] = useState('');
@@ -114,9 +117,11 @@ export function ModalDetailOrderFormOSTecnica({
     container: {
       width: WIDTH - 30,
       maxHeight: HEIGHT - 80,
-      backgroundColor: '#fff',
+      backgroundColor: colors.card,
+      borderWidth: 1,
+      borderColor: colors.border,
       padding: 20,
-      borderRadius: 12,
+      borderRadius: radii.card,
     },
   });
 
@@ -139,12 +144,14 @@ export function ModalDetailOrderFormOSTecnica({
             {/* Formulário */}
             <TextInput
               placeholder="Nome do Técnico Responsável"
+              placeholderTextColor={colors.placeholder}
               style={styles.input}
               value={nameTecnico}
               onChangeText={setNameTecnico}
             />
             <TextInput
               placeholder="Solução Aplicada"
+              placeholderTextColor={colors.placeholder}
               style={[styles.input, styles.textArea]}
               value={solucao}
               onChangeText={setSolucao}
@@ -176,7 +183,7 @@ export function ModalDetailOrderFormOSTecnica({
                 style={styles.buttonSecondary}
                 onPress={() => signatureRef.current?.readSignature()} // Isso dispara o onOK/handleSignature
               >
-                <Text>Confirmar Assinatura</Text>
+                <Text style={styles.buttonTextSecondary}>Confirmar Assinatura</Text>
               </TouchableOpacity>
             </View>
 
@@ -187,7 +194,7 @@ export function ModalDetailOrderFormOSTecnica({
               disabled={loading}
             >
               {loading ? (
-                <ActivityIndicator color="#fff" />
+                <ActivityIndicator color={colors.onPrimary} />
               ) : (
                 <Text style={styles.buttonText}>FINALIZAR ORDEM</Text>
               )}
@@ -203,94 +210,62 @@ export function ModalDetailOrderFormOSTecnica({
   );
 }
 
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  scrollContent: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 40,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#4E3182',
-  },
-  closeButtonIcon: {
-    padding: 5,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 12,
-    backgroundColor: '#F8FAFC',
-  },
-  textArea: {
-    height: 80,
-    textAlignVertical: 'top',
-  },
-  signatureContainer: {
-    height: 200,
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
-    borderRadius: 8,
-    overflow: 'hidden',
-    marginBottom: 10,
-  },
-  signatureButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  buttonSubmit: {
-    backgroundColor: '#4E3182',
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  buttonSecondary: {
-    backgroundColor: '#EDF2F7',
-    padding: 10,
-    borderRadius: 6,
-    width: '48%',
-    alignItems: 'center',
-  },
-  buttonCancel: {
-    padding: 12,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: '800',
-    fontSize: 16,
-  },
-  buttonTextSecondary: {
-    color: '#4E3182',
-    fontWeight: '600',
-    fontSize: 12,
-  },
-  buttonTextCancel: {
-    color: '#E53E3E',
-    fontWeight: '600',
-  },
-});
+const makeStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    overlay: {
+      flex: 1,
+      backgroundColor: c.overlay,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    scrollContent: {
+      flexGrow: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingVertical: 40,
+    },
+    headerRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 20,
+    },
+    title: { fontSize: 18, color: c.text, ...font('bold') },
+    closeButtonIcon: { padding: 5 },
+    label: { fontSize: 13, color: c.body, marginBottom: 8, ...font('medium') },
+    input: {
+      borderWidth: 1,
+      borderColor: c.inputBorder,
+      borderRadius: radii.btn,
+      padding: 12,
+      marginBottom: 12,
+      backgroundColor: c.inputBg,
+      color: c.text,
+      ...font('regular'),
+    },
+    textArea: { height: 80, textAlignVertical: 'top' },
+    signatureContainer: {
+      height: 200,
+      borderWidth: 1,
+      borderColor: c.border,
+      borderRadius: radii.btn,
+      overflow: 'hidden',
+      marginBottom: 10,
+      backgroundColor: c.paper,
+    },
+    signatureButtons: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 },
+    buttonSubmit: { backgroundColor: c.brand, padding: 16, borderRadius: radii.btn, alignItems: 'center', marginBottom: 12 },
+    buttonSecondary: {
+      backgroundColor: c.primarySoft,
+      borderWidth: 1,
+      borderColor: c.borderAccent,
+      padding: 10,
+      borderRadius: radii.btn,
+      width: '48%',
+      alignItems: 'center',
+    },
+    buttonCancel: { padding: 12, alignItems: 'center' },
+    buttonText: { color: c.onPrimary, fontSize: 16, ...font('extrabold') },
+    buttonTextSecondary: { color: c.primaryText, fontSize: 12, ...font('semibold') },
+    buttonTextCancel: { color: c.errorText, ...font('semibold') },
+  });

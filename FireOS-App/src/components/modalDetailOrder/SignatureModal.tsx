@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Modal, SafeAreaView, View, Text, TouchableOpacity, StyleSheet, Alert, TextInput } from 'react-native';
-import SignatureScreen, { SignatureViewRef } from 'react-native-signature-canvas';
+import SignatureScreen, { SignatureViewRef } from '../SignaturePad';
+import { font, radii, ThemeColors, useTheme, useThemedStyles } from '../../theme';
 import { MaterialIcons } from '@expo/vector-icons';
 
 interface SignatureModalProps {
@@ -12,6 +13,8 @@ interface SignatureModalProps {
 export function SignatureModal({ visible, onClose, onSave }: SignatureModalProps) {
   const [nomeAssinante, setNomeAssinante] = useState('');
   const signatureRef = useRef<SignatureViewRef>(null);
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
 
   // Limpa o campo toda vez que o modal for aberto
   useEffect(() => {
@@ -40,7 +43,7 @@ export function SignatureModal({ visible, onClose, onSave }: SignatureModalProps
         <View style={styles.header}>
           <Text style={styles.title}>Assinatura Digital</Text>
           <TouchableOpacity onPress={onClose} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-            <MaterialIcons name="close" size={28} color="#4E3182" />
+            <MaterialIcons name="close" size={28} color={colors.text} />
           </TouchableOpacity>
         </View>
 
@@ -52,9 +55,11 @@ export function SignatureModal({ visible, onClose, onSave }: SignatureModalProps
             value={nomeAssinante}
             onChangeText={setNomeAssinante}
             returnKeyType="done"
+            placeholderTextColor={colors.placeholder}
           />
         </View>
 
+        <Text style={[styles.label, styles.padLabel]}>Assine no quadro abaixo:</Text>
         <View style={styles.canvasWrapper}>
           <SignatureScreen
             ref={signatureRef}
@@ -72,7 +77,7 @@ export function SignatureModal({ visible, onClose, onSave }: SignatureModalProps
             style={styles.buttonClear} 
             onPress={() => signatureRef.current?.clearSignature()}
           >
-            <Text style={styles.buttonText}>Limpar</Text>
+            <Text style={styles.buttonClearText}>Limpar</Text>
           </TouchableOpacity>
           
           <TouchableOpacity 
@@ -87,16 +92,36 @@ export function SignatureModal({ visible, onClose, onSave }: SignatureModalProps
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
-  header: { flexDirection: 'row', justifyContent: 'space-between', padding: 20, alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#f0f0f0' },
-  title: { fontSize: 18, fontWeight: 'bold', color: '#111' },
-  inputContainer: { paddingHorizontal: 20, paddingTop: 15, paddingBottom: 10 },
-  label: { marginBottom: 8, fontSize: 14, color: '#333', fontWeight: '500' },
-  input: { borderWidth: 1, borderColor: '#ddd', borderRadius: 8, padding: 12, fontSize: 16, backgroundColor: '#fafafa' },
-  canvasWrapper: { flex: 1, backgroundColor: '#fff' },
-  footer: { flexDirection: 'row', padding: 20, gap: 15, borderTopWidth: 1, borderTopColor: '#f0f0f0' },
-  buttonClear: { flex: 1, backgroundColor: '#6c757d', padding: 16, borderRadius: 8, alignItems: 'center' },
-  buttonSave: { flex: 2, backgroundColor: '#28a745', padding: 16, borderRadius: 8, alignItems: 'center' },
-  buttonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
-});
+const makeStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    container: { flex: 1, backgroundColor: c.background },
+    header: { flexDirection: 'row', justifyContent: 'space-between', padding: 20, alignItems: 'center', borderBottomWidth: 1, borderBottomColor: c.border },
+    title: { fontSize: 18, color: c.text, ...font('bold') },
+    inputContainer: { paddingHorizontal: 20, paddingTop: 15, paddingBottom: 10 },
+    label: { marginBottom: 8, fontSize: 13, color: c.body, ...font('medium') },
+    padLabel: { paddingHorizontal: 20 },
+    input: {
+      borderWidth: 1,
+      borderColor: c.inputBorder,
+      borderRadius: radii.btn,
+      padding: 12,
+      fontSize: 16,
+      color: c.text,
+      backgroundColor: c.inputBg,
+      ...font('regular'),
+    },
+    canvasWrapper: {
+      flex: 1,
+      marginHorizontal: 20,
+      borderRadius: radii.card,
+      borderWidth: 1,
+      borderColor: c.border,
+      overflow: 'hidden',
+      backgroundColor: c.paper,
+    },
+    footer: { flexDirection: 'row', padding: 20, gap: 12, borderTopWidth: 1, borderTopColor: c.border, marginTop: 16 },
+    buttonClear: { flex: 1, backgroundColor: 'transparent', borderWidth: 1, borderColor: c.borderStrong, padding: 16, borderRadius: radii.btn, alignItems: 'center' },
+    buttonSave: { flex: 2, backgroundColor: c.brand, padding: 16, borderRadius: radii.btn, alignItems: 'center' },
+    buttonText: { color: c.onPrimary, fontSize: 16, ...font('semibold') },
+    buttonClearText: { color: c.text, fontSize: 16, ...font('semibold') },
+  });

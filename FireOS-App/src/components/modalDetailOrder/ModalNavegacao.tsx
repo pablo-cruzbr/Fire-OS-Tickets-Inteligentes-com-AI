@@ -16,6 +16,7 @@ import { ModalDetailOrderFormTecnico } from "../modalDetailOrderFormTecnico";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from '@expo/vector-icons'; // Se usar Expo
 // import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'; // Se usar React Native CLI puro
+import { font, radii, ThemeColors, useTheme, useThemedStyles } from '../../theme';
 
 
 const { width: WIDTH } = Dimensions.get("window");
@@ -26,6 +27,8 @@ interface ModalDetailOsProps {
 }
 
 export function ModalNavegacao({ ordem, handleCloseModal }: ModalDetailOsProps) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const [modalTecnicoOpen, setModalTecnicoOpen] = useState(false);
   const [modalDestinoOpen, setModalDestinoOpen] = useState(false);
   const [ordemAtual] = useState<OrdensDeServico | null>(ordem);
@@ -64,7 +67,7 @@ export function ModalNavegacao({ ordem, handleCloseModal }: ModalDetailOsProps) 
     onPress={() => setModalDestinoOpen(true)}
   >
     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-      <MaterialIcons name="navigation" size={20} color="#FFF" style={{ marginRight: 8 }} />
+      <MaterialIcons name="navigation" size={20} color={colors.onPrimary} style={{ marginRight: 8 }} />
       <Text style={styles.textButton}>NAVEGAR ATÉ O LOCAL</Text>
     </View>
   </TouchableOpacity>
@@ -77,21 +80,21 @@ export function ModalNavegacao({ ordem, handleCloseModal }: ModalDetailOsProps) 
   <Text style={styles.title}>Escolha o destino:</Text>
   {getDestinos().map((item, index) => (
     <View key={index} style={styles.destinoItem}>
-      <Text style={{fontWeight: 'bold'}}>{item.label}</Text>
+      <Text style={styles.destinoLabel}>{item.label}</Text>
       <View style={styles.rowButtons}>
         <TouchableOpacity style={styles.btnNav} onPress={() => abrirWaze(item.endereco)}>
-          <FontAwesome5 name="waze" size={16} color="#FFF" /> <Text style={{color:'#FFF'}}>WAZE</Text>
+          <FontAwesome5 name="waze" size={16} color={colors.onPrimary} /> <Text style={styles.btnNavText}>WAZE</Text>
         </TouchableOpacity>
         <TouchableOpacity 
-        style={[styles.btnNav, {backgroundColor:'#27AE60'}]} onPress={() => 
+        style={[styles.btnNav, styles.btnNavMaps]} onPress={() => 
           abrirGoogleMaps(item.endereco)}>
-          <FontAwesome5 name="map-marked-alt" size={16} color="#FFF" /> <Text style={{color:'#FFF'}}>GOOGLE MAPS</Text>
+          <FontAwesome5 name="map-marked-alt" size={16} color={colors.onPrimary} /> <Text style={styles.btnNavText}>GOOGLE MAPS</Text>
         </TouchableOpacity>
       </View>
     </View>
   ))}
   <TouchableOpacity onPress={() => setModalDestinoOpen(false)} style={{marginTop: 15, width: '100%', alignItems: 'center', justifyContent: 'center'}}
-><Text>Fechar</Text></TouchableOpacity>
+><Text style={styles.closeText}>Fechar</Text></TouchableOpacity>
 </View>
 
         </View>
@@ -102,29 +105,33 @@ export function ModalNavegacao({ ordem, handleCloseModal }: ModalDetailOsProps) 
 
 export default ModalNavegacao;
 
-const styles = StyleSheet.create({
-  overlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.5)" },
-  modalContainer: { 
-    width: WIDTH, 
-    backgroundColor: "#FFF", 
-    paddingHorizontal: 15,
-    paddingTop: 10, 
-    paddingBottom: 10
-  },
-  buttonBase: { 
-   backgroundColor: "#4E3182", 
-    paddingVertical: 15, 
-    paddingHorizontal: 30, 
-    borderRadius: 8, 
-    alignItems: "center",
-    width: '90%', 
-  },
-  buttonNavigation: { backgroundColor: "#4E3182" },
-  textButton: { color: "#FFF", fontWeight: "bold" },
-  title: { fontSize: 18, fontWeight: "bold" },
-  centeredModal: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'center', padding: 20 },
-  modalContent: { backgroundColor: '#FFF', padding: 20, borderRadius: 12 },
-  destinoItem: { marginTop: 15, borderBottomWidth: 1, borderColor: '#EEE', paddingBottom: 10 },
-  rowButtons: { flexDirection: 'row', gap: 10, marginTop: 10 },
-  btnNav: { flex: 1, padding: 10, backgroundColor: '#4E3182', alignItems: 'center', borderRadius: 5 }
-});
+const makeStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    overlay: { flex: 1, backgroundColor: c.overlay },
+    modalContainer: {
+      width: WIDTH,
+      backgroundColor: 'transparent',
+      paddingTop: 14,
+      paddingBottom: 4,
+    },
+    buttonBase: {
+      backgroundColor: c.brand,
+      paddingVertical: 15,
+      paddingHorizontal: 30,
+      borderRadius: radii.btn,
+      alignItems: 'center',
+      width: '90%',
+    },
+    buttonNavigation: { backgroundColor: c.brand, borderWidth: 1, borderColor: 'rgba(121,137,250,0.6)' },
+    textButton: { color: c.onPrimary, fontSize: 13, letterSpacing: 0.4, ...font('bold') },
+    title: { fontSize: 18, color: c.text, ...font('bold') },
+    centeredModal: { flex: 1, backgroundColor: c.overlay, justifyContent: 'center', padding: 20 },
+    modalContent: { backgroundColor: c.card, padding: 20, borderRadius: radii.card, borderWidth: 1, borderColor: c.border },
+    destinoItem: { marginTop: 15, borderBottomWidth: 1, borderColor: c.border, paddingBottom: 12 },
+    destinoLabel: { color: c.text, fontSize: 14, ...font('semibold') },
+    rowButtons: { flexDirection: 'row', gap: 10, marginTop: 10 },
+    btnNav: { flex: 1, flexDirection: 'row', gap: 6, justifyContent: 'center', padding: 11, backgroundColor: c.brand, alignItems: 'center', borderRadius: radii.btn },
+    btnNavMaps: { backgroundColor: c.successStrong },
+    btnNavText: { color: c.onPrimary, fontSize: 12, ...font('bold') },
+    closeText: { color: c.body, fontSize: 14, ...font('semibold') },
+  });

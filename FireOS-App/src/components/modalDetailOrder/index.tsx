@@ -25,6 +25,7 @@ import * as ImagePicker from "expo-image-picker";
 import { SiGooglemaps } from "react-icons/si";
 import { SiWaze } from "react-icons/si";
 import { FontAwesome5 } from '@expo/vector-icons'; // Ou de 'react-native-vector-icons/FontAwesome5'
+import { font, getStatusColor, radii, ThemeColors, useTheme, useThemedStyles, withAlpha } from '../../theme';
 
 
 
@@ -54,6 +55,8 @@ const getImageFingerprint = (base64: string) => {
 
 export function ModalDetailOrder({ ordem, handleCloseModal }: ModalDetailOsProps) {
 
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const [signature, setSignature] = useState<string | null>(null);
   const [showSignatureModal, setShowSignatureModal] = useState(false);
   const [modalTecnicoOpen, setModalTecnicoOpen] = useState(false);
@@ -577,10 +580,10 @@ const isDisabled = selectedImages.length === 0;
         <View style={styles.header}>
           <Text style={styles.title}>Detalhes da Ordem</Text>
           <TouchableOpacity onPress={atualizarOrdem} style={styles.refreshIcon}>
-            <MaterialIcons name="refresh" size={24} color="#0F1431" />
+            <MaterialIcons name="refresh" size={22} color={colors.text} />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleCloseModal} style={styles.closeIcon}>
-            <MaterialIcons name="close" size={34} color="#0F1431" />
+            <MaterialIcons name="close" size={26} color={colors.text} />
           </TouchableOpacity>
         </View>
 
@@ -590,50 +593,53 @@ const isDisabled = selectedImages.length === 0;
       <Text style={styles.label}>Local do Chamado: </Text>
       
         {ordemAtual?.informacoesSetor?.instituicaoUnidade?.name ? (
-          <Text>{ordemAtual.informacoesSetor.instituicaoUnidade.name}</Text>
+          <Text style={styles.value}>{ordemAtual.informacoesSetor.instituicaoUnidade.name}</Text>
           ) : ordemAtual?.informacoesSetor?.cliente?.name ? (
-          <Text>{ordemAtual.informacoesSetor.cliente.name}</Text>
+          <Text style={styles.value}>{ordemAtual.informacoesSetor.cliente.name}</Text>
           ) : (
-          <Text>Não informado</Text>
+          <Text style={styles.value}>Não informado</Text>
           )}
       
           <Text style={styles.label}>
           Informações do usuário que solicitou o chamado
           </Text>
                         
-            <Text>Setor: {ordemAtual.informacoesSetor.setor.name}</Text>
-            <Text>Usuário: {ordemAtual.informacoesSetor.usuario}</Text>
-            <Text>Ramal: {ordemAtual.informacoesSetor.ramal}</Text>
-          <Text>Andar: {ordemAtual.informacoesSetor.andar}</Text>
+            <Text style={styles.value}>Setor: {ordemAtual.informacoesSetor.setor.name}</Text>
+            <Text style={styles.value}>Usuário: {ordemAtual.informacoesSetor.usuario}</Text>
+            <Text style={styles.value}>Ramal: {ordemAtual.informacoesSetor.ramal}</Text>
+          <Text style={styles.value}>Andar: {ordemAtual.informacoesSetor.andar}</Text>
             </View>
             )}
 
         <Text style={styles.label}>Número: {ordemAtual.numeroOS ?? "Não Disponível"}</Text>
         <Text style={styles.label}>Status:</Text>
-        <Text>{ordemAtual.statusOrdemdeServico?.name ?? "-"}</Text>
+        <View style={[styles.statusPill, { backgroundColor: withAlpha(getStatusColor(colors, ordemAtual.statusOrdemdeServico?.name), 0.14), borderColor: withAlpha(getStatusColor(colors, ordemAtual.statusOrdemdeServico?.name), 0.32) }]}>
+          <View style={[styles.statusDot, { backgroundColor: getStatusColor(colors, ordemAtual.statusOrdemdeServico?.name) }]} />
+          <Text style={[styles.statusPillText, { color: getStatusColor(colors, ordemAtual.statusOrdemdeServico?.name) }]}>{ordemAtual.statusOrdemdeServico?.name ?? "-"}</Text>
+        </View>
         <Text style={styles.label}>Quem abriu a OS:</Text>
-        <Text>{ordemAtual.name}</Text>
+        <Text style={styles.value}>{ordemAtual.name}</Text>
 
        {ordemAtual.user?.cliente ? (
     <>
       <Text style={styles.label}>Empresa:</Text>
-      <Text>{ordemAtual.user.cliente.name}</Text>
+      <Text style={styles.value}>{ordemAtual.user.cliente.name}</Text>
       <Text style={styles.label}>Endereço:</Text>
-      <Text>{ordemAtual.user.cliente.endereco || "Endereço ainda não atribuído. Peça para seu gestor atribuir."}</Text>
+      <Text style={styles.value}>{ordemAtual.user.cliente.endereco || "Endereço ainda não atribuído. Peça para seu gestor atribuir."}</Text>
     </>
   ) : ordemAtual.instituicaoUnidade ? (
     <>
 
 <Text style={styles.label}>Local de Atendimento:</Text>
       <Text style={styles.label}>Instituição:</Text>
-      <Text>{ordemAtual.instituicaoUnidade.name}</Text>
+      <Text style={styles.value}>{ordemAtual.instituicaoUnidade.name}</Text>
       <Text style={styles.label}>Endereço:</Text>
-      <Text>{ordemAtual.instituicaoUnidade.endereco || "Endereço ainda não atribuído. Peça para seu gestor atribuir."}</Text>
+      <Text style={styles.value}>{ordemAtual.instituicaoUnidade.endereco || "Endereço ainda não atribuído. Peça para seu gestor atribuir."}</Text>
     </>
   ) : (
     <>
       <Text style={styles.label}>Endereço:</Text>
-      <Text style={{ color: '#E67E22', fontWeight: '500' }}>
+      <Text style={styles.warningText}>
         Endereço ainda não atribuído. Peça para seu gestor atribuir.
       </Text>
     </>
@@ -686,9 +692,9 @@ const isDisabled = selectedImages.length === 0;
     </View>
 </View>
             <Text style={styles.label}>Tipo de Chamado:</Text>
-            <Text>{ordemAtual.tipodeChamado?.name ?? "-"}</Text>
+            <Text style={styles.value}>{ordemAtual.tipodeChamado?.name ?? "-"}</Text>
             <Text style={styles.label}>Problema:</Text>
-            <Text>{ordemAtual.descricaodoProblemaouSolicitacao}</Text>
+            <Text style={styles.value}>{ordemAtual.descricaodoProblemaouSolicitacao}</Text>
             <Text style={styles.label}>Patrimônio: </Text>
 
 <Text style={styles.label}>Assinatura:</Text>
@@ -704,13 +710,13 @@ const isDisabled = selectedImages.length === 0;
       style={styles.reSignButton} 
       onPress={() => setShowSignatureModal(true)}
     >
-      <MaterialIcons name="refresh" size={16} color="#4E3182" />
+      <MaterialIcons name="refresh" size={16} color={colors.primaryText} />
       <Text style={styles.reSignText}>Refazer assinatura</Text>
     </TouchableOpacity>
   </View>
 ) : (
   <View style={{ marginVertical: 10 }}>
-    <Text style={{ color: '#666', fontStyle: 'italic', marginBottom: 10 }}>
+    <Text style={styles.emptyText}>
       Nenhuma assinatura coletada para esta ordem.
     </Text>
   </View>
@@ -718,21 +724,21 @@ const isDisabled = selectedImages.length === 0;
 
              <TouchableOpacity style={styles.buttonClose} onPress={() => setModalTecnicoOpen(true)}>
               <View style={styles.buttonContent}>
-                <MaterialIcons name="description" size={20} color="#FFF" />
+                <MaterialIcons name="description" size={20} color={colors.primaryText} />
                 <Text style={styles.textButtonClose}>ADICIONAR DESCRIÇÃO TÉCNICA</Text>
               </View>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.buttonClose} onPress={takePhoto}>
               <View style={styles.buttonContent}>
-                <MaterialIcons name="photo-camera" size={20} color="#FFF" />
+                <MaterialIcons name="photo-camera" size={20} color={colors.primaryText} />
                 <Text style={styles.textButtonClose}>TIRAR FOTO</Text>
               </View>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.buttonClose} onPress={pickImages}>
               <View style={styles.buttonContent}>
-                <MaterialIcons name="photo-library" size={20} color="#FFF" />
+                <MaterialIcons name="photo-library" size={20} color={colors.primaryText} />
                 <Text style={styles.textButtonClose}>SELECIONAR IMAGENS</Text>
               </View>
             </TouchableOpacity>
@@ -742,7 +748,7 @@ const isDisabled = selectedImages.length === 0;
                 <View key={index} style={styles.imageWrapper}>
                   <Image source={{ uri: img.uri }} style={styles.imageItem} />
                   <TouchableOpacity style={styles.removeButton} onPress={() => removeImage(index)}>
-                    <MaterialIcons name="close" size={16} color="#FFF" />
+                    <MaterialIcons name="close" size={16} color={colors.onPrimary} />
                   </TouchableOpacity>
                 </View>
               ))}
@@ -751,15 +757,15 @@ const isDisabled = selectedImages.length === 0;
            <TouchableOpacity
           style={[
             styles.buttonClose,
-            isJaConcluida ? { backgroundColor: '#555' } : styles.buttonComplete, 
+            isJaConcluida ? styles.buttonResend : styles.buttonComplete, 
             isDisabled && styles.buttonDisabled,
           ]}
           disabled={isDisabled}
           onPress={handleFinalizarEEnviar}
         >
           <View style={styles.buttonContent}>
-            <MaterialIcons name="check-circle" size={20} color="#FFF" />
-            <Text style={styles.textButtonClose}>
+            <MaterialIcons name="check-circle" size={20} color={isJaConcluida ? colors.text : colors.onPrimary} />
+            <Text style={[styles.textButtonClose, !isJaConcluida && { color: colors.onPrimary }]}>
               {isJaConcluida ? "ENVIAR MAIS IMAGENS" : "CONCLUIR OS"}
             </Text>
           </View>
@@ -793,130 +799,170 @@ const isDisabled = selectedImages.length === 0;
   );
 }
 
-const styles = StyleSheet.create({
-  overlay: { 
-    flex: 1, 
-    backgroundColor: "#FFF" // Removido o transparente para parecer uma tela cheia
-  },
-  modalContainer: {
-    width: WIDTH,
-    height: HEIGHT, // Ocupa a altura total
-    backgroundColor: "#FFF",
-    borderRadius: 0, // Remove arredondamento para colar nas bordas
-    padding: 15,
-    paddingTop: 40, // Espaço para não cobrir a barra de status do celular
-  },
-  header: { 
-    flexDirection: "row", 
-    justifyContent: "space-between", 
-    alignItems: "center", 
-    marginBottom: 20,
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#EEE" 
-  },
-  title: { fontSize: 20, fontWeight: "bold" },
-  refreshIcon: { left: 40 },
-  closeIcon: { right: 4 },
-  label: { marginTop: 15, fontWeight: "bold", fontSize: 14 },
-  buttonClose: { marginTop: 20, backgroundColor: "#4E3182", padding: 15, borderRadius: 8, alignItems: "center" },
-  buttonContent: { flexDirection: "row", alignItems: "center", justifyContent: "center" },
-  textButtonClose: { color: "#FFF", fontWeight: "bold", marginLeft: 8 },
-  buttonNavigation: { backgroundColor: "#4E3182" },
-  buttonDisabled: { backgroundColor: "#9CA3AF", opacity: 0.6 },
-  timerContainer: {
-    marginVertical: 20,
-    padding: 15,
-    backgroundColor: '#F8F9FA',
-    borderRadius: 12,
-    alignItems: 'center',
-    width: '100%',
-    zIndex: 99
-  },
-  btnDisabled: {
-    backgroundColor: '#BDC3C7',
-    borderWidth: 1,
-    borderColor: '#95A5A6',
-    elevation: 0,
-    opacity: 0.8,
-  },
-  timerLabel: {
-    fontSize: 13,
-    color: '#666',
-    marginBottom: 10,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-  },
-  actionWrapper: {
-    width: '100%',
-  },
-  mainButton: {
-    height: 55,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  mainButtonText: {
-    color: '#FFF',
-    fontSize: 16,
-    fontWeight: '800',
-    letterSpacing: 1.2,
-  },
-  btnStart: {
-    backgroundColor: '#4E3182',
-  },
-  btnPause: {
-    backgroundColor: '#E67E22',
-  },
-  btnResume: {
-    backgroundColor: '#27AE60',
-  },
-  gridImages: { flexDirection: "row", flexWrap: "wrap", marginTop: 10 },
-  imageWrapper: { width: IMAGE_SIZE, height: IMAGE_SIZE, marginRight: 10, marginBottom: 10, position: "relative" },
-  imageItem: { width: "100%", height: "100%", borderRadius: 8 },
-  removeButton: { position: "absolute", top: 5, right: 5, backgroundColor: "rgba(0,0,0,0.6)", borderRadius: 12, padding: 2, zIndex: 10 },
-  buttonComplete: { backgroundColor: "green" },
+const makeStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    overlay: {
+      flex: 1,
+      backgroundColor: c.background, // Removido o transparente para parecer uma tela cheia
+    },
+    modalContainer: {
+      width: WIDTH,
+      height: HEIGHT, // Ocupa a altura total
+      backgroundColor: c.background,
+      borderRadius: 0, // Remove arredondamento para colar nas bordas
+      padding: 16,
+      paddingTop: 40, // Espaço para não cobrir a barra de status do celular
+    },
+    header: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 12,
+      paddingBottom: 12,
+      borderBottomWidth: 1,
+      borderBottomColor: c.border,
+    },
+    title: { fontSize: 20, color: c.text, letterSpacing: -0.3, ...font("bold") },
+    refreshIcon: { left: 40 },
+    closeIcon: { right: 4 },
+    label: {
+      marginTop: 16,
+      marginBottom: 3,
+      fontSize: 11,
+      color: c.eyebrow,
+      letterSpacing: 1,
+      textTransform: "uppercase",
+      ...font("semibold"),
+    },
+    value: { color: c.body, fontSize: 14, lineHeight: 20, ...font("regular") },
+    warningText: { color: c.warningText, fontSize: 14, ...font("medium") },
+    emptyText: { color: c.muted, fontSize: 13, fontStyle: "italic", marginBottom: 10, ...font("regular") },
+    statusPill: {
+      flexDirection: "row",
+      alignItems: "center",
+      alignSelf: "flex-start",
+      gap: 6,
+      borderRadius: radii.pill,
+      borderWidth: 1,
+      paddingHorizontal: 10,
+      paddingVertical: 4,
+    },
+    statusDot: { width: 6, height: 6, borderRadius: 3 },
+    statusPillText: { fontSize: 11, letterSpacing: 0.5, textTransform: "uppercase", ...font("bold") },
+    buttonClose: {
+      marginTop: 14,
+      backgroundColor: c.surface,
+      borderWidth: 1,
+      borderColor: c.borderAccent,
+      padding: 15,
+      borderRadius: radii.btn,
+      alignItems: "center",
+    },
+    buttonContent: { flexDirection: "row", alignItems: "center", justifyContent: "center" },
+    textButtonClose: { color: c.text, marginLeft: 8, fontSize: 13, letterSpacing: 0.3, ...font("semibold") },
+    buttonNavigation: { backgroundColor: c.brand },
+    buttonDisabled: { backgroundColor: c.surface, borderColor: c.border, opacity: 0.5 },
+    timerContainer: {
+      marginVertical: 18,
+      padding: 14,
+      backgroundColor: c.card,
+      borderWidth: 1,
+      borderColor: c.border,
+      borderRadius: radii.card,
+      alignItems: "center",
+      width: "100%",
+      zIndex: 99,
+    },
+    btnDisabled: {
+      backgroundColor: withAlpha(c.neutral, 0.18),
+      borderWidth: 1,
+      borderColor: withAlpha(c.neutral, 0.4),
+      elevation: 0,
+    },
+    timerLabel: {
+      fontSize: 13,
+      color: c.muted,
+      marginBottom: 10,
+      textTransform: "uppercase",
+      letterSpacing: 1,
+    },
+    actionWrapper: {
+      width: "100%",
+    },
+    mainButton: {
+      height: 54,
+      borderRadius: radii.btn,
+      justifyContent: "center",
+      alignItems: "center",
+      elevation: 2,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.15,
+      shadowRadius: 10,
+    },
+    mainButtonText: {
+      color: c.onPrimary,
+      fontSize: 15,
+      letterSpacing: 1,
+      ...font("bold"),
+    },
+    btnStart: {
+      backgroundColor: c.brand,
+      borderWidth: 1,
+      borderColor: withAlpha(c.periwinkle, 0.6),
+      shadowColor: c.brand,
+      shadowOpacity: 0.45,
+    },
+    btnPause: {
+      backgroundColor: c.warningStrong,
+    },
+    btnResume: {
+      backgroundColor: c.successStrong,
+    },
+    gridImages: { flexDirection: "row", flexWrap: "wrap", marginTop: 10 },
+    imageWrapper: { width: IMAGE_SIZE, height: IMAGE_SIZE, marginRight: 10, marginBottom: 10, position: "relative" },
+    imageItem: { width: "100%", height: "100%", borderRadius: radii.btn, borderWidth: 1, borderColor: c.border },
+    removeButton: { position: "absolute", top: 5, right: 5, backgroundColor: "rgba(0,2,20,0.7)", borderRadius: 12, padding: 2, zIndex: 10 },
+    buttonComplete: { backgroundColor: c.brand, borderColor: withAlpha(c.periwinkle, 0.6) },
+    buttonResend: { backgroundColor: c.surface, borderColor: c.borderStrong },
 
-  signaturePreviewContainer: {
-  width: '100%',
-  height: 150,
-  borderWidth: 1,
-  borderColor: '#28a745',
-  borderRadius: 8,
-  backgroundColor: '#fff',
-  justifyContent: 'center',
-  alignItems: 'center',
-  marginBottom: 15,
-  overflow: 'hidden'
-},
-signatureImage: { width: '100%', height: '100%' },
-reSignButton: {
-  position: 'absolute',
-  bottom: 5,
-  right: 10,
-  flexDirection: 'row',
-  alignItems: 'center',
-  backgroundColor: 'rgba(255,255,255,0.9)',
-  padding: 6,
-  borderRadius: 6,
-  borderWidth: 1,
-  borderColor: '#eee'
-},
-reSignText: { color: '#4E3182', fontSize: 12, fontWeight: '600' },
-buttonSignatureOpen: {
-  backgroundColor: '#4E3182',
-  flexDirection: 'row',
-  padding: 16,
-  borderRadius: 8,
-  alignItems: 'center',
-  justifyContent: 'center',
-  marginBottom: 15,
-  gap: 10
-},
-buttonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
-});
+    signaturePreviewContainer: {
+      width: "100%",
+      height: 150,
+      borderWidth: 1,
+      borderColor: withAlpha(c.success, 0.6),
+      borderRadius: radii.btn,
+      backgroundColor: c.paper,
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: 15,
+      overflow: "hidden",
+    },
+    signatureImage: { width: "100%", height: "100%" },
+    reSignButton: {
+      position: "absolute",
+      bottom: 6,
+      right: 8,
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 4,
+      backgroundColor: c.card,
+      paddingVertical: 6,
+      paddingHorizontal: 8,
+      borderRadius: radii.btn,
+      borderWidth: 1,
+      borderColor: c.border,
+    },
+    reSignText: { color: c.primaryText, fontSize: 12, ...font("semibold") },
+    buttonSignatureOpen: {
+      backgroundColor: c.brand,
+      flexDirection: "row",
+      padding: 16,
+      borderRadius: radii.btn,
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 15,
+      gap: 10,
+    },
+    buttonText: { color: c.onPrimary, fontSize: 16, ...font("bold") },
+  });

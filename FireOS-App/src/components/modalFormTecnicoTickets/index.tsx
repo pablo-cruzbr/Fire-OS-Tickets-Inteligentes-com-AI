@@ -13,6 +13,7 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { api } from "../../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { font, radii, ThemeColors, useTheme, useThemedStyles } from "../../theme";
 
 interface ModalDetailOrderTecnicoProps {
   handleCloseModal: () => void;
@@ -53,6 +54,8 @@ export function ModalFormTecnicoTickets({
   handleCloseModal,
   visible,
 }: ModalDetailOrderTecnicoProps) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const [descricaoProblema, setDescricaoProblema] = useState("");
   const [solucao, setSolucao] = useState("");
   const [statusId, setStatusId] = useState("");
@@ -207,6 +210,7 @@ const handlePesquisaHibrida = async () => {
 
           <TextInput
             placeholder="Descrição do Problema"
+            placeholderTextColor={colors.placeholder}
             style={[styles.input, styles.textArea]}
             value={descricaoProblema}
             onChangeText={setDescricaoProblema}
@@ -215,6 +219,7 @@ const handlePesquisaHibrida = async () => {
 
           <TextInput
             placeholder="Solução"
+            placeholderTextColor={colors.placeholder}
             style={[styles.input, styles.textArea]}
             value={solucao}
             onChangeText={setSolucao}
@@ -226,6 +231,7 @@ const handlePesquisaHibrida = async () => {
             selectedValue={statusId}
             onValueChange={setStatusId}
             style={styles.picker}
+            dropdownIconColor={colors.muted}
           >
             <Picker.Item label="Selecione o Status" value="" />
             {statusList.map((status) => (
@@ -238,6 +244,7 @@ const handlePesquisaHibrida = async () => {
             selectedValue={tipoChamadoId}
             onValueChange={setTipoChamadoId}
             style={styles.picker}
+            dropdownIconColor={colors.muted}
           >
             <Picker.Item label="Selecione o Tipo de Chamado" value="" />
             {tiposChamado.map((tipo) => (
@@ -248,6 +255,7 @@ const handlePesquisaHibrida = async () => {
           <View style={styles.row}>
             <TextInput
               placeholder="Ramal ou Nome do Usuário"
+            placeholderTextColor={colors.placeholder}
               style={[styles.input, { flex: 1, marginRight: 8 }]}
               value={buscaGeral}
               onChangeText={setBuscaGeral}
@@ -265,10 +273,10 @@ const handlePesquisaHibrida = async () => {
 
           {setorInfo && (
           <View style={styles.infoBox}>
-            <Text>Setor: {setorInfo?.setor.name || "Não Encontrado"}</Text>
-            <Text>Ramal: {setorInfo?.ramal || "Não Encontrado"}</Text>
-            <Text>Usuário: {setorInfo?.usuario || "Não Encontrado"}</Text>
-            <Text>Andar: {setorInfo?.andar || "Não Encontrado"}</Text>
+            <Text style={styles.infoText}>Setor: {setorInfo?.setor.name || "Não Encontrado"}</Text>
+            <Text style={styles.infoText}>Ramal: {setorInfo?.ramal || "Não Encontrado"}</Text>
+            <Text style={styles.infoText}>Usuário: {setorInfo?.usuario || "Não Encontrado"}</Text>
+            <Text style={styles.infoText}>Andar: {setorInfo?.andar || "Não Encontrado"}</Text>
           </View>
           )}
 
@@ -278,14 +286,14 @@ const handlePesquisaHibrida = async () => {
             disabled={loading}
           >
             {loading ? (
-              <ActivityIndicator color="#fff" />
+              <ActivityIndicator color={colors.onPrimary} />
             ) : (
               <Text style={styles.buttonText}>Concluir OS</Text>
             )}
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.buttonClose} onPress={handleCloseModal}>
-            <Text style={styles.buttonText}>Fechar</Text>
+            <Text style={styles.buttonCloseText}>Fechar</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>
@@ -293,77 +301,100 @@ const handlePesquisaHibrida = async () => {
   );
 }
 
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    justifyContent: "center",
-  },
-  container: {
-    backgroundColor: "#fff",
-    margin: 20,
-    padding: 20,
-    borderRadius: 12,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 15,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 6,
-    padding: 10,
-    marginBottom: 12,
-    fontSize: 14,
-  },
-  textArea: {
-    minHeight: 80,
-    textAlignVertical: "top",
-  },
-  label: {
-    fontWeight: "600",
-    marginBottom: 4,
-  },
-  picker: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 6,
-    marginBottom: 12,
-  },
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 12,
-  },
-  infoBox: {
-    backgroundColor: "#f2f2f2",
-    padding: 10,
-    borderRadius: 6,
-    marginBottom: 12,
-  },
-  button: {
-    backgroundColor: "#4E3182",
-    padding: 12,
-    borderRadius: 6,
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  buttonSmall: {
-    backgroundColor: "#4E3182",
-    padding: 10,
-    borderRadius: 6,
-    alignItems: "center",
-  },
-  buttonClose: {
-    backgroundColor: "#888",
-    padding: 12,
-    borderRadius: 6,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-});
+const makeStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    overlay: {
+      flex: 1,
+      backgroundColor: c.overlay,
+      justifyContent: "center",
+    },
+    title: { fontSize: 18, marginBottom: 15, color: c.text, ...font("bold") },
+    label: { fontSize: 13, marginBottom: 6, color: c.body, ...font("medium") },
+    row: { flexDirection: "row", alignItems: "center", marginBottom: 12 },
+    input: {
+      borderWidth: 1,
+      borderColor: c.inputBorder,
+      borderRadius: radii.btn,
+      padding: 11,
+      marginBottom: 12,
+      fontSize: 14,
+      color: c.text,
+      backgroundColor: c.inputBg,
+      ...font("regular"),
+    },
+    textArea: { minHeight: 80, textAlignVertical: "top" },
+    pickerWrapper: {
+      borderWidth: 1,
+      borderColor: c.inputBorder,
+      borderRadius: radii.btn,
+      marginBottom: 12,
+      backgroundColor: c.inputBg,
+      overflow: "hidden",
+    },
+    picker: {
+      color: c.text,
+      backgroundColor: c.inputBg,
+      borderWidth: 1,
+      borderColor: c.inputBorder,
+      borderRadius: radii.btn,
+      marginBottom: 12,
+      minHeight: 48,
+      paddingHorizontal: 8,
+      fontSize: 14,
+    },
+    pickerInner: { color: c.text, backgroundColor: c.inputBg, borderWidth: 0, minHeight: 48, paddingHorizontal: 8, fontSize: 14 },
+    infoBox: {
+      backgroundColor: c.primarySoft,
+      borderWidth: 1,
+      borderColor: c.borderAccent,
+      padding: 12,
+      borderRadius: radii.btn,
+      marginBottom: 12,
+      gap: 2,
+    },
+    infoText: { color: c.body, fontSize: 13, ...font("regular") },
+    infoCard: {
+      padding: 10,
+      borderWidth: 1,
+      borderColor: c.border,
+      borderRadius: radii.btn,
+      marginBottom: 12,
+      backgroundColor: c.surface,
+    },
+    infoTitle: { color: c.text, marginBottom: 6, ...font("bold") },
+    button: {
+      backgroundColor: c.brand,
+      padding: 13,
+      borderRadius: radii.btn,
+      alignItems: "center",
+      marginBottom: 10,
+    },
+    buttonSmall: {
+      backgroundColor: c.brand,
+      paddingVertical: 11,
+      paddingHorizontal: 12,
+      borderRadius: radii.btn,
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 12,
+    },
+    buttonTextSmall: { color: c.onPrimary, fontSize: 13, ...font("bold") },
+    buttonClose: {
+      backgroundColor: "transparent",
+      borderWidth: 1,
+      borderColor: c.borderStrong,
+      padding: 12,
+      borderRadius: radii.btn,
+      alignItems: "center",
+    },
+    buttonText: { color: c.onPrimary, ...font("bold") },
+    buttonCloseText: { color: c.text, ...font("semibold") },
+    container: {
+      backgroundColor: c.card,
+      borderWidth: 1,
+      borderColor: c.border,
+      margin: 20,
+      padding: 20,
+      borderRadius: radii.card,
+    },
+  });

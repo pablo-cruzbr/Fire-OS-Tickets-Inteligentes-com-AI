@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   TextInput,
   ScrollView,
+  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Feather from "@expo/vector-icons/Feather";
@@ -22,6 +23,17 @@ import { api } from "../../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ModalDetailOrder } from "../../components/modalDetailOrder";
 import { useNavigation } from "@react-navigation/native";
+import { ThemeToggle } from "../../components/ThemeToggle";
+import {
+  font,
+  getPrioridadeColor as prioridadeColor,
+  getStatusColor as statusColorFor,
+  radii,
+  ThemeColors,
+  useTheme,
+  useThemedStyles,
+  withAlpha,
+} from "../../theme";
 
 export type OrdensDeServico = {
   id: string;
@@ -67,24 +79,6 @@ type Cliente = { id: string; name: string };
 type TipodeOrdem = { id: string; name: string };
 type Prioridade = { id: string; name: string };
 
-const STATUS_COLORS: Record<string, string> = {
-  "ABERTA": "#27AE60",
-  "EM ANDAMENTO": "#2980B9",
-  "CONCLUIDA": "#95A5A6",
-  "PAUSADA": "#F39C12",
-};
-
-function getStatusColor(name?: string | null): string {
-  return STATUS_COLORS[name?.trim().toUpperCase() ?? ""] ?? "#BDC3C7";
-}
-
-function getPrioridadeColor(name: string): string {
-  const l = name.toLowerCase();
-  if (l.includes("alta") || l.includes("urgent") || l.includes("crít")) return "#E74C3C";
-  if (l.includes("méd") || l.includes("med")) return "#F39C12";
-  return "#27AE60";
-}
-
 function timeAgo(dateStr?: string | null): string {
   if (!dateStr) return "";
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -101,6 +95,11 @@ function timeAgo(dateStr?: string | null): string {
 export default function Dashboard() {
   const navigation = useNavigation();
   const { signOut } = useContext(AuthContext);
+  const { colors, isDark } = useTheme();
+  const styles = useThemedStyles(makeStyles);
+  const getStatusColor = (name?: string | null) => statusColorFor(colors, name);
+  const getPrioridadeColor = (name: string) => prioridadeColor(colors, name);
+  const [searchFocused, setSearchFocused] = useState(false);
 
   const [ordensDeServico, setOrdensDeServico] = useState<OrdensDeServico[]>([]);
   const [filteredOrdens, setFilteredOrdens] = useState<OrdensDeServico[]>([]);
@@ -263,48 +262,69 @@ console.log("DADOS COMPLETOS:", JSON.stringify(response.data.controles, null, 2)
     <SafeAreaView style={styles.container}>
   
       <View style={styles.header}>
-        <Image source={require("../../assets/logoperfil2.png")} style={styles.profileImage} />
-        <Text style={styles.title}>Ordens de Serviço</Text>
-        <View style={styles.headerIcons}>
-          <SimpleLineIcons name="logout" size={20} color="#fff" style={styles.icon} onPress={signOut}/>
-          <Feather name="user" size={24} color="#fff" style={styles.icon} />
-          {loading ? (
-            <ActivityIndicator size="small" color="#fff" style={styles.icon} />
-          ) : (
-            <Ionicons
-              name="refresh"
-              size={22}
-              color="#fff"
-              style={styles.icon}
-              onPress={loadOrdens}
-            />
-          )}
+        <View style={styles.headerTop}>
+          <Image
+            source={
+              isDark
+                ? require("../../assets/fire-os-wordmark-white.png")
+                : require("../../assets/fire-os-wordmark-navy.png")
+            }
+            style={styles.wordmark}
+            accessibilityLabel="Fire OS"
+          />
+          <View style={styles.headerIcons}>
+            <ThemeToggle />
+            <TouchableOpacity style={styles.iconButton} onPress={loadOrdens} disabled={loading} activeOpacity={0.75}>
+              {loading ? (
+                <ActivityIndicator size="small" color={colors.text} />
+              ) : (
+                <Ionicons name="refresh" size={18} color={colors.text} />
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iconButton} onPress={signOut} activeOpacity={0.75}>
+              <SimpleLineIcons name="logout" size={16} color={colors.text} />
+            </TouchableOpacity>
+            <View style={styles.avatar}>
+              <Feather name="user" size={16} color={colors.onPrimary} />
+            </View>
+          </View>
         </View>
+        <Text style={styles.eyebrow}>PAINEL DO TÉCNICO</Text>
+        <Text style={styles.title}>Ordens de Serviço</Text>
+        <Text style={styles.subtitle}>
+          {filteredOrdens.length} {filteredOrdens.length === 1 ? "ordem" : "ordens"} na sua fila
+        </Text>
       </View>
 
-    
-      <TextInput
-        style={styles.input}
-        placeholder="Pesquisar por número da OS, Instituição ou Empresa"
-        value={search}
-        onChangeText={setSearch}
-      />
+      <View style={styles.searchRow}>
+        <View style={[styles.searchBox, searchFocused && styles.searchBoxFocused]}>
+          <Ionicons name="search" size={16} color={colors.muted} />
+          <TextInput
+            style={styles.input}
+            placeholder="Pesquisar por número da OS, Instituição ou Empresa"
+            placeholderTextColor={colors.placeholder}
+            value={search}
+            onChangeText={setSearch}
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => setSearchFocused(false)}
+          />
+        </View>
 
-    
-      <TouchableOpacity
-        style={styles.filterButton}
-        onPress={() => setFilterModalVisible(true)}
-        activeOpacity={0.8}
-      >
-        <Ionicons name="options-outline" size={18} color="#4E3182" />
-        <Text style={styles.filterButtonText}>Filtros</Text>
-        {activeFiltersCount > 0 && (
-          <View style={styles.filterBadge}>
-            <Text style={styles.filterBadgeText}>{activeFiltersCount}</Text>
-          </View>
-        )}
-      </TouchableOpacity>
-     
+        <TouchableOpacity
+          style={[styles.filterButton, activeFiltersCount > 0 && styles.filterButtonActive]}
+          onPress={() => setFilterModalVisible(true)}
+          activeOpacity={0.8}
+        >
+          <Ionicons name="options-outline" size={18} color={colors.primaryText} />
+          <Text style={styles.filterButtonText}>Filtros</Text>
+          {activeFiltersCount > 0 && (
+            <View style={styles.filterBadge}>
+              <Text style={styles.filterBadgeText}>{activeFiltersCount}</Text>
+            </View>
+          )}
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.statusRow}>
         {statusList.map((status) => {
           const active =
@@ -345,7 +365,8 @@ console.log("DADOS COMPLETOS:", JSON.stringify(response.data.controles, null, 2)
         {/* Linha 1: número + badge de status */}
         <View style={styles.cardRowSpaced}>
           <Text style={styles.cardNumber}>OS #{item?.numeroOS ?? "N/A"}</Text>
-          <View style={[styles.statusBadge, { backgroundColor: statusColor + "22" }]}>
+          <View style={[styles.statusBadge, { backgroundColor: withAlpha(statusColor, 0.14), borderColor: withAlpha(statusColor, 0.32) }]}>
+            <View style={[styles.statusDot, { backgroundColor: statusColor }]} />
             <Text style={[styles.statusBadgeText, { color: statusColor }]}>
               {item?.statusOrdemdeServico?.name ?? "—"}
             </Text>
@@ -355,16 +376,17 @@ console.log("DADOS COMPLETOS:", JSON.stringify(response.data.controles, null, 2)
         {/* Local do chamado */}
         {!!local && (
           <View style={styles.cardRowInfo}>
-            <Ionicons name="business" size={14} color="#4E3182" />
+            <Ionicons name="business-outline" size={14} color={colors.primaryText} />
             <Text style={styles.cardLocalText} numberOfLines={1}>{local}</Text>
           </View>
         )}
 
         {/* Prioridade */}
         {item?.prioridade?.name && (
-          <View style={[styles.priorityBadge, { backgroundColor: getPrioridadeColor(item.prioridade.name) + "18" }]}>
+          <View style={[styles.priorityBadge, { backgroundColor: withAlpha(getPrioridadeColor(item.prioridade.name), 0.12) }]}>
+            <Ionicons name="flag-outline" size={11} color={getPrioridadeColor(item.prioridade.name)} />
             <Text style={[styles.priorityBadgeText, { color: getPrioridadeColor(item.prioridade.name) }]}>
-              ⚠  {item.prioridade.name}
+              {item.prioridade.name}
             </Text>
           </View>
         )}
@@ -372,7 +394,7 @@ console.log("DADOS COMPLETOS:", JSON.stringify(response.data.controles, null, 2)
         {/* Descrição do problema */}
         {!!item?.descricaodoProblemaouSolicitacao && (
           <View style={styles.cardRowInfo}>
-            <Ionicons name="chatbubble-outline" size={13} color="#888" />
+            <Ionicons name="chatbubble-outline" size={13} color={colors.muted} />
             <Text style={styles.cardProblemText} numberOfLines={1}>
               {item.descricaodoProblemaouSolicitacao}
             </Text>
@@ -381,7 +403,7 @@ console.log("DADOS COMPLETOS:", JSON.stringify(response.data.controles, null, 2)
 
         {/* Data */}
         <View style={styles.cardRowInfo}>
-          <Ionicons name="time-outline" size={12} color="#bbb" />
+          <Ionicons name="time-outline" size={12} color={colors.muted} />
           <Text style={styles.cardDateText}>{timeAgo(item?.created_at)}</Text>
         </View>
 
@@ -393,7 +415,7 @@ console.log("DADOS COMPLETOS:", JSON.stringify(response.data.controles, null, 2)
         ListEmptyComponent={
           !loading ? (
             <View style={styles.emptyContainer}>
-              <Ionicons name="document-text-outline" size={52} color="#ccc" />
+              <Ionicons name="document-text-outline" size={52} color={colors.muted} />
               <Text style={styles.emptyTitle}>Nenhuma OS encontrada</Text>
               <Text style={styles.emptySubtitle}>
                 {search || statusFilter || activeFiltersCount > 0
@@ -423,7 +445,7 @@ console.log("DADOS COMPLETOS:", JSON.stringify(response.data.controles, null, 2)
         onPress={() => navigation.navigate("ListOrdemdeServicoInterna" as never)}
         activeOpacity={0.7}
       >
-        <MaterialCommunityIcons name="form-select" size={30} color="#fff" />
+        <MaterialCommunityIcons name="form-select" size={26} color={colors.onPrimary} />
       </TouchableOpacity>
 
       {/* Modal de filtros — bottom sheet */}
@@ -462,6 +484,10 @@ console.log("DADOS COMPLETOS:", JSON.stringify(response.data.controles, null, 2)
               selectedTextStyle={styles.dropdownSelected}
               inputSearchStyle={styles.dropdownSearchInput}
               containerStyle={styles.dropdownContainer}
+              itemTextStyle={styles.dropdownItemText}
+              itemContainerStyle={styles.dropdownItem}
+              activeColor={colors.primarySoft}
+              iconColor={colors.muted}
               data={[{ label: "Todos os tipos", value: "" }, ...tiposOrdem.map(t => ({ label: t.name, value: t.id }))]}
               labelField="label"
               valueField="value"
@@ -480,6 +506,10 @@ console.log("DADOS COMPLETOS:", JSON.stringify(response.data.controles, null, 2)
               selectedTextStyle={styles.dropdownSelected}
               inputSearchStyle={styles.dropdownSearchInput}
               containerStyle={styles.dropdownContainer}
+              itemTextStyle={styles.dropdownItemText}
+              itemContainerStyle={styles.dropdownItem}
+              activeColor={colors.primarySoft}
+              iconColor={colors.muted}
               data={[{ label: "Todas as instituições", value: "" }, ...instituicoes.map(i => ({ label: i.name, value: i.id }))]}
               labelField="label"
               valueField="value"
@@ -498,6 +528,10 @@ console.log("DADOS COMPLETOS:", JSON.stringify(response.data.controles, null, 2)
               selectedTextStyle={styles.dropdownSelected}
               inputSearchStyle={styles.dropdownSearchInput}
               containerStyle={styles.dropdownContainer}
+              itemTextStyle={styles.dropdownItemText}
+              itemContainerStyle={styles.dropdownItem}
+              activeColor={colors.primarySoft}
+              iconColor={colors.muted}
               data={[{ label: "Todos os clientes", value: "" }, ...clientes.map(c => ({ label: c.name, value: c.id }))]}
               labelField="label"
               valueField="value"
@@ -516,6 +550,10 @@ console.log("DADOS COMPLETOS:", JSON.stringify(response.data.controles, null, 2)
               selectedTextStyle={styles.dropdownSelected}
               inputSearchStyle={styles.dropdownSearchInput}
               containerStyle={styles.dropdownContainer}
+              itemTextStyle={styles.dropdownItemText}
+              itemContainerStyle={styles.dropdownItem}
+              activeColor={colors.primarySoft}
+              iconColor={colors.muted}
               data={[{ label: "Todas as prioridades", value: "" }, ...prioridades.map(p => ({ label: p.name, value: p.id }))]}
               labelField="label"
               valueField="value"
@@ -542,307 +580,247 @@ console.log("DADOS COMPLETOS:", JSON.stringify(response.data.controles, null, 2)
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F8F8F8" },
-  header: {
-    backgroundColor: "#4E3182",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 15,
-    paddingTop: 40,
-    paddingBottom: 20,
-  },
-  profileImage: { width: 35, height: 35, borderRadius: 50 },
-  title: { color: "#fff", fontSize: 20, fontWeight: "700", flex: 1, textAlign: "center" },
-  headerIcons: { flexDirection: "row", alignItems: "center" },
-  icon: { marginLeft: 15 },
-  input: {
-    marginHorizontal: 10,
-    marginTop: 10,
-    marginBottom: 5,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    backgroundColor: "#fff",
-  },
-  filterRow: { flexDirection: "row", marginHorizontal: 10, marginBottom: 10 },
-  dropdown: {
-    height: 48,
-    backgroundColor: "#F4F4F8",
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    borderWidth: 1,
-    borderColor: "#E0E0E0",
-    marginTop: 6,
-    marginBottom: 4,
-  },
-  dropdownPlaceholder: {
-    fontSize: 13,
-    color: "#aaa",
-  },
-  dropdownSelected: {
-    fontSize: 13,
-    color: "#0F1431",
-    fontWeight: "600",
-  },
-  dropdownSearchInput: {
-    height: 40,
-    fontSize: 13,
-    borderRadius: 8,
-    borderColor: "#ddd",
-  },
-  dropdownContainer: {
-    borderRadius: 10,
-    borderColor: "#ddd",
-    elevation: 4,
-  },
-  statusRow: { flexDirection: "row", paddingHorizontal: 10, marginBottom: 10, flexWrap: "wrap" },
-  statusButton: {
-    width: 100,
-    height: 30,
-    backgroundColor: "#eee",
-    borderRadius: 20,
-    marginRight: 7,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  statusButtonActive: { backgroundColor: "#4E3182" },
-  statusText: { fontSize: 11, color: "#333", fontWeight: "600" },
-  statusTextActive: { color: "#fff" },
-  card: {
-    flexDirection: "row",
-    backgroundColor: "#fff",
-    marginHorizontal: 10,
-    marginTop: 9,
-    borderRadius: 10,
-    overflow: "hidden",
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-  },
-  cardAccent: {
-    width: 4,
-    alignSelf: "stretch",
-  },
-  cardBody: {
-    flex: 1,
-    paddingVertical: 13,
-    paddingHorizontal: 13,
-    gap: 5,
-  },
-  cardRowSpaced: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 2,
-  },
-  cardNumber: {
-    fontSize: 14,
-    fontWeight: "800",
-    color: "#0F1431",
-  },
-  statusBadge: {
-    borderRadius: 20,
-    paddingHorizontal: 9,
-    paddingVertical: 3,
-  },
-  statusBadgeText: {
-    fontSize: 10,
-    fontWeight: "700",
-    textTransform: "uppercase",
-    letterSpacing: 0.4,
-  },
-  cardRowInfo: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 5,
-  },
-  cardInfoText: {
-    fontSize: 12,
-    color: "#555",
-    flex: 1,
-  },
-  cardLocalText: {
-    fontSize: 13,
-    fontWeight: "700",
-    color: "#2C1F5E",
-    flex: 1,
-  },
-  priorityBadge: {
-    alignSelf: "flex-start",
-    borderRadius: 6,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    marginTop: 1,
-  },
-  priorityBadgeText: {
-    fontSize: 11,
-    fontWeight: "700",
-  },
-  cardProblemText: {
-    fontSize: 12,
-    color: "#666",
-    flex: 1,
-    fontStyle: "italic",
-  },
-  cardDateText: {
-    fontSize: 11,
-    color: "#bbb",
-  },
-  fab: {
-    position: "absolute",
-    bottom: 120,
-    right: 20,
-    backgroundColor: "#4E3182",
-    width: 55,
-    height: 55,
-    borderRadius: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    elevation: 6,
-    zIndex: 99,
-  },
-  fabSecondary: {
-    position: "absolute",
-    bottom: 50,
-    right: 20,
-    backgroundColor: "#4E3182",
-    width: 55,
-    height: 55,
-    borderRadius: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    elevation: 4,
-  },
-  fabLogout: {
-    position: "absolute",
-    bottom: 115,
-    right: 20,
-    backgroundColor: "#4E3182",
-    width: 55,
-    height: 55,
-    borderRadius: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    elevation: 4,
-  },
+const makeStyles = (c: ThemeColors) => {
+  const dark = c.mode === "dark";
+  return StyleSheet.create({
+    container: { flex: 1, backgroundColor: c.background },
+    header: {
+      backgroundColor: c.header,
+      paddingHorizontal: 16,
+      paddingTop: 44,
+      paddingBottom: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: c.border,
+    },
+    headerTop: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 18 },
+    wordmark: { width: 96, height: 20, resizeMode: "contain" },
+    headerIcons: { flexDirection: "row", alignItems: "center", gap: 8 },
+    iconButton: {
+      width: 38,
+      height: 38,
+      borderRadius: radii.btn,
+      borderWidth: 1,
+      borderColor: c.border,
+      backgroundColor: dark ? "rgba(255,255,255,0.04)" : c.surface,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    avatar: {
+      width: 34,
+      height: 34,
+      borderRadius: 17,
+      backgroundColor: c.brand,
+      borderWidth: 1,
+      borderColor: withAlpha(c.periwinkle, 0.6),
+      alignItems: "center",
+      justifyContent: "center",
+      marginLeft: 2,
+    },
+    eyebrow: { color: c.eyebrow, fontSize: 11, letterSpacing: 1.8, ...font("semibold") },
+    title: { color: c.text, fontSize: 24, letterSpacing: -0.5, marginTop: 4, ...font("bold") },
+    subtitle: { color: c.body, fontSize: 13, marginTop: 2, ...font("regular") },
 
-  emptyContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 80,
-    gap: 10,
-  },
-  emptyTitle: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#aaa",
-  },
-  emptySubtitle: {
-    fontSize: 13,
-    color: "#bbb",
-    textAlign: "center",
-    paddingHorizontal: 40,
-  },
+    searchRow: { flexDirection: "row", alignItems: "center", gap: 8, marginHorizontal: 16, marginTop: 14, marginBottom: 10 },
+    searchBox: {
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+      height: 44,
+      paddingHorizontal: 12,
+      borderWidth: 1,
+      borderColor: c.inputBorder,
+      borderRadius: radii.btn,
+      backgroundColor: c.inputBg,
+    },
+    searchBoxFocused: { borderColor: c.inputFocus },
+    input: {
+      flex: 1,
+      height: "100%",
+      color: c.text,
+      fontSize: 13,
+      ...font("regular"),
+      ...(Platform.OS === "web" ? ({ outlineStyle: "none" } as any) : null),
+    },
 
-  // Botão de filtro
-  filterButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    alignSelf: "flex-end",
-    marginHorizontal: 10,
-    marginBottom: 8,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderWidth: 1.5,
-    borderColor: "#4E3182",
-    backgroundColor: "#fff",
-    gap: 6,
-  },
-  filterButtonText: {
-    color: "#4E3182",
-    fontWeight: "700",
-    fontSize: 13,
-  },
-  filterBadge: {
-    backgroundColor: "#4E3182",
-    borderRadius: 10,
-    minWidth: 18,
-    height: 18,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 4,
-  },
-  filterBadgeText: {
-    color: "#fff",
-    fontSize: 11,
-    fontWeight: "700",
-  },
+    filterButton: {
+      flexDirection: "row",
+      alignItems: "center",
+      height: 44,
+      paddingHorizontal: 12,
+      borderRadius: radii.btn,
+      borderWidth: 1,
+      borderColor: c.borderAccent,
+      backgroundColor: c.primarySoft,
+      gap: 6,
+    },
+    filterButtonActive: { borderColor: c.primary },
+    filterButtonText: { color: c.primaryText, fontSize: 13, ...font("semibold") },
+    filterBadge: {
+      backgroundColor: c.brand,
+      borderRadius: 9,
+      minWidth: 18,
+      height: 18,
+      justifyContent: "center",
+      alignItems: "center",
+      paddingHorizontal: 4,
+    },
+    filterBadgeText: { color: c.onPrimary, fontSize: 11, ...font("bold") },
 
-  // Bottom sheet de filtros
-  filterOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.45)",
-  },
-  filterSheet: {
-    backgroundColor: "#fff",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingHorizontal: 16,
-    paddingBottom: 30,
-    paddingTop: 10,
-    maxHeight: "85%",
-  },
-  filterHandle: {
-    width: 40,
-    height: 4,
-    backgroundColor: "#ddd",
-    borderRadius: 2,
-    alignSelf: "center",
-    marginBottom: 14,
-  },
-  filterHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  filterTitle: {
-    fontSize: 17,
-    fontWeight: "700",
-    color: "#0F1431",
-  },
-  filterClearText: {
-    fontSize: 13,
-    color: "#E74C3C",
-    fontWeight: "600",
-  },
-  filterLabel: {
-    fontSize: 12,
-    fontWeight: "700",
-    color: "#555",
-    marginTop: 14,
-    marginBottom: 2,
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-  },
-  filterApplyButton: {
-    marginTop: 14,
-    backgroundColor: "#4E3182",
-    borderRadius: 10,
-    paddingVertical: 14,
-    alignItems: "center",
-  },
-  filterApplyText: {
-    color: "#fff",
-    fontWeight: "700",
-    fontSize: 15,
-  },
-});
+    statusRow: { flexDirection: "row", paddingHorizontal: 16, marginBottom: 4, flexWrap: "wrap", gap: 8 },
+    statusButton: {
+      height: 32,
+      paddingHorizontal: 14,
+      backgroundColor: dark ? "rgba(255,255,255,0.03)" : c.surface,
+      borderWidth: 1,
+      borderColor: c.border,
+      borderRadius: radii.pill,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    statusButtonActive: { backgroundColor: c.brand, borderColor: withAlpha(c.periwinkle, 0.6) },
+    statusText: { fontSize: 11, color: c.body, letterSpacing: 0.4, ...font("semibold") },
+    statusTextActive: { color: c.onPrimary },
+
+    card: {
+      flexDirection: "row",
+      backgroundColor: c.card,
+      marginHorizontal: 16,
+      marginTop: 10,
+      borderRadius: radii.card,
+      borderWidth: 1,
+      borderColor: c.border,
+      overflow: "hidden",
+      shadowColor: dark ? "#000" : "#0B1033",
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: dark ? 0.3 : 0.06,
+      shadowRadius: 16,
+      elevation: 2,
+    },
+    cardAccent: { width: 3, alignSelf: "stretch" },
+    cardBody: { flex: 1, paddingVertical: 14, paddingHorizontal: 14, gap: 6 },
+    cardRowSpaced: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 2 },
+    cardNumber: { fontSize: 15, color: c.text, letterSpacing: -0.2, ...font("extrabold") },
+    statusBadge: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 5,
+      borderRadius: radii.pill,
+      borderWidth: 1,
+      paddingHorizontal: 9,
+      paddingVertical: 3,
+    },
+    statusDot: { width: 6, height: 6, borderRadius: 3 },
+    statusBadgeText: { fontSize: 10, textTransform: "uppercase", letterSpacing: 0.5, ...font("bold") },
+    cardRowInfo: { flexDirection: "row", alignItems: "center", gap: 6 },
+    cardLocalText: { fontSize: 13, color: c.text, flex: 1, ...font("semibold") },
+    priorityBadge: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 4,
+      alignSelf: "flex-start",
+      borderRadius: radii.chip,
+      paddingHorizontal: 7,
+      paddingVertical: 3,
+      marginTop: 1,
+    },
+    priorityBadgeText: { fontSize: 11, ...font("bold") },
+    cardProblemText: { fontSize: 12, color: c.body, flex: 1, ...font("regular") },
+    cardDateText: { fontSize: 11, color: c.muted, ...font("medium") },
+
+    fabSecondary: {
+      position: "absolute",
+      bottom: 40,
+      right: 20,
+      backgroundColor: c.brand,
+      width: 56,
+      height: 56,
+      borderRadius: 28,
+      borderWidth: 1,
+      borderColor: withAlpha(c.periwinkle, 0.6),
+      justifyContent: "center",
+      alignItems: "center",
+      shadowColor: c.brand,
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.45,
+      shadowRadius: 16,
+      elevation: 6,
+    },
+
+    emptyContainer: { flex: 1, alignItems: "center", justifyContent: "center", paddingTop: 80, gap: 10 },
+    emptyTitle: { fontSize: 16, color: c.text, ...font("bold") },
+    emptySubtitle: { fontSize: 13, color: c.muted, textAlign: "center", paddingHorizontal: 40, ...font("regular") },
+
+    filterOverlay: { flex: 1, backgroundColor: c.overlay },
+    filterSheet: {
+      backgroundColor: c.card,
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+      borderWidth: 1,
+      borderBottomWidth: 0,
+      borderColor: c.border,
+      paddingHorizontal: 16,
+      paddingBottom: 30,
+      paddingTop: 10,
+      maxHeight: "85%",
+    },
+    filterHandle: {
+      width: 40,
+      height: 4,
+      backgroundColor: c.borderStrong,
+      borderRadius: 2,
+      alignSelf: "center",
+      marginBottom: 14,
+    },
+    filterHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 10 },
+    filterTitle: { fontSize: 18, color: c.text, ...font("bold") },
+    filterClearText: { fontSize: 13, color: c.errorText, ...font("semibold") },
+    filterLabel: {
+      fontSize: 11,
+      color: c.eyebrow,
+      marginTop: 14,
+      marginBottom: 2,
+      textTransform: "uppercase",
+      letterSpacing: 1.2,
+      ...font("semibold"),
+    },
+    dropdown: {
+      height: 48,
+      backgroundColor: c.inputBg,
+      borderRadius: radii.btn,
+      paddingHorizontal: 14,
+      borderWidth: 1,
+      borderColor: c.inputBorder,
+      marginTop: 6,
+      marginBottom: 4,
+    },
+    dropdownPlaceholder: { fontSize: 13, color: c.placeholder, ...font("regular") },
+    dropdownSelected: { fontSize: 13, color: c.text, ...font("semibold") },
+    dropdownSearchInput: {
+      height: 40,
+      fontSize: 13,
+      borderRadius: radii.btn,
+      borderColor: c.border,
+      color: c.text,
+      backgroundColor: c.inputBg,
+    },
+    dropdownContainer: {
+      borderRadius: radii.btn,
+      borderColor: c.border,
+      backgroundColor: c.surface,
+      overflow: "hidden",
+      elevation: 4,
+    },
+    dropdownItem: { backgroundColor: c.surface },
+    dropdownItemText: { fontSize: 13, color: c.text, ...font("regular") },
+    filterApplyButton: {
+      marginTop: 16,
+      backgroundColor: c.brand,
+      borderRadius: radii.btn,
+      paddingVertical: 14,
+      alignItems: "center",
+    },
+    filterApplyText: { color: c.onPrimary, fontSize: 15, ...font("semibold") },
+  });
+};
+
