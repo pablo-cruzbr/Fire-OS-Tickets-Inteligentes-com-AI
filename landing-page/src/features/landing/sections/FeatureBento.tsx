@@ -1,32 +1,25 @@
 import Image from "next/image";
 import Link from "next/link";
-import { TbArrowUpRight, TbDeviceMobile, TbSparkles } from "react-icons/tb";
+import { TbArrowUpRight, TbDeviceMobile } from "react-icons/tb";
+import { AutoVideo } from "@/components/media/AutoVideo";
 import { SectionHeading } from "@/components/ui";
 import { agnis, features, featuresSection } from "../content";
+import { agnisDemo } from "../media";
 
-/** Pure-CSS chat mock for the Agnis tile. */
-function AgnisChatMock() {
+/** Real recording of the Agnis panel, cropped to the chat, inside a glass frame. */
+function AgnisDemo() {
   return (
-    <div aria-hidden className="relative mt-8 flex flex-col gap-3 rounded-card border border-border bg-glass p-4 backdrop-blur-[8px] sm:p-5">
-      <div className="flex items-center gap-2 border-b border-border pb-3 text-xs font-semibold text-link">
-        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[image:var(--gradient-brand)] text-[13px] text-white">
-          <TbSparkles />
-        </span>
-        Agnis
-        <span className="ml-auto flex items-center gap-1.5 font-normal text-muted">
-          <span className="h-1.5 w-1.5 rounded-full bg-success" /> online
-        </span>
-      </div>
-      <div className="ml-auto max-w-[85%] rounded-card rounded-br-chip bg-[image:var(--gradient-brand)] px-4 py-2.5 text-sm text-white">
-        Quantos chamados estão abertos agora?
-      </div>
-      <div className="mr-auto max-w-[90%] rounded-card rounded-bl-chip border border-border bg-fill-2 px-4 py-3 text-sm text-link/90">
-        Há <strong className="font-semibold text-link">12 chamados abertos</strong>, 3 com prioridade alta.
-        <div className="mt-3 flex flex-wrap gap-2">
-          <span className="rounded-chip border border-border-accent bg-badge px-2.5 py-1 text-xs text-eyebrow">3 alta prioridade</span>
-          <span className="rounded-chip border border-border-accent bg-badge px-2.5 py-1 text-xs text-eyebrow">Próximo passo: agendar técnico</span>
-        </div>
-      </div>
+    <div className="dark relative mt-8 overflow-hidden rounded-card border border-border bg-background">
+      <AutoVideo
+        src={agnisDemo.src}
+        poster={agnisDemo.poster}
+        mode="inview"
+        preload="metadata"
+        label={agnisDemo.title}
+        showToggle
+        className="aspect-[700/780] w-full"
+        videoClassName="h-full w-full object-cover object-top"
+      />
     </div>
   );
 }
@@ -49,7 +42,7 @@ export function FeatureBento() {
               </span>
               <h3 className="mt-5 text-2xl font-semibold text-link sm:text-[32px]">{agnis.title}</h3>
               <p className="mt-3 max-w-md text-base leading-normal text-bodytext sm:text-lg">{agnis.text}</p>
-              <AgnisChatMock />
+              <AgnisDemo />
             </div>
           </article>
 

@@ -63,3 +63,10 @@ export const dashboardTour = {
   poster: "/videos/dashboard-tour.png",
   title: "Tour pelo painel do Fire OS",
 } as const;
+
+/** Agnis panel recording (cropped to the chat), shown in the "Recursos" bento. */
+export const agnisDemo = {
+  src: "/videos/agnis-ai.webm",
+  poster: "/videos/agnis-ai.png",
+  title: "Agnis respondendo perguntas sobre chamados e técnicos",
+} as const;
