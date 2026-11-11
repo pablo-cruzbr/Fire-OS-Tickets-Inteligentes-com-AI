@@ -1,39 +1,52 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { TbMoon, TbSun } from "react-icons/tb";
+import { cn } from "@/lib/cn";
+import { THEME_COLOR, THEME_STORAGE_KEY } from "./theme";
 
-const STORAGE_KEY = "ordemnext-theme";
-
-/** Inline script for <head>: applies the saved theme before first paint. */
-export const themeScript = `(function(){try{var t=localStorage.getItem("${STORAGE_KEY}");if(t==="dark"||(!t&&window.matchMedia("(prefers-color-scheme: dark)").matches)){document.documentElement.classList.add("dark")}}catch(e){}})();`;
-
-export function ThemeToggle() {
-  const [dark, setDark] = useState(false);
-
-  useEffect(() => {
-    setDark(document.documentElement.classList.contains("dark"));
-  }, []);
-
-  function toggle() {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle("dark", next);
-    try {
-      localStorage.setItem(STORAGE_KEY, next ? "dark" : "light");
-    } catch {
-      // storage unavailable (private mode): the choice just isn't remembered
-    }
+function toggleTheme() {
+  const root = document.documentElement;
+  const dark = !root.classList.contains("dark");
+  root.classList.toggle("dark", dark);
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", dark ? THEME_COLOR.dark : THEME_COLOR.light);
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, dark ? "dark" : "light");
+  } catch {
+    // storage unavailable (private mode): the choice just isn't remembered
   }
+}
 
+type ThemeToggleProps = {
+  /** Full-width row with a text label (for the mobile menu). */
+  withLabel?: boolean;
+  className?: string;
+};
+
+/**
+ * Sun/moon switch. The icon is picked with the `dark:` variant instead of
+ * React state, so server and client markup always match (no hydration flash).
+ */
+export function ThemeToggle({ withLabel = false, className }: ThemeToggleProps) {
   return (
     <button
       type="button"
-      onClick={toggle}
-      aria-label={dark ? "Usar tema claro" : "Usar tema escuro"}
-      className="flex h-10 w-10 items-center justify-center rounded-full text-xl text-link transition-colors hover:bg-lightprimary hover:text-primary"
+      onClick={toggleTheme}
+      aria-label="Alternar tema claro/escuro"
+      title="Alternar tema claro/escuro"
+      className={cn(
+        "flex items-center rounded-btn border border-border bg-fill-2 text-link transition-colors hover:border-border-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-2",
+        withLabel ? "h-11 w-full gap-3 px-3 text-sm font-semibold" : "h-10 w-10 justify-center text-xl",
+        className,
+      )}
     >
-      {dark ? <TbSun /> : <TbMoon />}
+      <TbSun aria-hidden className="hidden shrink-0 dark:block" />
+      <TbMoon aria-hidden className="shrink-0 dark:hidden" />
+      {withLabel ? (
+        <span aria-hidden>
+          <span className="hidden dark:inline">Usar tema claro</span>
+          <span className="dark:hidden">Usar tema escuro</span>
+        </span>
+      ) : null}
     </button>
   );
 }

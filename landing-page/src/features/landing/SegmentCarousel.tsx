@@ -2,25 +2,37 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { TbChevronLeft, TbChevronRight, TbCircleArrowRight } from "react-icons/tb";
+import { TbArrowUpRight, TbChevronLeft, TbChevronRight } from "react-icons/tb";
 import { cn } from "@/lib/cn";
 import { segments } from "./segments";
 
 const withPhoto = segments.filter((segment) => segment.image);
 const loop = [...withPhoto, ...withPhoto];
 /** Continuous drift speed, in px per second. */
-const SPEED = 45;
+const SPEED = 40;
+
+/** Selects the segment in <SegmentShowcase/>; the link's href then scrolls to it. */
+function selectSegment(segmentId: string) {
+  return () => {
+    document.getElementById(`tab-${segmentId}`)?.click();
+  };
+}
+
+const arrowClass =
+  "glass flex h-10 w-10 items-center justify-center rounded-full text-link/80 transition-colors hover:border-periwinkle/50 hover:text-link focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-2";
 
 /**
- * Segment photo carousel in the style of housecallpro.com: compact landscape
- * cards drifting continuously (seamless loop), arrows and dots underneath.
- * Pauses while hovered; arrows/dots glide to a card and the drift resumes.
+ * Segment photo carousel: landscape cards drifting continuously (seamless
+ * loop, the list is rendered twice). Pauses while hovered or focused;
+ * arrows/dots glide to a card and the drift resumes. With
+ * prefers-reduced-motion there is no drift, only the arrow/dot glides.
  */
 export function SegmentCarousel() {
   const trackRef = useRef<HTMLUListElement>(null);
   const offset = useRef(0);
   const target = useRef<number | null>(null);
-  const hovered = useRef(false);
+  const paused = useRef(false);
+  const reducedMotion = useRef(false);
   const [active, setActive] = useState(0);
 
   /** Width of one card plus the gap. */
@@ -29,6 +41,14 @@ export function SegmentCarousel() {
     const card = track?.querySelector("li");
     if (!track || !card) return 0;
     return card.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || "0");
+  }, []);
+
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    reducedMotion.current = query.matches;
+    const onChange = (event: MediaQueryListEvent) => (reducedMotion.current = event.matches);
+    query.addEventListener("change", onChange);
+    return () => query.removeEventListener("change", onChange);
   }, []);
 
   useEffect(() => {
@@ -50,11 +70,11 @@ export function SegmentCarousel() {
             offset.current = target.current;
             target.current = null;
           }
-        } else if (!hovered.current) {
+        } else if (!paused.current && !reducedMotion.current) {
           offset.current += SPEED * dt;
         }
 
-        // seamless loop: the list is rendered twice
+        // seamless loop: wrap by one full copy of the list
         if (offset.current >= half) {
           offset.current -= half;
           if (target.current !== null) target.current -= half;
@@ -78,7 +98,7 @@ export function SegmentCarousel() {
     return () => cancelAnimationFrame(frame);
   }, [step]);
 
-  /** Glide to a card: `delta` cards from the current position. */
+  /** Glide `delta` cards from the current position. */
   function glide(delta: number) {
     const size = step();
     if (!size) return;
@@ -94,14 +114,16 @@ export function SegmentCarousel() {
 
   return (
     <div
-      onMouseEnter={() => (hovered.current = true)}
-      onMouseLeave={() => (hovered.current = false)}
+      onMouseEnter={() => (paused.current = true)}
+      onMouseLeave={() => (paused.current = false)}
+      onFocus={() => (paused.current = true)}
+      onBlur={() => (paused.current = false)}
     >
-      <div className="overflow-hidden">
+      <div className="relative overflow-hidden">
         <ul
           ref={trackRef}
           aria-label="Segmentos atendidos"
-          className="flex w-max gap-4 px-4 will-change-transform sm:px-6 lg:px-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))]"
+          className="flex w-max gap-4 px-4 py-3 will-change-transform md:gap-5 md:px-8 lg:px-[max(48px,calc((100vw-1440px)/2+48px))]"
         >
           {loop.map((segment, index) => {
             const clone = index >= withPhoto.length;
@@ -109,43 +131,53 @@ export function SegmentCarousel() {
               <li
                 key={`${segment.id}-${index}`}
                 aria-hidden={clone || undefined}
-                className="group relative h-36 w-60 shrink-0 overflow-hidden rounded-xl border border-white/10 shadow-lg sm:h-40 sm:w-64"
+                className="dark group relative h-48 w-[72vw] max-w-72 shrink-0 overflow-hidden rounded-card border border-border bg-card transition-[border-color,box-shadow] duration-300 hover:border-periwinkle/60 hover:shadow-[0_0_40px_-12px_var(--periwinkle)] sm:h-56 sm:w-80 sm:max-w-none"
               >
                 <a
-                  href="#segmentos"
+                  href="#segment-showcase"
+                  onClick={selectSegment(segment.id)}
                   tabIndex={clone ? -1 : undefined}
-                  className="relative block h-full w-full"
-                  aria-label={segment.name}
+                  aria-label={`Ver como o Fire OS atende ${segment.short}`}
+                  className="relative block h-full w-full focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-accent-2"
                 >
                   <Image
                     src={segment.image!}
                     alt=""
                     fill
-                    sizes="256px"
+                    sizes="(min-width: 640px) 320px, 72vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <span className="absolute inset-0 bg-gradient-to-t from-[#140d2b]/90 via-[#140d2b]/25 to-transparent" />
-                  <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-3.5">
-                    <span className="text-base font-bold leading-tight text-white">{segment.short}</span>
-                    <TbCircleArrowRight className="h-6 w-6 shrink-0 text-white/90" />
+                  <span
+                    aria-hidden
+                    className="absolute inset-0 bg-gradient-to-t from-[#000214] via-[#000214]/45 to-transparent"
+                  />
+                  <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4 sm:p-5">
+                    <span className="min-w-0">
+                      <span className="block text-lg font-semibold leading-tight text-white">{segment.short}</span>
+                      <span className="mt-1 block truncate text-xs leading-normal text-bodytext sm:text-sm">
+                        {segment.records[0]}
+                      </span>
+                    </span>
+                    <TbArrowUpRight
+                      aria-hidden
+                      className="h-5 w-5 shrink-0 text-periwinkle transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                    />
                   </span>
                 </a>
               </li>
             );
           })}
         </ul>
+        {/* Edge fades so cards drift in/out of the page background. Photo cards are dark-scoped (white text on the photo fade). */}
+        <div aria-hidden className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-background to-transparent md:w-24" />
+        <div aria-hidden className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background to-transparent md:w-24" />
       </div>
 
-      <div className="mt-5 flex items-center justify-center gap-4">
-        <button
-          type="button"
-          onClick={() => glide(-1)}
-          aria-label="Segmento anterior"
-          className="flex h-8 w-8 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/10 hover:text-white"
-        >
+      <div className="mt-6 flex items-center justify-center gap-4">
+        <button type="button" onClick={() => glide(-1)} aria-label="Segmento anterior" className={arrowClass}>
           <TbChevronLeft className="h-5 w-5" />
         </button>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-center gap-2">
           {withPhoto.map((segment, index) => (
             <button
               key={segment.id}
@@ -154,18 +186,13 @@ export function SegmentCarousel() {
               aria-label={`Ir para ${segment.short}`}
               aria-current={index === active || undefined}
               className={cn(
-                "h-2 w-2 rounded-full transition-all duration-300",
-                index === active ? "bg-white ring-2 ring-white/40" : "bg-white/35 hover:bg-white/70",
+                "h-2 rounded-full transition-all duration-300",
+                index === active ? "w-6 bg-periwinkle" : "w-2 bg-link/25 hover:bg-link/60",
               )}
             />
           ))}
         </div>
-        <button
-          type="button"
-          onClick={() => glide(1)}
-          aria-label="Próximo segmento"
-          className="flex h-8 w-8 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/10 hover:text-white"
-        >
+        <button type="button" onClick={() => glide(1)} aria-label="Próximo segmento" className={arrowClass}>
           <TbChevronRight className="h-5 w-5" />
         </button>
       </div>

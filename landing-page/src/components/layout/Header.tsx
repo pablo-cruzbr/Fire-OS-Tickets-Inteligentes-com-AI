@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { TbArrowRight, TbDeviceMobile } from "react-icons/tb";
+import { TbArrowRight, TbMenu2, TbX } from "react-icons/tb";
 import { ButtonLink } from "@/components/ui";
 import { Logo } from "@/components/brand/Logo";
 import { appUrl } from "@/lib/appUrl";
@@ -10,30 +10,72 @@ import { ThemeToggle } from "./ThemeToggle";
  * to "/#secao" instead of "#secao" so they work the same whether you're
  * already on the homepage or navigating in from a subpage.
  */
+const nav = [
+  { href: "/#produto", label: "Produto" },
+  { href: "/#segmentos", label: "Segmentos" },
+  { href: "/#como-funciona", label: "Como funciona" },
+  { href: "/#recursos", label: "Recursos" },
+  { href: "/download", label: "App mobile" },
+  { href: appUrl("/AreadeUsuario"), label: "Área do usuário" },
+];
+
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
-      <div className="mx-auto flex h-[70px] max-w-7xl items-center gap-6 px-4 sm:px-6">
-        <Link href="/" aria-label="Fire OS, início" className="text-link">
-          <Logo className="h-6" />
+    <header className="sticky top-0 z-50 border-b border-border bg-header backdrop-blur-[12px]">
+      <div className="container-page flex h-16 items-center gap-3 sm:gap-6 lg:h-[84px]">
+        <Link href="/" aria-label="Fire OS, início" className="shrink-0 text-link">
+          <Logo className="h-5 sm:h-6" />
         </Link>
-        <nav aria-label="Seções" className="hidden items-center gap-7 text-sm font-medium text-link lg:flex">
-          <Link href="/#recursos" className="hover:text-primary">Recursos</Link>
-          <Link href="/#segmentos" className="hover:text-primary">Segmentos</Link>
-          <Link href="/#como-funciona" className="hover:text-primary">Como funciona</Link>
-          <Link href="/download" className="inline-flex items-center gap-1.5 hover:text-primary">
-            <TbDeviceMobile className="h-4 w-4" /> App mobile
-          </Link>
-          <Link href={appUrl("/AreadeUsuario")} className="hover:text-primary">Área do usuário</Link>
+
+        <nav aria-label="Seções" className="hidden flex-1 items-center justify-center gap-1 xl:flex">
+          {nav.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              className="rounded-btn px-3 py-2 text-sm font-semibold tracking-[-0.02em] text-link/85 transition-colors hover:bg-fill-2 hover:text-link"
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
-        <div className="ml-auto flex items-center gap-2">
-          <ThemeToggle />
-          <ButtonLink href={appUrl("/login")} variant="ghost" className="hidden sm:inline-flex">
+
+        <div className="ml-auto flex items-center gap-2 xl:ml-0">
+          <ThemeToggle className="max-sm:hidden" />
+          <ButtonLink href={appUrl("/login")} variant="secondary" className="max-sm:hidden">
             Entrar
           </ButtonLink>
-          <ButtonLink href={appUrl("/login")} icon={<TbArrowRight className="h-4 w-4" />}>
+          <ButtonLink href={appUrl("/login")} iconRight={<TbArrowRight className="hidden h-4 w-4 sm:block" aria-hidden />}>
             Acessar o portal
           </ButtonLink>
+
+          {/* Mobile menu: native <details>, no JS. */}
+          <details className="group relative xl:hidden">
+            <summary
+              aria-label="Abrir menu"
+              className="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-btn border border-border bg-fill-2 text-xl text-link [&::-webkit-details-marker]:hidden"
+            >
+              <TbMenu2 className="group-open:hidden" aria-hidden />
+              <TbX className="hidden group-open:block" aria-hidden />
+            </summary>
+            <nav
+              aria-label="Menu"
+              className="absolute right-0 top-[calc(100%+12px)] flex w-[min(20rem,calc(100vw-32px))] flex-col gap-1 rounded-card border border-border bg-background p-3 shadow-[0_20px_48px_-16px_rgba(11,16,51,0.25)] dark:shadow-none"
+            >
+              {nav.map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="rounded-btn px-3 py-2.5 text-sm font-semibold text-link/85 hover:bg-fill-2 hover:text-link"
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <ButtonLink href={appUrl("/login")} variant="secondary" className="mt-2 sm:hidden">
+                Entrar
+              </ButtonLink>
+              <ThemeToggle withLabel className="mt-2" />
+            </nav>
+          </details>
         </div>
       </div>
     </header>

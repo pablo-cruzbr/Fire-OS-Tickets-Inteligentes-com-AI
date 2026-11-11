@@ -3,65 +3,178 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /*
- * Design tokens — modelled on the Modernize admin template (purple skin),
- * tuned to the Fire OS brand. Components only reference the semantic
- * tokens below, so dark mode is a matter of swapping these values.
+ * Design tokens — navy/royal-blue brand in two themes.
+ * DARK is the default: <html> ships with `.dark` and the inline script in
+ * layout.tsx only removes it when the visitor picked light.
+ * :root holds the LIGHT set; `.dark` overrides it. `.dark` is a plain class,
+ * so it also works on any nested element: sections that sit on video or
+ * photos (Hero, FinalCta, photo cards) add `dark` to their root and get the
+ * dark tokens + the `dark:` variant in both themes.
  */
 :root {
-  --primary: #6d44e4;
-  --primary-emphasis: #5a33cc;
-  --secondary: #49beff;
-  --success: #13deb9;
-  --warning: #ffae1f;
-  --error: #fa896b;
-  --info: #539bff;
-  --brand: #4e3182;
+  color-scheme: light;
 
-  --lightprimary: color-mix(in oklab, var(--primary) 12%, transparent);
-  --lightsecondary: color-mix(in oklab, var(--secondary) 14%, transparent);
-  --lightsuccess: color-mix(in oklab, var(--success) 14%, transparent);
-  --lightwarning: color-mix(in oklab, var(--warning) 16%, transparent);
-  --lighterror: color-mix(in oklab, var(--error) 16%, transparent);
-  --lightinfo: color-mix(in oklab, var(--info) 14%, transparent);
+  /* Brand blues (theme-independent) */
+  --primary: #1530ea;
+  --primary-emphasis: #405de5;
+  --lavender: #dbe2ff;
+  --violet: #705fe8;
+  --navy-mid: #171e5a;
+  --navy-blue: #0f1fb3;
+  --brand: #1530ea;
 
+  /* Status base hues (the light* fills derive from them below) */
+  --success: #2fd4a7;
+  --warning: #ffb547;
+  --error: #ff7a6b;
+
+  /* Gradients (theme-independent) */
+  --gradient-brand: linear-gradient(97deg, #1530ea 0%, #7989fa 100%);
+  --gradient-footer: linear-gradient(180deg, #050719 0%, #171e5a 57.5%, #0f1fb3 100%);
+  /* Only used over video, which is always dark-scoped. */
+  --hero-overlay: linear-gradient(90deg, rgba(0, 2, 20, 0.92) 0%, rgba(0, 2, 20, 0.55) 45%, rgba(0, 2, 20, 0.1) 100%),
+    linear-gradient(180deg, rgba(0, 2, 20, 0) 50%, #000214 100%);
+
+  /* Radii */
+  --radius-chip: 4px;
+  --radius-btn: 8px;
+  --radius-card: 16px;
+
+  /* ---------- LIGHT theme ---------- */
+  /* Accent blues, deepened so icons and labels keep contrast on white */
+  --accent: #3f58eb;
+  --accent-2: #3a50ee;
+  --periwinkle: #4157ec;
+  --periwinkle-2: #5568f0;
+  --secondary: #3347d6;
+  --info: #3d52e0;
+
+  --lightprimary: rgba(21, 48, 234, 0.08);
+  --success-text: #0b7a5e;
+  --warning-text: #a35207;
+  --error-text: #b42318;
+
+  /* Surfaces */
   --background: #ffffff;
   --card: #ffffff;
-  --surface: #f6f9fc;
-  --border: #e5eaef;
-  --link: #2a3547;
-  --bodytext: #5a6a85;
-  --muted: #7c8fac;
+  --surface: #f5f7ff;
+  --header: rgba(255, 255, 255, 0.86);
+  --glass: rgba(255, 255, 255, 0.8);
+  --fill-1: rgba(21, 48, 234, 0.035);
+  --fill-2: rgba(21, 48, 234, 0.06);
+  --badge: rgba(21, 48, 234, 0.06);
+  --frame: #f5f7ff;
 
-  --success-text: #0e9f84;
-  --warning-text: #c77f00;
-  --error-text: #e0542f;
+  /* Lines */
+  --border: #e3e7f8;
+  --border-strong: #c9d0ee;
+  --border-accent: rgba(21, 48, 234, 0.18);
+
+  /* Text */
+  --link: #0b1033;
+  --foreground: #0b1033;
+  --bodytext: #4a5275;
+  --muted: #646c91;
+  --eyebrow: #1530ea;
+
+  /* Glows (softer on white) and theme-aware fades */
+  --glow: radial-gradient(
+    72% 46% at 18% 24%,
+    rgba(21, 48, 234, 0.1) 0%,
+    rgba(21, 48, 234, 0.06) 30%,
+    rgba(21, 48, 234, 0.025) 60%,
+    transparent 100%
+  );
+  --glow-strength: 0.35;
+  --fade-bottom: linear-gradient(180deg, rgba(255, 255, 255, 0) 55%, #ffffff 100%);
+  --text-gradient: linear-gradient(97deg, #1530ea 0%, #3a50ee 55%, #5a6ef5 100%);
+  --grid-line: rgba(11, 16, 51, 0.05);
+  --selection: rgba(21, 48, 234, 0.18);
 }
 
+/* ---------- DARK theme (default) — also usable as a nested scope ---------- */
 .dark {
-  --primary: #8b69f0;
-  --primary-emphasis: #7a55ea;
-  --lightprimary: color-mix(in oklab, var(--primary) 18%, transparent);
-
-  --background: #151b26;
-  --card: #1e2735;
-  --surface: #232d3d;
-  --border: #333f55;
-  --link: #e6ecf5;
-  --bodytext: #9aa9c2;
-  --muted: #7c8fac;
-
-  --success-text: #13deb9;
-  --warning-text: #ffae1f;
-  --error-text: #fa896b;
-
   color-scheme: dark;
+
+  --accent: #647ded;
+  --accent-2: #7989fa;
+  --periwinkle: #93a1fb;
+  --periwinkle-2: #9caeff;
+  --secondary: #9caeff;
+  --info: #7989fa;
+
+  --lightprimary: rgba(121, 138, 251, 0.1);
+  --success-text: #2fd4a7;
+  --warning-text: #ffb547;
+  --error-text: #ff7a6b;
+
+  --background: #000214;
+  --card: #01010d;
+  --surface: #050719;
+  --header: rgba(0, 5, 25, 0.9);
+  --glass: rgba(0, 2, 20, 0.9);
+  --fill-1: rgba(255, 255, 255, 0.02);
+  --fill-2: rgba(255, 255, 255, 0.05);
+  --badge: rgba(121, 138, 251, 0.05);
+  --frame: #050719;
+
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.2);
+  --border-accent: rgba(121, 138, 251, 0.1);
+
+  --link: #ffffff;
+  --foreground: #ffffff;
+  --bodytext: rgba(255, 255, 255, 0.7);
+  --muted: rgba(255, 255, 255, 0.5);
+  --eyebrow: #c8cfff;
+
+  --glow: radial-gradient(
+    72% 46% at 18% 24%,
+    rgba(28, 58, 190, 0.34) 0%,
+    rgba(28, 58, 190, 0.24) 30%,
+    rgba(28, 58, 190, 0.1) 60%,
+    transparent 100%
+  );
+  --glow-strength: 1;
+  --fade-bottom: linear-gradient(180deg, rgba(0, 2, 20, 0) 55%, #000214 100%);
+  --text-gradient: linear-gradient(97deg, #7989fa 0%, #c8cfff 60%, #ffffff 100%);
+  --grid-line: rgba(255, 255, 255, 0.04);
+  --selection: rgba(121, 138, 251, 0.35);
+}
+
+/*
+ * Tokens derived from other tokens are declared on every theme scope: a
+ * custom property resolves where it is declared, so one declared only on
+ * :root would carry light values into a nested `.dark` section.
+ */
+:root,
+.dark {
+  --lightsecondary: color-mix(in oklab, var(--secondary) 14%, transparent);
+  --lightsuccess: color-mix(in oklab, var(--success) 14%, transparent);
+  --lightwarning: color-mix(in oklab, var(--warning) 14%, transparent);
+  --lighterror: color-mix(in oklab, var(--error) 14%, transparent);
+  --lightinfo: color-mix(in oklab, var(--info) 14%, transparent);
+}
+
+/* A nested dark scope re-inherits the dark body text colour. */
+.dark:not(html) {
+  color: var(--bodytext);
 }
 
 @theme inline {
-  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-jakarta), "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-jakarta), "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 
   --color-primary: var(--primary);
   --color-primaryemphasis: var(--primary-emphasis);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-periwinkle: var(--periwinkle);
+  --color-periwinkle-2: var(--periwinkle-2);
+  --color-lavender: var(--lavender);
+  --color-violet: var(--violet);
+  --color-navy-mid: var(--navy-mid);
+  --color-navy-blue: var(--navy-blue);
   --color-secondary: var(--secondary);
   --color-success: var(--success);
   --color-warning: var(--warning);
@@ -83,16 +196,39 @@
   --color-background: var(--background);
   --color-card: var(--card);
   --color-surface: var(--surface);
+  --color-header: var(--header);
+  --color-glass: var(--glass);
+  --color-fill-1: var(--fill-1);
+  --color-fill-2: var(--fill-2);
+  --color-badge: var(--badge);
+  --color-frame: var(--frame);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-border-accent: var(--border-accent);
   --color-link: var(--link);
+  --color-foreground: var(--foreground);
   --color-bodytext: var(--bodytext);
   --color-muted: var(--muted);
+  --color-eyebrow: var(--eyebrow);
 
-  --shadow-md: 0 0 2px 0 rgb(145 158 171 / 0.3), 0 12px 24px -4px rgb(145 158 171 / 0.12);
-  --shadow-dark-md: 0 0 2px 0 rgb(145 158 171 / 0.3), 0 12px 24px -4px rgb(145 158 171 / 0.02);
-  --shadow-btn: 0 9px 17.5px rgb(0 0 0 / 0.05);
+  /* Same values as the :root radius tokens (literal to avoid a self-reference). */
+  --radius-chip: 4px;
+  --radius-btn: 8px;
+  --radius-card: 16px;
 
-  --animate-marquee: marquee 70s linear infinite;
+  --animate-fade-up: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-marquee: marquee 60s linear infinite;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
   @keyframes marquee {
     from {
@@ -104,14 +240,70 @@
   }
 }
 
+/* Gradient-filled text (brand blue → periwinkle). */
+@utility text-gradient {
+  background-image: var(--text-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Subtle 64px grid, faded toward the edges. */
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 40%, transparent 100%);
+}
+
+/* Blue radial glow wash; put on an absolutely-positioned, aria-hidden layer. */
+@utility glow-radial {
+  background-image: var(--glow);
+  pointer-events: none;
+}
+
+/* Translucent glass (navy in dark, white in light) with blur + hairline. */
+@utility glass {
+  background-color: var(--glass);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+}
+
+/* 1px hairline border. */
+@utility hairline {
+  border: 1px solid var(--border);
+}
+
+/* Page container: 1440 max with 48px gutters (16px on mobile) → 1344 content. */
+@utility container-page {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: 16px;
+  @media (width >= 48rem) {
+    padding-inline: 32px;
+  }
+  @media (width >= 64rem) {
+    padding-inline: 48px;
+  }
+}
+
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 88px;
+  }
+
   html,
   body {
     min-height: 100%;
   }
 
   body {
-    @apply bg-background font-sans text-sm text-bodytext antialiased;
+    @apply bg-background font-sans text-base text-bodytext antialiased;
+    letter-spacing: -0.01em;
   }
 
   h1,
@@ -120,22 +312,56 @@
   h4,
   h5,
   h6 {
-    @apply font-semibold text-link;
+    @apply font-display font-semibold text-link;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+
+  h1 {
+    letter-spacing: -0.02em;
+    line-height: 1.1;
   }
 
   *,
   ::before,
   ::after {
     border-color: var(--border);
+    /*
+     * Plus Jakarta Sans ships a very narrow space glyph (~0.17em advance vs
+     * ~0.25em in Inter / 0.28em in Arial), and our negative tracking
+     * (-0.01em body, -0.02em nav/buttons) is applied to spaces too, leaving
+     * ~0.155em: words visibly run together ("Comofunciona"). Widen every
+     * space back to ~0.25em. Set on every element (word-spacing inherits as
+     * an absolute length) so the em resolves against each element's own size.
+     */
+    word-spacing: 0.08em;
   }
 
   * {
     scrollbar-width: thin;
-    scrollbar-color: color-mix(in oklab, var(--primary) 30%, transparent) transparent;
+    scrollbar-color: rgba(121, 138, 251, 0.3) transparent;
+  }
+
+  ::selection {
+    background: var(--selection);
+    color: var(--link);
   }
 
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }

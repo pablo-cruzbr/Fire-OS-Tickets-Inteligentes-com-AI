@@ -9,7 +9,7 @@ import { cn } from "@/lib/cn";
 
 type LogoProps = {
   className?: string;
-  /** Paints "OS" in the brand purple. */
+  /** Paints "OS" in the brand periwinkle. */
   accent?: boolean;
   title?: string;
 };
@@ -20,7 +20,7 @@ export function Logo({ className, accent = false, title = "Fire OS" }: LogoProps
       viewBox="33 40 576 120"
       role="img"
       aria-label={title}
-      className={cn("h-7 w-auto", className)}
+      className={cn(/(^|\s)h-/.test(className ?? "") ? undefined : "h-7", "w-auto", className)}
       fill="none"
       stroke="currentColor"
       strokeWidth={14}
@@ -35,7 +35,7 @@ export function Logo({ className, accent = false, title = "Fire OS" }: LogoProps
       <path d="M176 153 V113 A26 26 0 0 1 202 87" />
       <path d="M271 120 H304 A33 33 0 1 0 295 143" />
       {/* OS */}
-      <g stroke={accent ? "var(--primary)" : undefined}>
+      <g stroke={accent ? "var(--accent-2)" : undefined}>
         <circle cx="451" cy="100" r="53" />
         <path d="M598 60.25 A30 26.5 0 1 0 572 100 A30 26.5 0 1 1 546 139.75" />
       </g>
@@ -47,7 +47,7 @@ export function Logo({ className, accent = false, title = "Fire OS" }: LogoProps
 export function LogoMark({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 64 64" role="img" aria-label="Fire OS" className={cn("h-9 w-9", className)}>
-      <rect width="64" height="64" rx="16" fill="var(--primary, #6d44e4)" />
+      <rect width="64" height="64" rx="16" fill="var(--primary, #1530ea)" />
       <g fill="none" stroke="#fff" strokeWidth={5} strokeLinecap="round" strokeLinejoin="round">
         <circle cx="32" cy="32" r="17" />
         <path d="M24.5 32.5 L30 38 L40 27" />

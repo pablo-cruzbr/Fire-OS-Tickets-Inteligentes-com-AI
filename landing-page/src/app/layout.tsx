@@ -1,11 +1,13 @@
-import type { Metadata } from "next";
-import { DM_Sans } from "next/font/google";
-import { themeScript } from "@/components/layout/ThemeToggle";
+import type { Metadata, Viewport } from "next";
+import { Plus_Jakarta_Sans } from "next/font/google";
+import { themeScript } from "@/components/layout/theme";
 import "./globals.css";
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -15,17 +17,24 @@ export const metadata: Metadata = {
   applicationName: "Fire OS",
 };
 
+export const viewport: Viewport = {
+  // Dark is the default; themeScript / ThemeToggle swap this for light.
+  themeColor: "#000214",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
+    // `dark` is the default theme; the inline script removes it before paint
+    // when the visitor chose light (hence suppressHydrationWarning).
+    <html lang="pt-BR" className={`${jakarta.variable} dark`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className={dmSans.variable}>{children}</body>
+      <body>{children}</body>
     </html>
   );
 }

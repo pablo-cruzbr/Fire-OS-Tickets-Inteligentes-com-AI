@@ -3,29 +3,38 @@ import { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { Spinner } from "./Spinner";
 
-type Variant = "primary" | "light" | "outline" | "ghost" | "danger" | "lightDanger";
-type Size = "sm" | "md" | "lg" | "icon";
+export type ButtonVariant = "primary" | "secondary" | "ghost" | "white" | "light" | "outline" | "danger" | "lightDanger";
+export type ButtonSize = "sm" | "md" | "lg" | "xl" | "icon";
 
-const variants: Record<Variant, string> = {
-  primary: "bg-primary text-white shadow-btn hover:bg-primaryemphasis",
-  light: "bg-lightprimary text-primary hover:bg-primary hover:text-white",
-  outline: "border border-border bg-transparent text-link hover:border-primary hover:text-primary",
-  ghost: "bg-transparent text-bodytext hover:bg-lightprimary hover:text-primary",
-  danger: "bg-error text-white hover:brightness-95",
-  lightDanger: "bg-lighterror text-errortext hover:bg-error hover:text-white",
+const variants: Record<ButtonVariant, string> = {
+  /** Brand gradient fill + 20% white hairline. */
+  primary:
+    "border border-border-strong bg-(image:--gradient-brand) text-white hover:brightness-110",
+  /** Hairline glass: faint fill, hairline, blur. */
+  secondary:
+    "border border-border bg-fill-2 text-link backdrop-blur-[8px] hover:border-border-strong hover:bg-lightprimary dark:hover:bg-white/[0.08]",
+  /** Text-only, picks up a faint fill on hover. */
+  ghost: "border border-transparent bg-transparent text-link/80 hover:bg-fill-2 hover:text-link",
+  /** Solid white, navy text — one per featured card. */
+  white: "border border-white bg-white text-background hover:bg-lavender",
+  light: "border border-border-accent bg-badge text-eyebrow hover:border-border-strong hover:text-link",
+  outline: "border border-border bg-transparent text-link hover:border-border-strong hover:bg-fill-2",
+  danger: "border border-transparent bg-error text-white hover:brightness-95",
+  lightDanger: "border border-transparent bg-lighterror text-errortext hover:bg-error hover:text-white",
 };
 
-const sizes: Record<Size, string> = {
+const sizes: Record<ButtonSize, string> = {
   sm: "h-8 gap-1.5 px-3 text-xs",
   md: "h-10 gap-2 px-4 text-sm",
   lg: "h-12 gap-2 px-6 text-base",
-  icon: "h-9 w-9 justify-center",
+  xl: "h-14 gap-2 px-8 text-base",
+  icon: "h-10 w-10 justify-center",
 };
 
-export function buttonClasses(variant: Variant = "primary", size: Size = "md", className?: string) {
+export function buttonClasses(variant: ButtonVariant = "primary", size: ButtonSize = "md", className?: string) {
   return cn(
-    "inline-flex shrink-0 items-center justify-center rounded-md font-medium transition-colors duration-200",
-    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
+    "inline-flex shrink-0 items-center justify-center rounded-btn font-semibold leading-none tracking-[-0.01em] transition-[filter,background-color,border-color,color] duration-200",
+    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-2",
     "disabled:pointer-events-none disabled:opacity-60",
     variants[variant],
     sizes[size],
@@ -34,10 +43,12 @@ export function buttonClasses(variant: Variant = "primary", size: Size = "md", c
 }
 
 type ButtonProps = ComponentProps<"button"> & {
-  variant?: Variant;
-  size?: Size;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
   loading?: boolean;
   icon?: ReactNode;
+  /** Icon rendered after the label (e.g. an arrow). */
+  iconRight?: ReactNode;
 };
 
 export function Button({
@@ -45,6 +56,7 @@ export function Button({
   size,
   loading,
   icon,
+  iconRight,
   className,
   children,
   disabled,
@@ -60,21 +72,25 @@ export function Button({
     >
       {loading ? <Spinner className="h-4 w-4" /> : icon}
       {children}
+      {iconRight}
     </button>
   );
 }
 
 type ButtonLinkProps = ComponentProps<typeof Link> & {
-  variant?: Variant;
-  size?: Size;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
   icon?: ReactNode;
+  /** Icon rendered after the label (e.g. an arrow). */
+  iconRight?: ReactNode;
 };
 
-export function ButtonLink({ variant, size, icon, className, children, ...props }: ButtonLinkProps) {
+export function ButtonLink({ variant, size, icon, iconRight, className, children, ...props }: ButtonLinkProps) {
   return (
     <Link className={buttonClasses(variant, size, className)} {...props}>
       {icon}
       {children}
+      {iconRight}
     </Link>
   );
 }
