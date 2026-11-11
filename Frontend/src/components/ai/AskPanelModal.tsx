@@ -453,7 +453,10 @@ export function AskPanelModal({ open, onClose }: { open: boolean; onClose: () =>
       size="lg"
       title={
         <span className="flex items-center gap-2">
-          <TbSparkles className="h-5 w-5 text-primary" /> {ASSISTANT_NAME}
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[image:var(--gradient-brand,linear-gradient(97deg,var(--primary),#7989fa))] text-white shadow-[0_0_24px_-4px_var(--primary)]">
+            <TbSparkles className="h-4 w-4" />
+          </span>
+          {ASSISTANT_NAME}
         </span>
       }
       subtitle="Assistente de IA do Fire OS — pergunte sobre chamados e ordens de serviço"
@@ -467,7 +470,7 @@ export function AskPanelModal({ open, onClose }: { open: boolean; onClose: () =>
         <button
           type="button"
           onClick={() => setMenuOpen((value) => !value)}
-          className="mb-3 flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+          className="mb-3 flex items-center gap-1.5 text-xs font-medium text-primarytext hover:underline"
         >
           <TbMenu2 className="h-3.5 w-3.5" /> {menuOpen ? "Ocultar perguntas" : "Ver mais perguntas"}
         </button>
@@ -484,7 +487,7 @@ export function AskPanelModal({ open, onClose }: { open: boolean; onClose: () =>
                     key={item}
                     type="button"
                     onClick={() => ask(item)}
-                    className="rounded-full border border-border px-3.5 py-1.5 text-xs font-medium text-link transition-colors hover:border-primary hover:text-primary"
+                    className="rounded-full border border-border bg-surface/60 px-3.5 py-1.5 text-xs font-medium text-link transition-colors hover:border-primary/60 hover:bg-lightprimary hover:text-primarytext"
                   >
                     {item}
                   </button>
@@ -500,16 +503,16 @@ export function AskPanelModal({ open, onClose }: { open: boolean; onClose: () =>
           <div key={index} className={`flex gap-3 ${message.role === "user" ? "flex-row-reverse" : ""}`}>
             <span
               className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm ${
-                message.role === "user" ? "bg-primary text-white" : "bg-lightprimary text-primary"
+                message.role === "user" ? "bg-[image:var(--gradient-brand,linear-gradient(97deg,var(--primary),#7989fa))] text-white" : "border border-primary/25 bg-lightprimary text-primarytext"
               }`}
             >
               {message.role === "user" ? <TbUser /> : <TbRobot />}
             </span>
             <div className={`max-w-[80%] ${message.role === "user" ? "text-right" : ""}`}>
-              {message.role === "ai" && <p className="mb-1 text-xs font-semibold text-primary">{ASSISTANT_NAME}</p>}
+              {message.role === "ai" && <p className="mb-1 text-xs font-semibold text-primarytext">{ASSISTANT_NAME}</p>}
               <div
                 className={`inline-block rounded-xl px-4 py-2.5 text-sm ${
-                  message.role === "user" ? "bg-primary text-white" : "bg-surface text-link"
+                  message.role === "user" ? "bg-[image:var(--gradient-brand,linear-gradient(97deg,var(--primary),#7989fa))] text-white" : "border border-border bg-surface text-link"
                 }`}
               >
                 {message.text}
@@ -528,7 +531,7 @@ export function AskPanelModal({ open, onClose }: { open: boolean; onClose: () =>
                 <Link
                   href={message.link.href}
                   onClick={handleClose}
-                  className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-primary px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary hover:text-white"
+                  className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-primary px-3 py-1.5 text-xs font-medium text-primarytext transition-colors hover:bg-primary hover:text-white"
                 >
                   <TbExternalLink className="h-3.5 w-3.5" /> {message.link.label}
                 </Link>
@@ -543,7 +546,7 @@ export function AskPanelModal({ open, onClose }: { open: boolean; onClose: () =>
                   ) : (
                     <div className="inline-block rounded-xl border border-border bg-card p-3">
                       <p className="mb-2 flex items-center gap-1.5 text-xs font-semibold text-link">
-                        <TbUserShare className="h-3.5 w-3.5 text-primary" /> {message.action.label}
+                        <TbUserShare className="h-3.5 w-3.5 text-primarytext" /> {message.action.label}
                       </p>
                       {message.action.multi ? (
                         <>
@@ -558,7 +561,7 @@ export function AskPanelModal({ open, onClose }: { open: boolean; onClose: () =>
                                   className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                                     checked
                                       ? "border-primary bg-primary text-white"
-                                      : "border-border bg-transparent text-link hover:border-primary hover:text-primary"
+                                      : "border-border bg-transparent text-link hover:border-primary hover:text-primarytext"
                                   }`}
                                 >
                                   {checked && <TbCheck className="h-3 w-3" />}
@@ -583,7 +586,7 @@ export function AskPanelModal({ open, onClose }: { open: boolean; onClose: () =>
                               key={option}
                               type="button"
                               onClick={() => pickOption(index, option)}
-                              className="rounded-full bg-lightprimary px-3 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary hover:text-white"
+                              className="rounded-full bg-lightprimary px-3 py-1 text-xs font-medium text-primarytext transition-colors hover:bg-primary hover:text-white"
                             >
                               {option}
                             </button>
@@ -599,7 +602,7 @@ export function AskPanelModal({ open, onClose }: { open: boolean; onClose: () =>
                 <button
                   type="button"
                   onClick={() => suggestNextStep(index)}
-                  className="mt-2 flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+                  className="mt-2 flex items-center gap-1.5 text-xs font-medium text-primarytext hover:underline"
                 >
                   <TbBulb className="h-3.5 w-3.5" /> Sugerir próximo passo
                 </button>
@@ -610,10 +613,10 @@ export function AskPanelModal({ open, onClose }: { open: boolean; onClose: () =>
 
         {loading && (
           <div className="flex items-center gap-3">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-lightprimary text-primary">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-lightprimary text-primarytext">
               <TbRobot />
             </span>
-            <div className="flex items-center gap-2 rounded-xl bg-surface px-4 py-2.5 text-sm text-bodytext">
+            <div className="flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-bodytext">
               <Spinner className="h-4 w-4" /> {ASSISTANT_NAME} está consultando...
             </div>
           </div>

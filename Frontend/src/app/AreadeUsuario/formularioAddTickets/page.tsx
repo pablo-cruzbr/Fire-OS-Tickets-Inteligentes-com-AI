@@ -92,16 +92,22 @@ export default function FormularioAddTickets() {
 
   return (
     <UserPortalShell>
-      <div className="relative mb-6 overflow-hidden rounded-xl bg-lightprimary px-6 py-7 sm:px-8">
-        <div className="relative z-10">
-          <h1 className="text-2xl font-semibold text-link">
+      <div className="relative isolate mb-6 overflow-hidden rounded-card border border-border bg-card px-6 py-7 sm:px-8">
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 bg-[radial-gradient(60%_120%_at_100%_0%,rgba(21,48,234,0.12)_0%,transparent_70%)] dark:bg-[radial-gradient(60%_120%_at_100%_0%,rgba(64,93,229,0.35)_0%,transparent_70%)]"
+        />
+        <div>
+          <span className="inline-flex items-center gap-2 rounded-chip border border-border-accent bg-badge px-2.5 py-1 text-xs font-medium uppercase tracking-[0.02em] text-eyebrow">
+            Novo chamado
+          </span>
+          <h1 className="mt-4 text-2xl font-semibold tracking-[-0.02em] text-link sm:text-[28px]">
             {usuario ? `Olá, ${usuario.name.split(" ")[0]}!` : "Bem-vindo ao Fire OS"}
           </h1>
           <p className="mt-2 max-w-xl text-bodytext">
             Descreva o problema abaixo e nossa equipe técnica entrará em contato para o atendimento.
           </p>
         </div>
-        <div aria-hidden className="absolute -right-10 -top-16 h-44 w-44 rounded-full bg-primary/10" />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -155,7 +161,7 @@ export default function FormularioAddTickets() {
               { icon: <TbBuilding />, label: "Local", value: local },
             ].map((item) => (
               <li key={item.label} className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-md bg-lightprimary text-lg text-primary">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-btn border border-border-accent bg-badge text-lg text-primarytext dark:text-periwinkle-2">
                   {item.icon}
                 </span>
                 <div className="min-w-0">

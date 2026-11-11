@@ -139,7 +139,7 @@ export default function OrdensList({ data }: { data: OrdemdeServicoResponseData 
                 onKeyDown={(event) => event.stopPropagation()}
                 aria-label={`Abrir a página da OS ${os.numeroOS ?? ""}`}
                 title="Abrir a página da OS"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-md text-bodytext transition-colors hover:bg-lightprimary hover:text-primary"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-md text-bodytext transition-colors hover:bg-lightprimary hover:text-primarytext"
               >
                 <TbExternalLink className="h-4 w-4" />
               </Link>
@@ -149,16 +149,14 @@ export default function OrdensList({ data }: { data: OrdemdeServicoResponseData 
         headerActions={
           <>
             <Button
-              variant="outline"
-              className="bg-card"
+              variant="surface"
               onClick={() => setExportOpen(true)}
               icon={<TbFileSpreadsheet className="h-4 w-4" />}
             >
               Relatório
             </Button>
             <Button
-              variant="outline"
-              className="bg-card"
+              variant="surface"
               onClick={() => setSecretaria("educacao")}
               icon={<TbFileSpreadsheet className="h-4 w-4" />}
               title="Relatório da Secretaria da Educação"
@@ -166,8 +164,7 @@ export default function OrdensList({ data }: { data: OrdemdeServicoResponseData 
               Rel. Educação
             </Button>
             <Button
-              variant="outline"
-              className="bg-card"
+              variant="surface"
               onClick={() => setSecretaria("saude")}
               icon={<TbFileSpreadsheet className="h-4 w-4" />}
               title="Relatório da Secretaria da Saúde"

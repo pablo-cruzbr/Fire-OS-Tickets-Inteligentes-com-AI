@@ -48,7 +48,7 @@ export function Modal({ open, onClose, title, subtitle, size = "lg", children, f
   // ancestor's own box" instead. A portal sidesteps the whole class of bug.
   return createPortal(
     <div
-      className="fixed inset-0 z-[1000] flex items-end justify-center bg-[#1c2536]/50 backdrop-blur-[2px] sm:items-center sm:p-4"
+      className="fixed inset-0 z-[1000] flex items-end justify-center bg-overlay backdrop-blur-[4px] sm:items-center sm:p-4"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}
@@ -59,7 +59,7 @@ export function Modal({ open, onClose, title, subtitle, size = "lg", children, f
         aria-modal="true"
         tabIndex={-1}
         className={cn(
-          "flex max-h-[92vh] w-full flex-col rounded-t-xl bg-card shadow-md outline-none sm:rounded-xl dark:shadow-dark-md",
+          "flex max-h-[92vh] w-full flex-col rounded-t-card border border-border bg-card shadow-md outline-none sm:rounded-card dark:shadow-none",
           widths[size],
         )}
       >
@@ -72,7 +72,7 @@ export function Modal({ open, onClose, title, subtitle, size = "lg", children, f
             type="button"
             onClick={onClose}
             aria-label="Fechar"
-            className="-mr-2 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-bodytext transition-colors hover:bg-lightprimary hover:text-primary"
+            className="-mr-2 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-bodytext transition-colors hover:bg-fill-2 hover:text-link"
           >
             <TbX className="h-5 w-5" />
           </button>

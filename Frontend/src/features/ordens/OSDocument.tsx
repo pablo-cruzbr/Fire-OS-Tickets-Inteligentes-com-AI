@@ -92,7 +92,7 @@ export function OSDocument({ os, fotos, crossOrigin, ref, className }: OSDocumen
     <div
       ref={ref}
       className={cn(
-        "mx-auto w-full max-w-4xl rounded-xl bg-card p-6 shadow-md sm:p-8 dark:shadow-dark-md",
+        "mx-auto w-full max-w-4xl rounded-xl bg-card p-6 shadow-md sm:p-8",
         "print:max-w-none print:rounded-none print:p-0 print:shadow-none",
         className,
       )}

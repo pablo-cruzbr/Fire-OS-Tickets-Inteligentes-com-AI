@@ -35,7 +35,7 @@ const WEEKDAYS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 const MAX_PER_CELL = 3;
 
 const eventTone: Record<Tone, string> = {
-  primary: "bg-lightprimary text-primary border-primary",
+  primary: "bg-lightprimary text-primarytext border-primary",
   secondary: "bg-lightsecondary text-secondary border-secondary",
   success: "bg-lightsuccess text-successtext border-success",
   warning: "bg-lightwarning text-warningtext border-warning",
@@ -272,7 +272,7 @@ export function TechCalendar({ ordens }: { ordens: Ordem[] }) {
                 onClick={() => setView(item.key)}
                 className={cn(
                   "rounded px-3 py-1.5 text-xs font-medium transition-colors",
-                  view === item.key ? "bg-card text-primary shadow-md dark:shadow-dark-md" : "text-bodytext hover:text-primary",
+                  view === item.key ? "bg-card text-primarytext shadow-md" : "text-bodytext hover:text-primarytext",
                 )}
               >
                 {item.label}
@@ -327,7 +327,7 @@ export function TechCalendar({ ordens }: { ordens: Ordem[] }) {
                         <button
                           type="button"
                           onClick={() => setDayOpen(day)}
-                          className="rounded px-2 text-left text-xs font-semibold text-primary hover:underline"
+                          className="rounded px-2 text-left text-xs font-semibold text-primarytext hover:underline"
                         >
                           +{list.length - MAX_PER_CELL} mais
                         </button>
@@ -395,7 +395,7 @@ export function TechCalendar({ ordens }: { ordens: Ordem[] }) {
                 </p>
               </div>
               <button type="button" onClick={() => openEvent(event)} className="min-w-0 flex-1 text-left">
-                <p className="truncate font-medium text-link hover:text-primary">{event.title}</p>
+                <p className="truncate font-medium text-link hover:text-primarytext">{event.title}</p>
                 <p className="text-xs text-bodytext">
                   OS #{event.ordem.numeroOS} · {event.ordem.tecnico?.name ?? "Técnico não atribuído"}
                 </p>
@@ -436,7 +436,7 @@ export function TechCalendar({ ordens }: { ordens: Ordem[] }) {
                     openEvent(event);
                   }}
                 >
-                  <p className="truncate text-sm font-medium text-link hover:text-primary">
+                  <p className="truncate text-sm font-medium text-link hover:text-primarytext">
                     {time(event.start)} · {event.title}
                   </p>
                   <p className="text-xs text-bodytext">

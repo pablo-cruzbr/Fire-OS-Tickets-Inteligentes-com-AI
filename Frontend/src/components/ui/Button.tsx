@@ -3,16 +3,22 @@ import { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { Spinner } from "./Spinner";
 
-type Variant = "primary" | "light" | "outline" | "ghost" | "danger" | "lightDanger";
+type Variant = "primary" | "light" | "outline" | "surface" | "ghost" | "danger" | "lightDanger";
 type Size = "sm" | "md" | "lg" | "icon";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-primary text-white shadow-btn hover:bg-primaryemphasis",
-  light: "bg-lightprimary text-primary hover:bg-primary hover:text-white",
-  outline: "border border-border bg-transparent text-link hover:border-primary hover:text-primary",
-  ghost: "bg-transparent text-bodytext hover:bg-lightprimary hover:text-primary",
-  danger: "bg-error text-white hover:brightness-95",
-  lightDanger: "bg-lighterror text-errortext hover:bg-error hover:text-white",
+  /** Landing CTA: brand gradient (#1530EA → #7989FA) + faint white hairline. */
+  primary: "border border-white/15 bg-gradient-brand text-white shadow-btn hover:brightness-110",
+  light:
+    "border border-border-accent bg-lightprimary text-primarytext hover:border-transparent hover:bg-primary hover:text-white",
+  /** Hairline "secondary" button, like the landing. */
+  outline: "border border-border bg-transparent text-link hover:border-border-strong hover:bg-fill-2",
+  /** Outline on a filled card: white fill + firm edge in light, hairline in dark (cn() does not merge, so no className overrides). */
+  surface:
+    "border border-border-strong bg-card text-link shadow-md hover:border-primary/40 dark:border-border dark:bg-fill-1 dark:shadow-none dark:hover:border-border-strong dark:hover:bg-fill-2",
+  ghost: "border border-transparent bg-transparent text-bodytext hover:bg-fill-2 hover:text-link",
+  danger: "border border-transparent bg-error text-white hover:brightness-95",
+  lightDanger: "border border-transparent bg-lighterror text-errortext hover:bg-error hover:text-white",
 };
 
 const sizes: Record<Size, string> = {
@@ -24,8 +30,8 @@ const sizes: Record<Size, string> = {
 
 export function buttonClasses(variant: Variant = "primary", size: Size = "md", className?: string) {
   return cn(
-    "inline-flex shrink-0 items-center justify-center rounded-md font-medium transition-colors duration-200",
-    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
+    "inline-flex shrink-0 items-center justify-center rounded-btn font-semibold transition-[filter,background-color,border-color,color] duration-200",
+    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-2",
     "disabled:pointer-events-none disabled:opacity-60",
     variants[variant],
     sizes[size],

@@ -174,7 +174,7 @@ export function RelatorioSecretariaModal({ secretaria, onClose }: { secretaria: 
                     key={tipo.id}
                     className={cn(
                       "flex cursor-pointer items-center gap-2.5 rounded-md border px-3 py-2 text-sm transition-colors",
-                      checked ? "border-primary bg-lightprimary text-primary" : "border-border text-link hover:border-primary",
+                      checked ? "border-primary bg-lightprimary text-primarytext" : "border-border text-link hover:border-primary",
                     )}
                   >
                     <input

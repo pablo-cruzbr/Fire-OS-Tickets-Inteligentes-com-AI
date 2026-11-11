@@ -111,7 +111,7 @@ export function OrdemFotos({ ordemId }: { ordemId: string }) {
       </div>
 
       {fotos === null ? (
-        <div className="flex justify-center py-10 text-primary">
+        <div className="flex justify-center py-10 text-primarytext">
           <Spinner />
         </div>
       ) : fotos.length === 0 ? (

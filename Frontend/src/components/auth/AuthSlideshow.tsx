@@ -7,7 +7,7 @@ import { cn } from "@/lib/cn";
 export type AuthSlide = { src: string; label: string };
 
 /**
- * Cross-fading photos of service professionals for the auth side panel.
+ * Cross-fading stills from the landing videos for the auth side panel.
  * Advances every few seconds; stays on the first photo with reduced motion.
  */
 export function AuthSlideshow({ slides, interval = 6000 }: { slides: AuthSlide[]; interval?: number }) {
@@ -40,10 +40,11 @@ export function AuthSlideshow({ slides, interval = 6000 }: { slides: AuthSlide[]
       </div>
 
       <div className="flex items-center gap-3">
-        <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-white backdrop-blur">
+        <span className="inline-flex items-center gap-2 rounded-[4px] border border-[#798AFB]/10 bg-[#000214]/70 px-3 py-1.5 text-xs font-medium uppercase tracking-[0.02em] text-[#C8CFFF] backdrop-blur-[8px]">
+          <span aria-hidden className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#9CAEFF]" />
           {slides[index]?.label}
         </span>
-        <div className="flex gap-1.5" role="tablist" aria-label="Fotos">
+        <div className="flex items-center" role="tablist" aria-label="Fotos">
           {slides.map((slide, slideIndex) => (
             <button
               key={slide.src}
@@ -52,11 +53,16 @@ export function AuthSlideshow({ slides, interval = 6000 }: { slides: AuthSlide[]
               aria-selected={slideIndex === index}
               aria-label={slide.label}
               onClick={() => setIndex(slideIndex)}
-              className={cn(
-                "h-1.5 rounded-full transition-all duration-300",
-                slideIndex === index ? "w-6 bg-white" : "w-1.5 bg-white/40 hover:bg-white/70",
-              )}
-            />
+              className="group flex h-8 w-6 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-[#9CAEFF]"
+            >
+              <span
+                aria-hidden
+                className={cn(
+                  "block h-1.5 rounded-full transition-all duration-300",
+                  slideIndex === index ? "w-5 bg-white" : "w-1.5 bg-white/35 group-hover:bg-white/70",
+                )}
+              />
+            </button>
           ))}
         </div>
       </div>

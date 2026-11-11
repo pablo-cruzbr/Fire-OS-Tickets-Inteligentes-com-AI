@@ -57,8 +57,7 @@ export default function EstabilizadoresList({ data }: { data: EstabilizadoresRes
       headerActions={
         <ButtonLink
           href="/dashboard/formulariosadd/formularioEstabilizadorAdd"
-          variant="outline"
-          className="bg-card"
+          variant="surface"
           icon={<TbPlus className="h-4 w-4" />}
         >
           Registrar estabilizador

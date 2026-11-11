@@ -116,8 +116,8 @@ export function OrdemModal({ data, onClose }: EntityModalProps<OrdemdeServicoPro
                 className={cn(
                   "-mb-px whitespace-nowrap border-b-2 px-3.5 py-2.5 text-sm font-medium transition-colors",
                   tab === item.id
-                    ? "border-primary text-primary"
-                    : "border-transparent text-bodytext hover:text-primary",
+                    ? "border-primary text-primarytext"
+                    : "border-transparent text-bodytext hover:text-primarytext",
                 )}
               >
                 {item.label}

@@ -8,8 +8,9 @@ import { api } from "@/services/api";
 import { apiErrorMessage } from "@/lib/apiError";
 import { cn } from "@/lib/cn";
 import { useLookups } from "@/components/data/useLookups";
-import { Button, Field, Input, Select } from "@/components/ui";
-import { EmailInput, PasswordInput } from "./AuthFields";
+import { Field } from "@/components/ui";
+import { AuthInput, AuthSelect, EmailInput, PasswordInput } from "./AuthFields";
+import { AuthButton } from "./SubmitButton";
 
 export type Vinculo = "empresa" | "instituicao";
 
@@ -68,7 +69,7 @@ export function NewUserForm({ defaultVinculo }: { defaultVinculo: Vinculo }) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-      <div role="radiogroup" aria-label="Vínculo do usuário" className="grid grid-cols-2 gap-2 rounded-lg bg-surface p-1">
+      <div role="radiogroup" aria-label="Vínculo do usuário" className="grid grid-cols-2 gap-1 rounded-btn border border-border bg-fill-1 p-1">
         {tabs.map((tab) => (
           <button
             key={tab.key}
@@ -77,8 +78,10 @@ export function NewUserForm({ defaultVinculo }: { defaultVinculo: Vinculo }) {
             aria-checked={vinculo === tab.key}
             onClick={() => setVinculo(tab.key)}
             className={cn(
-              "flex h-10 items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors",
-              vinculo === tab.key ? "bg-card text-primary shadow-md dark:shadow-dark-md" : "text-bodytext hover:text-primary",
+              "flex h-10 items-center justify-center gap-2 rounded-[6px] text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-periwinkle",
+              vinculo === tab.key
+                ? "border border-border-accent bg-card text-primarytext shadow-[0_4px_16px_-8px_rgba(21,48,234,0.35)] dark:bg-lightprimary dark:text-white"
+                : "border border-transparent text-bodytext hover:text-link",
             )}
           >
             {tab.icon}
@@ -88,13 +91,13 @@ export function NewUserForm({ defaultVinculo }: { defaultVinculo: Vinculo }) {
       </div>
 
       {failed.length > 0 && (
-        <p className="rounded-md bg-lightwarning px-4 py-3 text-sm text-warningtext">
+        <p className="rounded-btn border border-warning/25 bg-lightwarning px-4 py-3 text-sm text-warningtext">
           Não foi possível carregar algumas listas. Verifique se você está logado como administrador.
         </p>
       )}
 
       <Field label="Nome completo" htmlFor="name" required>
-        <Input id="name" name="name" autoComplete="name" required />
+        <AuthInput id="name" name="name" autoComplete="name" required />
       </Field>
       <Field label="E-mail" htmlFor="email" required>
         <EmailInput id="email" name="email" required />
@@ -103,7 +106,7 @@ export function NewUserForm({ defaultVinculo }: { defaultVinculo: Vinculo }) {
         <PasswordInput id="password" name="password" autoComplete="new-password" minLength={4} required />
       </Field>
       <Field label={vinculo === "empresa" ? "Empresa" : "Instituição"} htmlFor="org" required>
-        <Select id="org" name="org" required defaultValue="" key={vinculo} disabled={loading}>
+        <AuthSelect id="org" name="org" required defaultValue="" key={vinculo} disabled={loading}>
           <option value="" disabled>
             {loading ? "Carregando..." : "Selecione"}
           </option>
@@ -112,10 +115,10 @@ export function NewUserForm({ defaultVinculo }: { defaultVinculo: Vinculo }) {
               {option.label}
             </option>
           ))}
-        </Select>
+        </AuthSelect>
       </Field>
       <Field label="Setor" htmlFor="setor" required>
-        <Select id="setor" name="setor" required defaultValue="" disabled={loading}>
+        <AuthSelect id="setor" name="setor" required defaultValue="" disabled={loading}>
           <option value="" disabled>
             {loading ? "Carregando..." : "Selecione"}
           </option>
@@ -124,17 +127,17 @@ export function NewUserForm({ defaultVinculo }: { defaultVinculo: Vinculo }) {
               {option.label}
             </option>
           ))}
-        </Select>
+        </AuthSelect>
       </Field>
 
       <label className="flex items-center gap-2 text-sm text-bodytext">
-        <input type="checkbox" name="another" className="h-4 w-4 accent-[var(--primary)]" />
+        <input type="checkbox" name="another" className="h-4 w-4 rounded accent-[var(--primary)]" />
         Cadastrar outro em seguida
       </label>
 
-      <Button type="submit" size="lg" loading={sending} disabled={loading} className="w-full">
+      <AuthButton loading={sending} disabled={loading}>
         Cadastrar usuário
-      </Button>
+      </AuthButton>
     </form>
   );
 }

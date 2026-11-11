@@ -7,7 +7,8 @@ import { loginErrorMessage, setSessionCookie } from "@/lib/auth";
 import { AuthDivider, AuthError, AuthShell, authSlides } from "@/components/auth/AuthShell";
 import { EmailInput, PasswordInput } from "@/components/auth/AuthFields";
 import { SubmitButton } from "@/components/auth/SubmitButton";
-import { ButtonLink, Field } from "@/components/ui";
+import { authButton, authLink } from "@/components/auth/authStyles";
+import { Field } from "@/components/ui";
 
 type LoginPageProps = {
   searchParams: Promise<{ error?: string }>;
@@ -44,15 +45,17 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
   return (
     <AuthShell
+      eyebrow="Portal administrativo"
       title="Bem-vindo de volta"
       subtitle="Portal administrativo para administradores e técnicos."
       slides={authSlides.staff}
       asideTitle="Sua equipe em campo, organizada do chamado à OS assinada"
+      asideHighlight="do chamado à OS assinada"
       asideText="Agende atendimentos, acompanhe cada ordem de serviço e tenha o histórico de todos os equipamentos."
       topLink={
         <>
           É cliente?{" "}
-          <Link href="/AreadeUsuario" className="font-medium text-primary hover:underline">
+          <Link href="/AreadeUsuario" className={authLink}>
             Área do usuário
           </Link>
         </>
@@ -69,9 +72,9 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         <SubmitButton>Entrar</SubmitButton>
       </form>
       <AuthDivider>ou</AuthDivider>
-      <ButtonLink href="/AreadeUsuario" variant="outline" size="lg" className="w-full">
+      <Link href="/AreadeUsuario" className={authButton.secondary}>
         Sou cliente, quero abrir um chamado
-      </ButtonLink>
+      </Link>
     </AuthShell>
   );
 }

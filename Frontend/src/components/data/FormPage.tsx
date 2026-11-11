@@ -19,7 +19,7 @@ export function FormPage({ title, description, backHref, backLabel, cardTitle, c
         title={title}
         breadcrumbs={[{ label: backLabel, href: backHref }, { label: title }]}
         actions={
-          <ButtonLink href={backHref} variant="outline" className="bg-card" icon={<TbArrowLeft className="h-4 w-4" />}>
+          <ButtonLink href={backHref} variant="surface" icon={<TbArrowLeft className="h-4 w-4" />}>
             Voltar
           </ButtonLink>
         }

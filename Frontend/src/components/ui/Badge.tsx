@@ -3,7 +3,7 @@ import { cn } from "@/lib/cn";
 import { statusTone, Tone } from "@/lib/status";
 
 const tones: Record<Tone, string> = {
-  primary: "bg-lightprimary text-primary",
+  primary: "bg-lightprimary text-primarytext",
   secondary: "bg-lightsecondary text-secondary",
   success: "bg-lightsuccess text-successtext",
   warning: "bg-lightwarning text-warningtext",

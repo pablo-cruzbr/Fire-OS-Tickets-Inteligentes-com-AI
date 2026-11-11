@@ -2,14 +2,18 @@ import { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { Tone } from "@/lib/status";
 
-const tones: Record<Tone, { box: string; icon: string }> = {
-  primary: { box: "bg-lightprimary", icon: "bg-primary text-white" },
-  secondary: { box: "bg-lightsecondary", icon: "bg-secondary text-white" },
-  success: { box: "bg-lightsuccess", icon: "bg-success text-white" },
-  warning: { box: "bg-lightwarning", icon: "bg-warning text-white" },
-  error: { box: "bg-lighterror", icon: "bg-error text-white" },
-  info: { box: "bg-lightinfo", icon: "bg-info text-white" },
-  neutral: { box: "bg-surface", icon: "bg-muted text-white" },
+/**
+ * Icon square per tone: a tinted fill + the tone colour on the glyph (never
+ * white on a bright fill, which was unreadable on warning/success/secondary).
+ */
+const tones: Record<Tone, string> = {
+  primary: "bg-lightprimary text-primarytext ring-primary/25",
+  secondary: "bg-lightsecondary text-secondary ring-secondary/25",
+  success: "bg-lightsuccess text-successtext ring-success/25",
+  warning: "bg-lightwarning text-warningtext ring-warning/25",
+  error: "bg-lighterror text-errortext ring-error/25",
+  info: "bg-lightinfo text-info ring-info/25",
+  neutral: "bg-fill-2 text-bodytext ring-border",
 };
 
 export type Stat = {
@@ -19,13 +23,17 @@ export type Stat = {
   icon?: ReactNode;
 };
 
-/** Coloured KPI tile, like the Modernize dashboard top cards. */
+/** KPI tile: landing-style card (bg-card + hairline) with a tinted icon square. */
 export function StatCard({ label, value, tone = "primary", icon }: Stat) {
-  const palette = tones[tone];
   return (
-    <div className={cn("flex items-center gap-4 rounded-xl px-5 py-5", palette.box)}>
+    <div className="flex items-center gap-4 rounded-card border border-border bg-card px-5 py-5 shadow-md dark:shadow-none">
       {icon && (
-        <span className={cn("flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-xl", palette.icon)}>
+        <span
+          className={cn(
+            "flex h-11 w-11 shrink-0 items-center justify-center rounded-btn text-xl ring-1 ring-inset",
+            tones[tone],
+          )}
+        >
           {icon}
         </span>
       )}

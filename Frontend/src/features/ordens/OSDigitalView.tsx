@@ -93,7 +93,7 @@ export function OSDigitalView({ os, fotos }: { os: OrdemdeServicoProps | null; f
     <main className="min-h-screen bg-background px-4 py-8 print:bg-white print:p-0">
       <OSDocument ref={sheetRef} os={os} fotos={fotos} crossOrigin />
       <div className="mx-auto mt-6 flex max-w-4xl flex-wrap justify-end gap-2 print:hidden">
-        <Button variant="outline" className="bg-card" onClick={() => window.print()} icon={<TbPrinter className="h-4 w-4" />}>
+        <Button variant="surface" onClick={() => window.print()} icon={<TbPrinter className="h-4 w-4" />}>
           Imprimir
         </Button>
         <Button onClick={handleDownload} loading={generating} icon={<TbFileDownload className="h-4 w-4" />}>

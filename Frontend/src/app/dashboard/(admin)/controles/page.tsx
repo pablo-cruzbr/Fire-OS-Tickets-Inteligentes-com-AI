@@ -15,10 +15,10 @@ export default function ControlesPage() {
           <Link
             key={link.href}
             href={link.href}
-            className="group flex items-center justify-between rounded-xl bg-card p-5 shadow-md transition-colors hover:bg-lightprimary dark:shadow-dark-md"
+            className="group flex items-center justify-between rounded-xl bg-card p-5 shadow-md transition-colors hover:bg-lightprimary"
           >
-            <span className="font-semibold text-link group-hover:text-primary">{link.label}</span>
-            <TbChevronRight className="h-5 w-5 text-muted group-hover:text-primary" />
+            <span className="font-semibold text-link group-hover:text-primarytext">{link.label}</span>
+            <TbChevronRight className="h-5 w-5 text-muted group-hover:text-primarytext" />
           </Link>
         ))}
       </div>

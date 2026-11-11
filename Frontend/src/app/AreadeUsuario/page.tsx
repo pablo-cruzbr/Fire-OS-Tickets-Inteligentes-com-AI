@@ -7,6 +7,7 @@ import { loginErrorMessage, setSessionCookie } from "@/lib/auth";
 import { AuthDivider, AuthError, AuthShell, authSlides } from "@/components/auth/AuthShell";
 import { EmailInput, PasswordInput } from "@/components/auth/AuthFields";
 import { SubmitButton } from "@/components/auth/SubmitButton";
+import { authLink } from "@/components/auth/authStyles";
 import { Field } from "@/components/ui";
 
 type PageProps = {
@@ -41,16 +42,18 @@ export default async function AreadeUsuario({ searchParams }: PageProps) {
 
   return (
     <AuthShell
+      eyebrow="Área do cliente"
       title="Área do usuário"
       subtitle="Entre para abrir e acompanhar seus chamados."
       slides={authSlides.client}
       asideTitle="Atendimento técnico descomplicado"
+      asideHighlight="descomplicado"
       asideText="Abra chamados em poucos cliques e acompanhe cada etapa até a solução."
       asidePoints={["Abra um chamado em menos de um minuto", "Seus dados já vão junto com o pedido", "Técnicos atendendo no seu local"]}
       topLink={
         <>
           É colaborador?{" "}
-          <Link href="/login" className="font-medium text-primary hover:underline">
+          <Link href="/login" className={authLink}>
             Portal administrativo
           </Link>
         </>
@@ -67,7 +70,7 @@ export default async function AreadeUsuario({ searchParams }: PageProps) {
         <SubmitButton>Entrar</SubmitButton>
       </form>
       <AuthDivider>ou</AuthDivider>
-      <p className="text-center text-sm text-bodytext">
+      <p className="text-center text-sm leading-relaxed text-bodytext">
         Ainda não tem acesso? Peça à empresa que presta o atendimento para criar o seu usuário.
       </p>
     </AuthShell>

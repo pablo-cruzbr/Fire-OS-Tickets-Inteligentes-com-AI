@@ -15,7 +15,7 @@ export default async function CalendarioTecnicoPage() {
         title="Calendário técnico"
         breadcrumbs={[{ label: "Administração" }, { label: "Calendário técnico" }]}
         actions={
-          <ButtonLink href="/dashboard/tickets" variant="outline" className="bg-card" icon={<TbListDetails className="h-4 w-4" />}>
+          <ButtonLink href="/dashboard/tickets" variant="surface" icon={<TbListDetails className="h-4 w-4" />}>
             Lista de chamados
           </ButtonLink>
         }

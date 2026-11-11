@@ -134,12 +134,11 @@ export function EntityList<T>({
           <>
             {headerActions}
             <Button
-              variant="outline"
+              variant="surface"
               size="icon"
               onClick={refresh}
               aria-label="Atualizar lista"
               title="Atualizar lista"
-              className="bg-card"
             >
               <TbRefresh className={cn("h-4 w-4", refreshing && "animate-spin")} />
             </Button>

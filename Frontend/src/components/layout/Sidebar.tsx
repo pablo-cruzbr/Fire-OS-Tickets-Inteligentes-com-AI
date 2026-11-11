@@ -15,7 +15,7 @@ function isActive(pathname: string, href: string) {
 }
 
 const itemClasses =
-  "flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 hover:translate-x-1";
+  "flex w-full items-center gap-3 rounded-btn px-3 py-2.5 text-sm font-medium transition-all duration-200 hover:translate-x-1";
 
 function NavEntry({ item, pathname, onNavigate }: { item: NavItem; pathname: string; onNavigate: () => void }) {
   const childActive = item.children?.some((child) => isActive(pathname, child.href)) ?? false;
@@ -31,8 +31,8 @@ function NavEntry({ item, pathname, onNavigate }: { item: NavItem; pathname: str
         className={cn(
           itemClasses,
           active
-            ? "bg-primary text-white shadow-btn hover:translate-x-0"
-            : "text-link hover:bg-lightprimary hover:text-primary",
+            ? "border border-white/15 bg-gradient-brand text-white shadow-btn hover:translate-x-0"
+            : "border border-transparent text-bodytext hover:bg-fill-2 hover:text-link",
         )}
       >
         <span className="text-xl">{item.icon}</span>
@@ -49,8 +49,9 @@ function NavEntry({ item, pathname, onNavigate }: { item: NavItem; pathname: str
         aria-expanded={open}
         className={cn(
           itemClasses,
-          childActive ? "text-primary" : "text-link",
-          "hover:bg-lightprimary hover:text-primary",
+          "border border-transparent",
+          childActive ? "text-link" : "text-bodytext",
+          "hover:bg-fill-2 hover:text-link",
         )}
       >
         <span className="text-xl">{item.icon}</span>
@@ -58,7 +59,7 @@ function NavEntry({ item, pathname, onNavigate }: { item: NavItem; pathname: str
         <TbChevronDown className={cn("h-4 w-4 transition-transform duration-200", open && "rotate-180")} />
       </button>
       {open && (
-        <ul className="mt-1 flex flex-col gap-0.5 pl-4">
+        <ul className="ml-[22px] mt-1 flex flex-col gap-0.5 border-l border-border pl-2">
           {item.children?.map((child) => {
             const active = isActive(pathname, child.href);
             return (
@@ -68,11 +69,11 @@ function NavEntry({ item, pathname, onNavigate }: { item: NavItem; pathname: str
                   onClick={onNavigate}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors",
-                    active ? "font-medium text-primary" : "text-bodytext hover:text-primary",
+                    "flex items-center gap-2.5 rounded-btn px-3 py-2 text-sm transition-colors",
+                    active ? "bg-lightprimary font-medium text-link" : "text-bodytext hover:bg-fill-2 hover:text-link",
                   )}
                 >
-                  <TbPointFilled className={cn("h-2.5 w-2.5", active ? "text-primary" : "text-muted")} />
+                  <TbPointFilled className={cn("h-2.5 w-2.5", active ? "text-primarytext" : "text-muted")} />
                   {child.label}
                 </Link>
               </li>
@@ -99,7 +100,7 @@ export function Sidebar({ sections, open, onClose }: SidebarProps) {
         aria-hidden
         onClick={onClose}
         className={cn(
-          "fixed inset-0 z-40 bg-[#1c2536]/40 transition-opacity xl:hidden",
+          "fixed inset-0 z-40 bg-overlay backdrop-blur-[2px] transition-opacity xl:hidden",
           open ? "opacity-100" : "pointer-events-none opacity-0",
         )}
       />
@@ -119,7 +120,7 @@ export function Sidebar({ sections, open, onClose }: SidebarProps) {
         <nav aria-label="Menu principal" className="flex-1 overflow-y-auto px-5 pb-6">
           {sections.map((section) => (
             <div key={section.heading} className="mt-4 first:mt-1">
-              <h6 className="mb-1.5 px-3 text-xs font-bold uppercase tracking-wide text-muted">
+              <h6 className="mb-1.5 px-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">
                 {section.heading}
               </h6>
               <ul className="flex flex-col gap-0.5">

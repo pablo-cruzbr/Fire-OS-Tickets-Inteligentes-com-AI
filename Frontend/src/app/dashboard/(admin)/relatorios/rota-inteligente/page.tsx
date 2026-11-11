@@ -9,6 +9,7 @@ import {
   TbSparkles,
 } from "react-icons/tb";
 import { Badge, Card, CardHeader, StatGrid } from "@/components/ui";
+import { HeroCard } from "@/features/dashboard/HeroCard";
 
 export const metadata = {
   title: "Roteiro Inteligente — Fire OS",
@@ -79,23 +80,22 @@ const prioridadeTone = {
 export default function RotaInteligentePage() {
   return (
     <div className="flex flex-col gap-6">
-      <Card className="relative overflow-hidden bg-lightprimary shadow-none dark:shadow-none">
+      <HeroCard>
         <div className="relative z-10 flex flex-wrap items-start justify-between gap-4">
           <div>
-            <Badge tone="primary" className="bg-card">
+            <Badge tone="primary" className="ring-1 ring-inset ring-primary/20">
               <TbSparkles className="mr-1 inline h-3.5 w-3.5" /> Roteiro sugerido por IA
             </Badge>
             <h1 className="mt-3 text-2xl font-semibold text-link">Carlos Souza — hoje, 19/10/2026</h1>
             <p className="mt-1 text-sm text-bodytext">6 chamados reorganizados por urgência e proximidade</p>
           </div>
           <div className="flex gap-2">
-            <button className="flex h-10 items-center gap-2 rounded-md bg-card px-4 text-sm font-medium text-link shadow-md dark:shadow-dark-md">
-              <TbBrandGoogleMaps className="h-4 w-4 text-primary" /> Abrir no Google Maps
+            <button className="flex h-10 items-center gap-2 rounded-md bg-card px-4 text-sm font-medium text-link shadow-md">
+              <TbBrandGoogleMaps className="h-4 w-4 text-primarytext" /> Abrir no Google Maps
             </button>
           </div>
         </div>
-        <div aria-hidden className="absolute -bottom-16 -right-10 h-56 w-56 rounded-full bg-primary/15" />
-      </Card>
+      </HeroCard>
 
       <div className="rounded-lg border border-warning/30 bg-lightwarning px-4 py-3 text-sm text-warningtext">
         <strong className="font-semibold">Protótipo de interface:</strong> a ordem das paradas abaixo é fixa, só
@@ -113,7 +113,7 @@ export default function RotaInteligentePage() {
         />
         <ul className="flex flex-col gap-3 text-sm text-bodytext">
           <li className="flex items-start gap-3">
-            <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-lightprimary text-primary">
+            <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-lightprimary text-primarytext">
               <TbCode className="h-4 w-4" />
             </span>
             <span>
@@ -122,7 +122,7 @@ export default function RotaInteligentePage() {
             </span>
           </li>
           <li className="flex items-start gap-3">
-            <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-lightprimary text-primary">
+            <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-lightprimary text-primarytext">
               <TbCode className="h-4 w-4" />
             </span>
             <span>
@@ -131,7 +131,7 @@ export default function RotaInteligentePage() {
             </span>
           </li>
           <li className="flex items-start gap-3">
-            <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-lightprimary text-primary">
+            <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-lightprimary text-primarytext">
               <TbSparkles className="h-4 w-4" />
             </span>
             <span>
@@ -166,7 +166,7 @@ export default function RotaInteligentePage() {
                   </div>
                 </div>
                 {stop.nota && (
-                  <p className="mt-2 flex items-start gap-1.5 text-xs text-primary">
+                  <p className="mt-2 flex items-start gap-1.5 text-xs text-primarytext">
                     <TbBolt className="mt-0.5 h-3.5 w-3.5 shrink-0" /> {stop.nota}
                   </p>
                 )}

@@ -2,8 +2,8 @@ import { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 const control =
-  "w-full rounded-md border border-border bg-transparent px-3.5 text-sm text-link placeholder:text-muted " +
-  "transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-lightprimary " +
+  "w-full rounded-btn border border-border bg-fill-1 px-3.5 text-sm text-link placeholder:text-muted " +
+  "transition-colors focus:border-primary focus:outline-none focus:ring-3 focus:ring-primary/20 " +
   "disabled:cursor-not-allowed disabled:opacity-60";
 
 export function Input({ className, ...props }: ComponentProps<"input">) {

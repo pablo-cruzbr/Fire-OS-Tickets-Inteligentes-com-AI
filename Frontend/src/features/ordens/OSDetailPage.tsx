@@ -33,8 +33,7 @@ export function OSDetailPage({ os, fotos }: { os: OrdemdeServicoProps | null; fo
               <ButtonLink
                 href={`/os-digital/${os.id}`}
                 target="_blank"
-                variant="outline"
-                className="bg-card"
+                variant="surface"
                 icon={<TbFileText className="h-4 w-4" />}
               >
                 OS digital

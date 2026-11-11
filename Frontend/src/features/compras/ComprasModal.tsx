@@ -29,7 +29,7 @@ export function ComprasModal({ data: compra, onClose }: EntityModalProps<Compras
               href={compra.linkDeCompra}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary underline-offset-2 hover:underline"
+              className="text-primarytext underline-offset-2 hover:underline"
             >
               {compra.linkDeCompra}
             </a>

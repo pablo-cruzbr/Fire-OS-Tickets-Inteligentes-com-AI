@@ -10,7 +10,7 @@ type EmptyStateProps = {
 export function EmptyState({ title, description, action }: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-14 text-center">
-      <span className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-lightprimary text-2xl text-primary">
+      <span className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-lightprimary text-2xl text-primarytext">
         <TbInbox />
       </span>
       <h6 className="text-base font-semibold text-link">{title}</h6>

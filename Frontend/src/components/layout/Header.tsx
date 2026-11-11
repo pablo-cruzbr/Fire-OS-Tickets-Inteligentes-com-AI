@@ -48,9 +48,9 @@ function ProfileMenu({ user }: { user: SessionUser }) {
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
         aria-haspopup="menu"
-        className="flex items-center gap-3 rounded-full p-1 pr-1 transition-colors hover:bg-lightprimary sm:pr-3"
+        className="flex items-center gap-3 rounded-full p-1 pr-1 transition-colors hover:bg-fill-2 sm:pr-3"
       >
-        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white">
+        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-brand text-sm font-semibold text-white">
           {initials(user.name) || <TbUser />}
         </span>
         <span className="hidden text-left sm:block">
@@ -62,10 +62,10 @@ function ProfileMenu({ user }: { user: SessionUser }) {
       {open && (
         <div
           role="menu"
-          className="absolute right-0 top-full z-50 mt-2 w-72 rounded-xl bg-card p-5 shadow-md dark:shadow-dark-md"
+          className="absolute right-0 top-full z-50 mt-2 w-72 rounded-card border border-border bg-card p-5 shadow-md dark:shadow-none"
         >
           <div className="flex items-center gap-3 border-b border-border pb-4">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-base font-semibold text-white">
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-brand text-base font-semibold text-white">
               {initials(user.name)}
             </span>
             <div className="min-w-0">
@@ -78,9 +78,9 @@ function ProfileMenu({ user }: { user: SessionUser }) {
             href="/dashboard/tickets"
             role="menuitem"
             onClick={() => setOpen(false)}
-            className="mt-3 flex items-center gap-3 rounded-md px-2 py-2 text-sm text-link hover:bg-lightprimary hover:text-primary"
+            className="mt-3 flex items-center gap-3 rounded-btn px-2 py-2 text-sm text-link hover:bg-fill-2"
           >
-            <span className="flex h-9 w-9 items-center justify-center rounded-md bg-lightprimary text-lg text-primary">
+            <span className="flex h-9 w-9 items-center justify-center rounded-btn bg-lightprimary text-lg text-primarytext">
               <TbTicket />
             </span>
             Meus chamados
@@ -89,7 +89,7 @@ function ProfileMenu({ user }: { user: SessionUser }) {
             <button
               type="submit"
               role="menuitem"
-              className="flex h-10 w-full items-center justify-center gap-2 rounded-md border border-primary text-sm font-medium text-primary transition-colors hover:bg-primary hover:text-white"
+              className="flex h-10 w-full items-center justify-center gap-2 rounded-btn border border-border text-sm font-semibold text-link transition-colors hover:border-transparent hover:bg-lighterror hover:text-errortext"
             >
               <TbLogout className="h-4 w-4" />
               Sair do sistema
@@ -110,12 +110,12 @@ export function Header({ user, onMenuClick }: HeaderProps) {
   const [askOpen, setAskOpen] = useState(false);
 
   return (
-    <header className="flex h-[70px] items-center gap-2 bg-background/90 px-4 backdrop-blur sm:px-6">
+    <header className="flex h-[70px] items-center gap-2 border-b border-border bg-header px-4 backdrop-blur-[8px] sm:px-6">
       <button
         type="button"
         onClick={onMenuClick}
         aria-label="Abrir menu"
-        className="flex h-10 w-10 items-center justify-center rounded-full text-xl text-link hover:bg-lightprimary hover:text-primary xl:hidden"
+        className="flex h-10 w-10 items-center justify-center rounded-full text-xl text-link hover:bg-fill-2 xl:hidden"
       >
         <TbMenu2 />
       </button>
@@ -123,7 +123,7 @@ export function Header({ user, onMenuClick }: HeaderProps) {
         <button
           type="button"
           onClick={() => setAskOpen(true)}
-          className="flex h-10 items-center gap-1.5 rounded-full bg-lightprimary px-3.5 text-sm font-medium text-primary transition-colors hover:bg-primary hover:text-white sm:px-4"
+          className="flex h-10 items-center gap-1.5 rounded-full border border-border-accent bg-badge px-3.5 text-sm font-semibold text-eyebrow transition-colors hover:border-transparent hover:bg-primary hover:text-white sm:px-4"
         >
           <TbSparkles className="h-4 w-4" />
           <span className="hidden sm:inline">Perguntar à Agnis</span>

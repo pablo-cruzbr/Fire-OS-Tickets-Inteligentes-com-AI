@@ -39,7 +39,7 @@ export function OrdemAssinatura({ os }: { os: OrdemdeServicoProps }) {
   return (
     <div className="flex flex-col gap-4">
       {loading ? (
-        <div className="flex justify-center py-10 text-primary">
+        <div className="flex justify-center py-10 text-primarytext">
           <Spinner />
         </div>
       ) : url ? (

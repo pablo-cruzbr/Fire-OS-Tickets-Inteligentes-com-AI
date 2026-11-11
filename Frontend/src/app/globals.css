@@ -3,65 +3,173 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /*
- * Design tokens — modelled on the Modernize admin template (purple skin),
- * tuned to the Fire OS brand. Components only reference the semantic
- * tokens below, so dark mode is a matter of swapping these values.
+ * Design tokens — the landing page's navy / royal-blue language, in two
+ * themes. Dark (the default) mirrors the landing; light keeps the same blue
+ * brand on white surfaces with a faint blue tint. Components only reference
+ * the semantic tokens below, so a theme is a matter of swapping these values.
+ * Token NAMES are a contract: every screen consumes them.
+ *
+ * Contrast notes:
+ *  - light --primary #1530EA: 7.9:1 with white text, 7.4:1 as text on --surface.
+ *  - dark  --primary #5068F2: 4.6:1 with white text, so `bg-primary text-white`
+ *    stays readable. As TEXT it is only ~4.3:1 on --card, so text/icons use
+ *    `text-primarytext` (--primary-text: #1530EA light, #8C9BFF dark, 7.7:1).
+ *    The landing #1530EA lives on in --brand, the gradient and the LogoMark.
  */
 :root {
-  --primary: #6d44e4;
-  --primary-emphasis: #5a33cc;
-  --secondary: #49beff;
-  --success: #13deb9;
-  --warning: #ffae1f;
-  --error: #fa896b;
-  --info: #539bff;
-  --brand: #4e3182;
+  /* Brand blues */
+  --primary: #1530ea;
+  --primary-emphasis: #0f24c4;
+  --accent: #405de5;
+  --accent-2: #647ded;
+  --periwinkle: #7989fa;
+  --periwinkle-2: #93a1fb;
+  --lavender: #dbe2ff;
+  --violet: #705fe8;
+  --brand: #1530ea;
 
-  --lightprimary: color-mix(in oklab, var(--primary) 12%, transparent);
-  --lightsecondary: color-mix(in oklab, var(--secondary) 14%, transparent);
+  /* Status colours */
+  --secondary: #0284c7;
+  --success: #13b994;
+  --warning: #f59e0b;
+  --error: #ef5a3c;
+  --info: #405de5;
+
+  --lightprimary: color-mix(in oklab, var(--primary) 9%, transparent);
+  --lightsecondary: color-mix(in oklab, var(--secondary) 12%, transparent);
   --lightsuccess: color-mix(in oklab, var(--success) 14%, transparent);
   --lightwarning: color-mix(in oklab, var(--warning) 16%, transparent);
-  --lighterror: color-mix(in oklab, var(--error) 16%, transparent);
-  --lightinfo: color-mix(in oklab, var(--info) 14%, transparent);
+  --lighterror: color-mix(in oklab, var(--error) 14%, transparent);
+  --lightinfo: color-mix(in oklab, var(--info) 12%, transparent);
 
+  /* Surfaces */
   --background: #ffffff;
   --card: #ffffff;
-  --surface: #f6f9fc;
-  --border: #e5eaef;
-  --link: #2a3547;
-  --bodytext: #5a6a85;
-  --muted: #7c8fac;
+  --surface: #f5f7ff;
+  --header: rgba(255, 255, 255, 0.85);
+  --glass: rgba(255, 255, 255, 0.8);
+  --fill-1: rgba(21, 48, 234, 0.02);
+  --fill-2: rgba(21, 48, 234, 0.05);
+  --badge: rgba(21, 48, 234, 0.06);
 
-  --success-text: #0e9f84;
-  --warning-text: #c77f00;
-  --error-text: #e0542f;
+  /* Lines */
+  --border: #e3e7f8;
+  --border-strong: #c9d0f0;
+  --border-accent: rgba(21, 48, 234, 0.18);
+
+  /* Text */
+  --link: #0b1033;
+  --foreground: #0b1033;
+  --bodytext: #4a5275;
+  --muted: #6b7397;
+  --eyebrow: #1530ea;
+  /* Brand blue used AS TEXT/ICON colour (links, "Ver todos", chips). */
+  --primary-text: #1530ea;
+
+  --success-text: #0b8a6e;
+  --warning-text: #b46a00;
+  --error-text: #d4401f;
+
+  /* Gradients and glows */
+  --gradient-brand: linear-gradient(97deg, #1530ea 0%, #7989fa 100%);
+  --gradient-text: linear-gradient(97deg, #1530ea 0%, #405de5 50%, #7989fa 100%);
+  --glow: radial-gradient(
+    72% 46% at 18% 24%,
+    rgba(21, 48, 234, 0.12) 0%,
+    rgba(21, 48, 234, 0.07) 30%,
+    rgba(21, 48, 234, 0.03) 60%,
+    transparent 100%
+  );
+  --grid-line: rgba(21, 48, 234, 0.06);
+  --selection: rgba(21, 48, 234, 0.18);
+  --overlay: rgba(11, 16, 51, 0.45);
+  /* Elevation: a soft blue-tinted lift in light. */
+  --elev-md: 0 0 1px 0 rgb(11 16 51 / 0.14), 0 12px 24px -8px rgb(21 48 234 / 0.08);
+
+  /* Radii */
+  --radius-chip: 4px;
+  --radius-btn: 8px;
+  --radius-card: 16px;
+
+  color-scheme: light;
 }
 
 .dark {
-  --primary: #8b69f0;
-  --primary-emphasis: #7a55ea;
-  --lightprimary: color-mix(in oklab, var(--primary) 18%, transparent);
+  --primary: #5068f2;
+  --primary-emphasis: #1530ea;
+  --accent: #647ded;
+  --accent-2: #7989fa;
+  --periwinkle: #93a1fb;
+  --periwinkle-2: #9caeff;
+  --brand: #1530ea;
 
-  --background: #151b26;
-  --card: #1e2735;
-  --surface: #232d3d;
-  --border: #333f55;
-  --link: #e6ecf5;
-  --bodytext: #9aa9c2;
-  --muted: #7c8fac;
+  --secondary: #5cc8ff;
+  --success: #2fd4a7;
+  --warning: #ffb547;
+  --error: #ff7a6b;
+  --info: #7989fa;
 
-  --success-text: #13deb9;
-  --warning-text: #ffae1f;
-  --error-text: #fa896b;
+  --lightprimary: rgba(121, 138, 251, 0.12);
+  --lightsecondary: color-mix(in oklab, var(--secondary) 14%, transparent);
+  --lightsuccess: color-mix(in oklab, var(--success) 14%, transparent);
+  --lightwarning: color-mix(in oklab, var(--warning) 14%, transparent);
+  --lighterror: color-mix(in oklab, var(--error) 14%, transparent);
+  --lightinfo: color-mix(in oklab, var(--info) 14%, transparent);
+
+  --background: #000214;
+  --card: #070a1f;
+  --surface: #0a0e26;
+  --header: rgba(0, 2, 20, 0.85);
+  --glass: rgba(0, 2, 20, 0.9);
+  --fill-1: rgba(255, 255, 255, 0.02);
+  --fill-2: rgba(255, 255, 255, 0.05);
+  --badge: rgba(121, 138, 251, 0.05);
+
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.2);
+  --border-accent: rgba(121, 138, 251, 0.18);
+
+  --link: #ffffff;
+  --foreground: #ffffff;
+  --bodytext: rgba(255, 255, 255, 0.7);
+  --muted: rgba(255, 255, 255, 0.5);
+  --eyebrow: #c8cfff;
+  /* #5068F2 is only ~4.3:1 on --card; text needs a lighter periwinkle (7.7:1). */
+  --primary-text: #8c9bff;
+
+  --success-text: #2fd4a7;
+  --warning-text: #ffb547;
+  --error-text: #ff7a6b;
+
+  --gradient-text: linear-gradient(97deg, #7989fa 0%, #c8cfff 60%, #ffffff 100%);
+  --glow: radial-gradient(
+    72% 46% at 18% 24%,
+    rgba(28, 58, 190, 0.34) 0%,
+    rgba(28, 58, 190, 0.24) 30%,
+    rgba(28, 58, 190, 0.1) 60%,
+    transparent 100%
+  );
+  --grid-line: rgba(255, 255, 255, 0.04);
+  --selection: rgba(121, 138, 251, 0.35);
+  --overlay: rgba(0, 2, 20, 0.7);
+  /* Dark: no drop shadow, just the landing hairline. */
+  --elev-md: 0 0 0 1px rgb(255 255 255 / 0.1);
 
   color-scheme: dark;
 }
 
 @theme inline {
-  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-jakarta), "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-jakarta), "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 
   --color-primary: var(--primary);
   --color-primaryemphasis: var(--primary-emphasis);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-periwinkle: var(--periwinkle);
+  --color-periwinkle-2: var(--periwinkle-2);
+  --color-lavender: var(--lavender);
+  --color-violet: var(--violet);
   --color-secondary: var(--secondary);
   --color-success: var(--success);
   --color-warning: var(--warning);
@@ -79,20 +187,50 @@
   --color-successtext: var(--success-text);
   --color-warningtext: var(--warning-text);
   --color-errortext: var(--error-text);
+  --color-primarytext: var(--primary-text);
 
   --color-background: var(--background);
   --color-card: var(--card);
   --color-surface: var(--surface);
+  --color-header: var(--header);
+  --color-glass: var(--glass);
+  --color-fill-1: var(--fill-1);
+  --color-fill-2: var(--fill-2);
+  --color-badge: var(--badge);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-border-accent: var(--border-accent);
   --color-link: var(--link);
+  --color-foreground: var(--foreground);
   --color-bodytext: var(--bodytext);
   --color-muted: var(--muted);
+  --color-eyebrow: var(--eyebrow);
+  --color-overlay: var(--overlay);
 
-  --shadow-md: 0 0 2px 0 rgb(145 158 171 / 0.3), 0 12px 24px -4px rgb(145 158 171 / 0.12);
-  --shadow-dark-md: 0 0 2px 0 rgb(145 158 171 / 0.3), 0 12px 24px -4px rgb(145 158 171 / 0.02);
-  --shadow-btn: 0 9px 17.5px rgb(0 0 0 / 0.05);
+  /* Same values as the :root radius tokens (literal to avoid a self-reference). */
+  --radius-chip: 4px;
+  --radius-btn: 8px;
+  --radius-card: 16px;
 
+  /* Theme-aware via --elev-md: soft lift in light, hairline ring (no shadow) in dark.
+     shadow-dark-md is kept as an alias so existing dark: classes stay valid. */
+  --shadow-md: var(--elev-md);
+  --shadow-dark-md: var(--elev-md);
+  --shadow-btn: 0 8px 20px -10px rgb(21 48 234 / 0.6);
+
+  --animate-fade-up: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-marquee: marquee 70s linear infinite;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
   @keyframes marquee {
     from {
@@ -104,6 +242,47 @@
   }
 }
 
+/* Gradient-filled text (royal blue → periwinkle; → white in dark). */
+@utility text-gradient {
+  background-image: var(--gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Brand gradient fill (97deg #1530EA → #7989FA), e.g. for CTAs. */
+@utility bg-gradient-brand {
+  background-image: var(--gradient-brand);
+}
+
+/* Subtle 64px grid, faded toward the edges. */
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 40%, transparent 100%);
+}
+
+/* Blue radial glow wash; put on an absolutely-positioned, aria-hidden layer. */
+@utility glow-radial {
+  background-image: var(--glow);
+  pointer-events: none;
+}
+
+/* Translucent glass with blur + hairline. */
+@utility glass {
+  background-color: var(--glass);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+}
+
+/* 1px hairline border (white 10% in dark, blue-grey in light). */
+@utility hairline {
+  border: 1px solid var(--border);
+}
+
 @layer base {
   html,
   body {
@@ -112,6 +291,21 @@
 
   body {
     @apply bg-background font-sans text-sm text-bodytext antialiased;
+    letter-spacing: -0.01em;
+  }
+
+  /*
+   * Plus Jakarta Sans ships a very narrow space glyph (~0.17em; most UI fonts
+   * use ~0.26em) and our negative tracking shaves it further, so words in
+   * small/semibold text visually ran together ("Vertodos"). Widen every
+   * space by 0.08em (same value as the landing). Set per element (not inherited from body) so the em
+   * resolves at each element size and reaches form controls, whose UA style
+   * resets word-spacing (Tailwind preflight does not re-inherit it).
+   */
+  *,
+  ::before,
+  ::after {
+    word-spacing: 0.08em;
   }
 
   h1,
@@ -120,7 +314,8 @@
   h4,
   h5,
   h6 {
-    @apply font-semibold text-link;
+    @apply font-display font-semibold text-link;
+    letter-spacing: -0.01em;
   }
 
   *,
@@ -131,7 +326,11 @@
 
   * {
     scrollbar-width: thin;
-    scrollbar-color: color-mix(in oklab, var(--primary) 30%, transparent) transparent;
+    scrollbar-color: color-mix(in oklab, var(--periwinkle) 30%, transparent) transparent;
+  }
+
+  ::selection {
+    background: var(--selection);
   }
 
   button:not(:disabled),

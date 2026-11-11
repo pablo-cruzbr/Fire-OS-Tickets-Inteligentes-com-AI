@@ -12,6 +12,7 @@ import {
   TbTool,
 } from "react-icons/tb";
 import { Badge, ButtonLink, Card, CardHeader, StatCard, StatusBadge } from "@/components/ui";
+import { HeroCard } from "@/features/dashboard/HeroCard";
 import { getSessionUser } from "@/lib/session";
 import { serverGet } from "@/lib/serverApi";
 import { formatDateTime } from "@/lib/format";
@@ -78,12 +79,18 @@ export default async function DashboardHome() {
   return (
     <div className="flex flex-col gap-6">
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        <Card className="relative overflow-hidden bg-lightprimary shadow-none lg:col-span-7 dark:shadow-none">
+        <HeroCard className="lg:col-span-7">
           <div className="relative z-10 max-w-md">
-            <Badge tone="primary" className="bg-card">
+            <Badge tone="primary" className="ring-1 ring-inset ring-primary/20">
               {isAdmin ? "Administrador" : "Técnico"}
             </Badge>
-            <h2 className="mt-4 text-2xl font-semibold text-link">Olá, {firstName}! 👋</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-link">
+              Olá,{" "}
+              <span className="bg-[image:var(--gradient-brand,linear-gradient(97deg,var(--primary),#7989fa))] bg-clip-text text-transparent">
+                {firstName}
+              </span>
+              ! 👋
+            </h2>
             <p className="mt-2 text-bodytext">
               Você tem <strong className="text-link">{data.totalAberta ?? 0}</strong> chamados abertos e{" "}
               <strong className="text-link">{data.totalEmAndamento ?? 0}</strong> em andamento.
@@ -92,14 +99,12 @@ export default async function DashboardHome() {
               <ButtonLink href="/dashboard/tickets" icon={<TbTicket className="h-4 w-4" />}>
                 Ver chamados
               </ButtonLink>
-              <ButtonLink href="/dashboard/formulariosadd/formularioOrdemdeServico" variant="outline" className="bg-card">
+              <ButtonLink href="/dashboard/formulariosadd/formularioOrdemdeServico" variant="surface">
                 Nova OS
               </ButtonLink>
             </div>
           </div>
-          <div aria-hidden className="absolute -bottom-16 -right-10 h-56 w-56 rounded-full bg-primary/15" />
-          <div aria-hidden className="absolute -right-4 -top-20 h-40 w-40 rounded-full bg-secondary/15" />
-        </Card>
+        </HeroCard>
 
         <div className="grid grid-cols-2 gap-4 lg:col-span-5">
           <StatCard label="Total de chamados" value={data.total ?? 0} tone="primary" icon={<TbTicket />} />
@@ -115,7 +120,7 @@ export default async function DashboardHome() {
             title="Chamados recentes"
             subtitle="Os últimos chamados e ordens de serviço registrados"
             action={
-              <Link href="/dashboard/tickets" className="flex items-center gap-1 text-sm font-medium text-primary">
+              <Link href="/dashboard/tickets" className="flex items-center gap-1 text-sm font-medium text-primarytext">
                 Ver todos <TbArrowRight />
               </Link>
             }
@@ -137,7 +142,7 @@ export default async function DashboardHome() {
                   {recent.map((os) => (
                     <tr key={os.id} className="border-b border-border last:border-0">
                       <td className="px-6 py-3.5">
-                        <Link href={`/dashboard/ordemdeservico/${os.id}`} className="font-semibold text-link hover:text-primary">
+                        <Link href={`/dashboard/ordemdeservico/${os.id}`} className="font-semibold text-link hover:text-primarytext">
                           #{os.numeroOS}
                         </Link>
                         <p className="text-xs text-muted">{formatDateTime(os.created_at)}</p>
@@ -167,7 +172,7 @@ export default async function DashboardHome() {
                   </div>
                   <div className="h-2 overflow-hidden rounded-full bg-surface">
                     <div
-                      className="h-full rounded-full bg-primary"
+                      className="h-full rounded-full bg-[image:var(--gradient-brand,linear-gradient(97deg,var(--primary),#7989fa))]"
                       style={{ width: `${(row.value / max) * 100}%` }}
                     />
                   </div>
@@ -190,11 +195,11 @@ export default async function DashboardHome() {
                     href={shortcut.href}
                     className="group flex items-center gap-3 rounded-md p-2 transition-colors hover:bg-lightprimary"
                   >
-                    <span className="flex h-10 w-10 items-center justify-center rounded-md bg-lightprimary text-lg text-primary">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-md bg-lightprimary text-lg text-primarytext">
                       {shortcut.icon}
                     </span>
-                    <span className="flex-1 text-sm font-medium text-link group-hover:text-primary">{shortcut.label}</span>
-                    <TbArrowRight className="text-muted group-hover:text-primary" />
+                    <span className="flex-1 text-sm font-medium text-link group-hover:text-primarytext">{shortcut.label}</span>
+                    <TbArrowRight className="text-muted group-hover:text-primarytext" />
                   </Link>
                 </li>
               ))}

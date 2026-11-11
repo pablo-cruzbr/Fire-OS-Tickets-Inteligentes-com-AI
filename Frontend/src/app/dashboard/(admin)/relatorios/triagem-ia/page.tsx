@@ -16,6 +16,7 @@ import {
   TbX,
 } from "react-icons/tb";
 import { Badge, Button, Card, CardHeader } from "@/components/ui";
+import { HeroCard } from "@/features/dashboard/HeroCard";
 
 type Stage =
   | "idle"
@@ -53,7 +54,7 @@ function FlowNode({
   children: React.ReactNode;
 }) {
   const toneClasses = {
-    primary: "bg-lightprimary text-primary",
+    primary: "bg-lightprimary text-primarytext",
     success: "bg-lightsuccess text-successtext",
     error: "bg-lighterror text-errortext",
     warning: "bg-lightwarning text-warningtext",
@@ -93,10 +94,10 @@ export default function TriagemIAPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <Card className="relative overflow-hidden bg-lightprimary shadow-none dark:shadow-none">
+      <HeroCard>
         <div className="relative z-10 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <Badge tone="primary" className="bg-card">
+            <Badge tone="primary" className="ring-1 ring-inset ring-primary/20">
               <TbSparkles className="mr-1 inline h-3.5 w-3.5" /> Triagem automática
             </Badge>
             <h1 className="mt-3 text-2xl font-semibold text-link">Agente de triagem de chamados</h1>
@@ -108,8 +109,7 @@ export default function TriagemIAPage() {
             Simular novo chamado
           </Button>
         </div>
-        <div aria-hidden className="absolute -bottom-16 -right-10 h-56 w-56 rounded-full bg-primary/15" />
-      </Card>
+      </HeroCard>
 
       <div className="rounded-lg border border-warning/30 bg-lightwarning px-4 py-3 text-sm text-warningtext">
         <strong className="font-semibold">Protótipo de interface:</strong> a classificação, os casos parecidos e a
@@ -221,7 +221,7 @@ export default function TriagemIAPage() {
                       setTecnicoEscolhido(nome);
                       setStage("aprovado");
                     }}
-                    className="rounded-full bg-lightprimary px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary hover:text-white"
+                    className="rounded-full bg-lightprimary px-3 py-1.5 text-xs font-medium text-primarytext transition-colors hover:bg-primary hover:text-white"
                   >
                     {nome}
                   </button>
@@ -254,7 +254,7 @@ export default function TriagemIAPage() {
           <button
             type="button"
             onClick={() => setStage("idle")}
-            className="flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+            className="flex items-center gap-1.5 text-sm font-medium text-primarytext hover:underline"
           >
             <TbTool className="h-4 w-4" /> Simular outro chamado
           </button>

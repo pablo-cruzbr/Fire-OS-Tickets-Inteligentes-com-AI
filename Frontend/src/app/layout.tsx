@@ -1,14 +1,16 @@
-import type { Metadata } from "next";
-import { DM_Sans } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import { Toaster } from "sonner";
 import { GlobalModalProvider } from "@/provider/GlobalModalProvider";
 import GlobalModal from "@/app/components/GlobalModal";
 import { themeScript } from "@/components/layout/ThemeToggle";
 import "./globals.css";
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -21,17 +23,21 @@ export const metadata: Metadata = {
   applicationName: "Fire OS",
 };
 
+export const viewport: Viewport = {
+  themeColor: "#000214",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
+    <html lang="pt-BR" className={jakarta.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className={dmSans.variable}>
+      <body>
         <GlobalModalProvider>
           {children}
           <GlobalModal />

@@ -68,14 +68,14 @@ export function SearchableSelect({
         input: () => "text-link",
         indicatorsContainer: () => "gap-1 text-muted",
         clearIndicator: () => "p-1 rounded hover:text-errortext",
-        dropdownIndicator: () => "p-1 hover:text-primary",
+        dropdownIndicator: () => "p-1 hover:text-primarytext",
         loadingIndicator: () => "p-1",
-        menu: () => "mt-1 overflow-hidden rounded-md border border-border bg-card py-1 shadow-md dark:shadow-dark-md",
+        menu: () => "mt-1 overflow-hidden rounded-md border border-border bg-card py-1 shadow-md dark:shadow-none",
         menuList: () => "max-h-64",
         option: ({ isFocused, isSelected }) =>
           cn(
             "cursor-pointer px-3.5 py-2 text-sm",
-            isSelected ? "bg-primary text-white" : isFocused ? "bg-lightprimary text-primary" : "text-link",
+            isSelected ? "bg-primary text-white" : isFocused ? "bg-lightprimary text-primarytext" : "text-link",
           ),
         noOptionsMessage: () => "px-3.5 py-2 text-sm text-muted",
         loadingMessage: () => "px-3.5 py-2 text-sm text-muted",
