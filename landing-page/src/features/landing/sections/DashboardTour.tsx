@@ -192,12 +192,36 @@ export function DashboardTour() {
       {/* Tall track on desktop: the stage stays pinned while the scroll plays the montage. */}
       <div ref={trackRef} className="relative lg:motion-safe:h-[215vh]">
         <div className="relative pt-24 lg:pt-32 lg:motion-safe:sticky lg:motion-safe:top-0 lg:motion-safe:flex lg:motion-safe:h-svh lg:motion-safe:flex-col lg:motion-safe:overflow-clip lg:motion-safe:pt-[84px]">
-          {/* "Planet horizon": a huge disc whose top rim glows — navy in dark, pale periwinkle in light. */}
+          {/* Star field above the horizon (dark theme only). */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 -z-20 hidden opacity-85 [mask-image:linear-gradient(180deg,#000_0%,#000_45%,transparent_80%)] dark:block"
+            style={{
+              backgroundImage: [
+                "radial-gradient(1px 1px at 10% 20%,#fff,transparent)",
+                "radial-gradient(1px 1px at 25% 60%,#cfd6ff,transparent)",
+                "radial-gradient(1.5px 1.5px at 40% 15%,#fff,transparent)",
+                "radial-gradient(1px 1px at 60% 35%,#fff,transparent)",
+                "radial-gradient(1px 1px at 72% 12%,#9caeff,transparent)",
+                "radial-gradient(1.5px 1.5px at 85% 45%,#fff,transparent)",
+                "radial-gradient(1px 1px at 92% 22%,#fff,transparent)",
+                "radial-gradient(1px 1px at 5% 50%,#dbe2ff,transparent)",
+                "radial-gradient(1px 1px at 50% 8%,#fff,transparent)",
+                "radial-gradient(1px 1px at 33% 38%,#fff,transparent)",
+                "radial-gradient(1px 1px at 78% 58%,#dbe2ff,transparent)",
+                "radial-gradient(1px 1px at 17% 9%,#fff,transparent)",
+                "radial-gradient(1.5px 1.5px at 66% 24%,#dbe2ff,transparent)",
+                "radial-gradient(1px 1px at 96% 6%,#fff,transparent)",
+              ].join(","),
+            }}
+          />
+
+          {/* "Planet horizon": a huge disc whose top rim glows — deep-blue planet in dark, pale periwinkle in light. */}
           <div
             aria-hidden
             className="pointer-events-none absolute inset-x-0 top-[22rem] -z-10 flex justify-center sm:top-[24rem] lg:motion-safe:top-[44%]"
           >
-            <div className="relative aspect-square w-[1800px] max-w-none shrink-0 rounded-full [mask-image:linear-gradient(180deg,#000_30%,transparent_70%)] dark:[mask-image:none] bg-[radial-gradient(50%_50%_at_50%_50%,#eef1ff_0%,#f3f5ff_96%,rgba(64,93,229,0.16)_98.5%,rgba(64,93,229,0.4)_99.4%,rgba(21,48,234,0.55)_99.8%,transparent_100%)] dark:bg-[radial-gradient(50%_50%_at_50%_50%,#000214_0%,#000214_96%,rgba(64,93,229,0.25)_98.5%,rgba(112,142,246,0.6)_99.4%,rgba(219,228,255,0.9)_99.8%,transparent_100%)]" />
+            <div className="relative aspect-square w-[1800px] max-w-none shrink-0 rounded-full [mask-image:linear-gradient(180deg,#000_30%,transparent_70%)] dark:[mask-image:none] bg-[radial-gradient(50%_50%_at_50%_50%,#eef1ff_0%,#f3f5ff_96%,rgba(64,93,229,0.16)_98.5%,rgba(64,93,229,0.4)_99.4%,rgba(21,48,234,0.55)_99.8%,transparent_100%)] dark:bg-[radial-gradient(50%_50%_at_50%_50%,#050a2e_0%,#0a1250_90%,#1530ea_98%,#9caeff_99.6%,transparent_100%)] dark:shadow-[0_-20px_80px_rgba(21,48,234,0.45)]" />
           </div>
           <div
             aria-hidden
