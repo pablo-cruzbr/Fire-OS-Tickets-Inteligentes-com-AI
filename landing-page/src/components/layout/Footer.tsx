@@ -12,7 +12,9 @@ export function Footer() {
     <footer className="bg-(image:--gradient-footer) text-white">
       <div className="container-page grid gap-12 pb-16 pt-20 md:grid-cols-12">
         <div className="md:col-span-12 lg:col-span-4">
-          <Logo className="h-7 text-white" />
+          <Link href="/" aria-label="Fire OS, início" className="inline-block text-white transition-opacity hover:opacity-80">
+            <Logo className="h-7" />
+          </Link>
           <p className="mt-5 max-w-xs text-sm leading-relaxed text-white/70">
             Software de ordens de serviço e chamados para empresas de assistência técnica e manutenção.
           </p>
