@@ -9,7 +9,9 @@ export function Footer() {
     <footer className="border-t border-border bg-surface">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-12">
         <div className="md:col-span-4">
-          <Logo className="h-6 text-link" />
+          <Link href="/" aria-label="Fire OS, início" className="inline-block text-link hover:opacity-80">
+            <Logo className="h-6" />
+          </Link>
           <p className="mt-4 max-w-xs text-sm text-bodytext">
             Software de ordens de serviço e chamados para empresas de assistência técnica e manutenção.
           </p>
