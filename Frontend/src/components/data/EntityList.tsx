@@ -1,5 +1,7 @@
 "use client";
 
+import { ta } from "@/i18n/active";
+import { useT } from "@/i18n/text";
 import { ReactNode, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -73,9 +75,11 @@ export function EntityList<T>({
   onOpen,
   remove,
   pageSize = 10,
-  emptyMessage = "Nenhum registro encontrado.",
+  emptyMessage,
   headerActions,
 }: EntityListProps<T>) {
+  const t = useT();
+  emptyMessage ??= t({ pt: "Nenhum registro encontrado.", en: "No records found." });
   const router = useRouter();
   const [refreshing, startRefresh] = useTransition();
   const [query, setQuery] = useState("");
@@ -105,7 +109,11 @@ export function EntityList<T>({
   async function handleDelete(item: T) {
     if (!remove) return;
     const label = remove.describe?.(item);
-    if (!window.confirm(label ? `Excluir "${label}"? Essa ação não pode ser desfeita.` : "Excluir este registro?")) {
+    if (!window.confirm(
+        label
+          ? ta({ pt: `Excluir "${label}"? Essa ação não pode ser desfeita.`, en: `Delete "${label}"? This can't be undone.` })
+          : ta({ pt: "Excluir este registro?", en: "Delete this record?" }),
+      )) {
       return;
     }
     const key = rowKey(item);
@@ -113,10 +121,10 @@ export function EntityList<T>({
     try {
       const { url, params } = remove.request(item);
       await api.delete(url, { params });
-      toast.success("Registro excluído.");
+      toast.success(ta({ pt: "Registro excluído.", en: "Record deleted." }));
       refresh();
     } catch (error) {
-      toast.error(apiErrorMessage(error, "Não foi possível excluir o registro."));
+      toast.error(apiErrorMessage(error, ta({ pt: "Não foi possível excluir o registro.", en: "Couldn't delete the record." })));
     } finally {
       setDeleting(null);
     }
@@ -137,8 +145,8 @@ export function EntityList<T>({
               variant="surface"
               size="icon"
               onClick={refresh}
-              aria-label="Atualizar lista"
-              title="Atualizar lista"
+              aria-label={t({ pt: "Atualizar lista", en: "Refresh list" })}
+              title={t({ pt: "Atualizar lista", en: "Refresh list" })}
             >
               <TbRefresh className={cn("h-4 w-4", refreshing && "animate-spin")} />
             </Button>
@@ -166,8 +174,8 @@ export function EntityList<T>({
                     setQuery(event.target.value);
                     setPage(1);
                   }}
-                  placeholder={search.placeholder ?? "Buscar..."}
-                  aria-label="Buscar"
+                  placeholder={search.placeholder ?? t({ pt: "Buscar...", en: "Search..." })}
+                  aria-label={t({ pt: "Buscar", en: "Search" })}
                   className="pl-10"
                 />
               </div>
@@ -204,8 +212,8 @@ export function EntityList<T>({
 
         {visible.length === 0 ? (
           <EmptyState
-            title={items.length === 0 ? emptyMessage : "Nenhum resultado para os filtros"}
-            description={items.length === 0 ? undefined : "Ajuste a busca ou limpe os filtros."}
+            title={items.length === 0 ? emptyMessage : t({ pt: "Nenhum resultado para os filtros", en: "No results for these filters" })}
+            description={items.length === 0 ? undefined : t({ pt: "Ajuste a busca ou limpe os filtros.", en: "Adjust the search or clear the filters." })}
             action={items.length === 0 && add ? <ButtonLink href={add.href}>{add.label}</ButtonLink> : undefined}
           />
         ) : (
@@ -259,8 +267,8 @@ export function EntityList<T>({
                           <Button
                             variant="ghost"
                             size="icon"
-                            aria-label="Excluir"
-                            title="Excluir"
+                            aria-label={t({ pt: "Excluir", en: "Delete" })}
+                            title={t({ pt: "Excluir", en: "Delete" })}
                             loading={deleting === key}
                             className="hover:bg-lighterror hover:text-errortext"
                             onClick={(event) => {
@@ -289,7 +297,7 @@ export function EntityList<T>({
               <Button
                 variant="outline"
                 size="icon"
-                aria-label="Página anterior"
+                aria-label={t({ pt: "Página anterior", en: "Previous page" })}
                 disabled={current === 1}
                 onClick={() => setPage(current - 1)}
               >
@@ -298,7 +306,7 @@ export function EntityList<T>({
               <Button
                 variant="outline"
                 size="icon"
-                aria-label="Próxima página"
+                aria-label={t({ pt: "Próxima página", en: "Next page" })}
                 disabled={current === pages}
                 onClick={() => setPage(current + 1)}
               >

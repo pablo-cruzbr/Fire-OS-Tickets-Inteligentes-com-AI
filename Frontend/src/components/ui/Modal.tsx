@@ -1,5 +1,6 @@
 "use client";
 
+import { useT } from "@/i18n/text";
 import { ReactNode, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { TbX } from "react-icons/tb";
@@ -19,6 +20,7 @@ const widths = { md: "sm:max-w-lg", lg: "sm:max-w-2xl", xl: "sm:max-w-4xl" };
 
 /** Accessible dialog: closes on Esc and backdrop click, locks body scroll. */
 export function Modal({ open, onClose, title, subtitle, size = "lg", children, footer }: ModalProps) {
+  const t = useT();
   const panelRef = useRef<HTMLDivElement>(null);
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
@@ -71,7 +73,7 @@ export function Modal({ open, onClose, title, subtitle, size = "lg", children, f
           <button
             type="button"
             onClick={onClose}
-            aria-label="Fechar"
+            aria-label={t({ pt: "Fechar", en: "Close" })}
             className="-mr-2 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-bodytext transition-colors hover:bg-fill-2 hover:text-link"
           >
             <TbX className="h-5 w-5" />

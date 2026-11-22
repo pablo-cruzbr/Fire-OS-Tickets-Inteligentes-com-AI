@@ -1,5 +1,6 @@
 "use client";
 
+import { useT } from "@/i18n/text";
 import { ReactNode, useState } from "react";
 import { useRouter } from "next/navigation";
 import { TbPencil } from "react-icons/tb";
@@ -56,6 +57,7 @@ export function DetailModal({
   extraActions,
   size = "lg",
 }: DetailModalProps) {
+  const t = useT();
   const router = useRouter();
   const [editing, setEditing] = useState(false);
 
@@ -69,18 +71,18 @@ export function DetailModal({
       open
       onClose={onClose}
       size={size}
-      title={editing ? "Editar registro" : title}
+      title={editing ? t({ pt: "Editar registro", en: "Edit record" }) : title}
       subtitle={editing ? (typeof title === "string" ? title : undefined) : subtitle}
       footer={
         editing ? undefined : (
           <>
             {extraActions}
             <Button variant="outline" onClick={onClose}>
-              Fechar
+              {t({ pt: "Fechar", en: "Close" })}
             </Button>
             {renderEdit && (
               <Button onClick={() => setEditing(true)} icon={<TbPencil className="h-4 w-4" />}>
-                Editar
+                {t({ pt: "Editar", en: "Edit" })}
               </Button>
             )}
           </>

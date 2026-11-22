@@ -1,3 +1,4 @@
+import { ta } from "@/i18n/active";
 import axios from "axios";
 import { toast } from "sonner";
 import { api } from "@/services/api";
@@ -13,7 +14,7 @@ export interface ExportParams {
   tipoOS_id?: string;
 }
 
-const FALLBACK_ERROR = "Erro ao exportar relatório. Verifique sua conexão.";
+const FALLBACK_ERROR = () => ta({ pt: "Erro ao exportar relatório. Verifique sua conexão.", en: "Couldn't export the report. Check your connection." });
 
 /** With `responseType: "blob"` the API error body arrives as a Blob — read it back as JSON. */
 async function exportErrorMessage(error: unknown) {
@@ -25,9 +26,9 @@ async function exportErrorMessage(error: unknown) {
     } catch {
       // not JSON — fall through
     }
-    return FALLBACK_ERROR;
+    return FALLBACK_ERROR();
   }
-  return apiErrorMessage(error, FALLBACK_ERROR);
+  return apiErrorMessage(error, FALLBACK_ERROR());
 }
 
 /**
@@ -54,7 +55,7 @@ export async function exportOrdemServicoExcel(params: ExportParams): Promise<boo
     link.remove();
     window.URL.revokeObjectURL(url);
 
-    toast.success("Excel gerado com sucesso!");
+    toast.success(ta({ pt: "Excel gerado com sucesso!", en: "Excel file generated!" }));
     return true;
   } catch (error) {
     toast.error(await exportErrorMessage(error));

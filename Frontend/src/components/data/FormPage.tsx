@@ -1,3 +1,4 @@
+import { useT } from "@/i18n/text";
 import { ReactNode } from "react";
 import { TbArrowLeft } from "react-icons/tb";
 import { ButtonLink, Card, CardHeader, PageHeader } from "@/components/ui";
@@ -13,6 +14,7 @@ type FormPageProps = {
 
 /** Page shell for the "new record" forms: header with back link + form card. */
 export function FormPage({ title, description, backHref, backLabel, cardTitle, children }: FormPageProps) {
+  const t = useT();
   return (
     <section>
       <PageHeader
@@ -20,12 +22,12 @@ export function FormPage({ title, description, backHref, backLabel, cardTitle, c
         breadcrumbs={[{ label: backLabel, href: backHref }, { label: title }]}
         actions={
           <ButtonLink href={backHref} variant="surface" icon={<TbArrowLeft className="h-4 w-4" />}>
-            Voltar
+            {t({ pt: "Voltar", en: "Back" })}
           </ButtonLink>
         }
       />
       <Card className="mx-auto max-w-4xl">
-        <CardHeader title={cardTitle ?? "Informações"} subtitle={description} />
+        <CardHeader title={cardTitle ?? t({ pt: "Informações", en: "Details" })} subtitle={description} />
         {children}
       </Card>
     </section>

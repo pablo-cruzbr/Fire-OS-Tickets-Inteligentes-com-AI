@@ -1,3 +1,4 @@
+import { useT } from "@/i18n/text";
 import Link from "next/link";
 import { ReactNode } from "react";
 import { TbChevronRight } from "react-icons/tb";
@@ -13,7 +14,8 @@ type PageHeaderProps = {
 
 /** Title banner with breadcrumb, on a hairline card with the landing glow. */
 export function PageHeader({ title, description, breadcrumbs = [], actions }: PageHeaderProps) {
-  const crumbs: Crumb[] = [{ label: "Início", href: "/dashboard" }, ...breadcrumbs];
+  const t = useT();
+  const crumbs: Crumb[] = [{ label: t({ pt: "Início", en: "Home" }), href: "/dashboard" }, ...breadcrumbs];
 
   return (
     <div className="relative mb-6 overflow-hidden rounded-card border border-border-accent bg-badge px-6 py-6 sm:px-8">

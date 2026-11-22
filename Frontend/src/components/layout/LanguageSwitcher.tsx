@@ -1,7 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { htmlLang, LOCALE_COOKIE, LOCALE_COOKIE_MAX_AGE, locales, type Locale } from "@/i18n/config";
 import { useAppLocale, useT } from "@/i18n/text";
 import { cn } from "@/lib/cn";
@@ -13,20 +12,19 @@ const labels: Record<Locale, { short: string; name: string }> = {
 
 /**
  * PT / EN pill, styled like the theme toggle. Saves the choice in the
- * NEXT_LOCALE cookie and re-renders the current page in place (no reload, the
- * URL stays the same).
+ * NEXT_LOCALE cookie and reloads the current page (same URL), so server pages,
+ * client components and the date formatters all switch together.
  */
 export function LanguageSwitcher({ className }: { className?: string }) {
   const locale = useAppLocale();
   const t = useT();
-  const router = useRouter();
-  const [pending, startTransition] = useTransition();
+  const [pending, setPending] = useState(false);
 
   function change(next: Locale) {
     if (next === locale) return;
     document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=${LOCALE_COOKIE_MAX_AGE}; samesite=lax`;
-    document.documentElement.lang = htmlLang[next];
-    startTransition(() => router.refresh());
+    setPending(true);
+    window.location.reload();
   }
 
   return (

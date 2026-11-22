@@ -1,5 +1,7 @@
 "use client";
 
+import { ta } from "@/i18n/active";
+import { useT } from "@/i18n/text";
 import { FormEvent, ReactNode, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { TbDeviceFloppy } from "react-icons/tb";
@@ -88,11 +90,14 @@ export function EntityForm({
   transform,
   onSuccess,
   onCancel,
-  submitLabel = "Salvar",
-  successMessage = "Dados salvos com sucesso!",
+  submitLabel,
+  successMessage,
   columns = 2,
   footer,
 }: EntityFormProps) {
+  const t = useT();
+  submitLabel ??= t({ pt: "Salvar", en: "Save" });
+  successMessage ??= t({ pt: "Dados salvos com sucesso!", en: "Data saved successfully!" });
   const lookups = useMemo(() => fields.flatMap((field) => (field.lookup ? [field.lookup] : [])), [fields]);
   const { options, loading, failed } = useLookups(lookups);
 
@@ -132,7 +137,7 @@ export function EntityForm({
       toast.success(successMessage);
       onSuccess?.(response);
     } catch (error) {
-      toast.error(apiErrorMessage(error, "Erro ao salvar os dados."));
+      toast.error(apiErrorMessage(error, ta({ pt: "Erro ao salvar os dados.", en: "Couldn't save the data." })));
     } finally {
       setSubmitting(false);
     }
@@ -142,7 +147,7 @@ export function EntityForm({
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
       {failed.length > 0 && (
         <p className="rounded-md bg-lightwarning px-4 py-3 text-sm text-warningtext">
-          Algumas listas não puderam ser carregadas. Tente recarregar a página.
+          {t({ pt: "Algumas listas não puderam ser carregadas. Tente recarregar a página.", en: "Some lists couldn't be loaded. Try reloading the page." })}
         </p>
       )}
 
@@ -176,7 +181,7 @@ export function EntityForm({
                 disabled={waiting}
                 onChange={(event) => setValue(field.name, event.target.value)}
               >
-                <option value="">{waiting ? "Carregando..." : field.placeholder ?? "Selecione"}</option>
+                <option value="">{waiting ? t({ pt: "Carregando...", en: "Loading..." }) : field.placeholder ?? t({ pt: "Selecione", en: "Select" })}</option>
                 {list.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -216,7 +221,7 @@ export function EntityForm({
       <div className="flex flex-wrap justify-end gap-2 border-t border-border pt-5">
         {onCancel && (
           <Button variant="outline" onClick={onCancel} disabled={submitting}>
-            Cancelar
+            {t({ pt: "Cancelar", en: "Cancel" })}
           </Button>
         )}
         <Button
