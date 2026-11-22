@@ -9,6 +9,7 @@ import { EmailInput, PasswordInput } from "@/components/auth/AuthFields";
 import { SubmitButton } from "@/components/auth/SubmitButton";
 import { authButton, authLink } from "@/components/auth/authStyles";
 import { Field } from "@/components/ui";
+import { getT } from "@/i18n/server";
 
 type LoginPageProps = {
   searchParams: Promise<{ error?: string }>;
@@ -22,7 +23,7 @@ async function handleLogin(formData: FormData) {
     password: formData.get("password")?.toString() ?? "",
   });
   if (!parsed.success) {
-    redirect(`/login?error=${encodeURIComponent(parsed.error.issues[0]?.message ?? "Dados inválidos")}`);
+    redirect(`/login?error=${encodeURIComponent(parsed.error.issues[0]?.message ?? "invalid")}`);
   }
 
   try {
@@ -42,38 +43,39 @@ async function handleLogin(formData: FormData) {
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const { error } = await searchParams;
+  const t = await getT();
 
   return (
     <AuthShell
-      eyebrow="Portal administrativo"
-      title="Bem-vindo de volta"
-      subtitle="Portal administrativo para administradores e técnicos."
+      eyebrow={t({ pt: "Portal administrativo", en: "Admin portal" })}
+      title={t({ pt: "Bem-vindo de volta", en: "Welcome back" })}
+      subtitle={t({ pt: "Portal administrativo para administradores e técnicos.", en: "Admin portal for administrators and technicians." })}
       slides={authSlides.staff}
-      asideTitle="Sua equipe em campo, organizada do chamado à OS assinada"
-      asideHighlight="do chamado à OS assinada"
-      asideText="Agende atendimentos, acompanhe cada ordem de serviço e tenha o histórico de todos os equipamentos."
+      asideTitle={t({ pt: "Sua equipe em campo, organizada do chamado à OS assinada", en: "Your field team, organized from ticket to signed work order" })}
+      asideHighlight={t({ pt: "do chamado à OS assinada", en: "from ticket to signed work order" })}
+      asideText={t({ pt: "Agende atendimentos, acompanhe cada ordem de serviço e tenha o histórico de todos os equipamentos.", en: "Schedule jobs, track every work order and keep the history of all your equipment." })}
       topLink={
         <>
-          É cliente?{" "}
+          {t({ pt: "É cliente?", en: "Are you a customer?" })}{" "}
           <Link href="/AreadeUsuario" className={authLink}>
-            Área do usuário
+            {t({ pt: "Área do usuário", en: "Customer area" })}
           </Link>
         </>
       }
     >
-      <AuthError message={loginErrorMessage(error)} />
+      <AuthError message={loginErrorMessage(error, t)} />
       <form action={handleLogin} className="flex flex-col gap-5">
         <Field label="E-mail" htmlFor="email">
           <EmailInput id="email" name="email" required />
         </Field>
-        <Field label="Senha" htmlFor="password">
+        <Field label={t({ pt: "Senha", en: "Password" })} htmlFor="password">
           <PasswordInput id="password" name="password" autoComplete="current-password" required minLength={4} />
         </Field>
-        <SubmitButton>Entrar</SubmitButton>
+        <SubmitButton>{t({ pt: "Entrar", en: "Sign in" })}</SubmitButton>
       </form>
-      <AuthDivider>ou</AuthDivider>
+      <AuthDivider>{t({ pt: "ou", en: "or" })}</AuthDivider>
       <Link href="/AreadeUsuario" className={authButton.secondary}>
-        Sou cliente, quero abrir um chamado
+        {t({ pt: "Sou cliente, quero abrir um chamado", en: "I'm a customer, I want to open a ticket" })}
       </Link>
     </AuthShell>
   );

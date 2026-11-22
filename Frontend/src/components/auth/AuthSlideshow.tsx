@@ -2,15 +2,17 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { type Text, useT } from "@/i18n/text";
 import { cn } from "@/lib/cn";
 
-export type AuthSlide = { src: string; label: string };
+export type AuthSlide = { src: string; label: Text };
 
 /**
  * Cross-fading stills from the landing videos for the auth side panel.
  * Advances every few seconds; stays on the first photo with reduced motion.
  */
 export function AuthSlideshow({ slides, interval = 6000 }: { slides: AuthSlide[]; interval?: number }) {
+  const t = useT();
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -42,16 +44,16 @@ export function AuthSlideshow({ slides, interval = 6000 }: { slides: AuthSlide[]
       <div className="flex items-center gap-3">
         <span className="inline-flex items-center gap-2 rounded-[4px] border border-[#798AFB]/10 bg-[#000214]/70 px-3 py-1.5 text-xs font-medium uppercase tracking-[0.02em] text-[#C8CFFF] backdrop-blur-[8px]">
           <span aria-hidden className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#9CAEFF]" />
-          {slides[index]?.label}
+          {slides[index] ? t(slides[index].label) : null}
         </span>
-        <div className="flex items-center" role="tablist" aria-label="Fotos">
+        <div className="flex items-center" role="tablist" aria-label={t({ pt: "Fotos", en: "Photos" })}>
           {slides.map((slide, slideIndex) => (
             <button
               key={slide.src}
               type="button"
               role="tab"
               aria-selected={slideIndex === index}
-              aria-label={slide.label}
+              aria-label={t(slide.label)}
               onClick={() => setIndex(slideIndex)}
               className="group flex h-8 w-6 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-[#9CAEFF]"
             >

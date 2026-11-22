@@ -2,6 +2,7 @@
 
 import { ComponentProps, ReactNode, useState } from "react";
 import { TbChevronDown, TbEye, TbEyeOff, TbLock, TbMail } from "react-icons/tb";
+import { useT } from "@/i18n/text";
 import { cn } from "@/lib/cn";
 
 /*
@@ -44,11 +45,13 @@ function IconInput({ icon, className, ...props }: ComponentProps<"input"> & { ic
 }
 
 export function EmailInput(props: ComponentProps<"input">) {
-  return <IconInput icon={<TbMail />} type="email" autoComplete="email" placeholder="voce@empresa.com" {...props} />;
+  const t = useT();
+  return <IconInput icon={<TbMail />} type="email" autoComplete="email" placeholder={t({ pt: "voce@empresa.com", en: "you@company.com" })} {...props} />;
 }
 
 /** Password field with a lock icon and a show/hide toggle. */
 export function PasswordInput(props: ComponentProps<"input">) {
+  const t = useT();
   const [visible, setVisible] = useState(false);
   return (
     <div className="relative">
@@ -56,7 +59,7 @@ export function PasswordInput(props: ComponentProps<"input">) {
       <button
         type="button"
         onClick={() => setVisible((value) => !value)}
-        aria-label={visible ? "Ocultar senha" : "Mostrar senha"}
+        aria-label={visible ? t({ pt: "Ocultar senha", en: "Hide password" }) : t({ pt: "Mostrar senha", en: "Show password" })}
         className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-md text-muted transition-colors hover:bg-lightprimary hover:text-link focus-visible:outline-2 focus-visible:outline-periwinkle"
       >
         {visible ? <TbEyeOff /> : <TbEye />}

@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { TbBuildingCommunity, TbBuildingStore } from "react-icons/tb";
 import { api } from "@/services/api";
 import { apiErrorMessage } from "@/lib/apiError";
+import { useT } from "@/i18n/text";
 import { cn } from "@/lib/cn";
 import { useLookups } from "@/components/data/useLookups";
 import { Field } from "@/components/ui";
@@ -25,6 +26,7 @@ const lookups = {
  * municipal institution — the two old signup pages merged into one form.
  */
 export function NewUserForm({ defaultVinculo }: { defaultVinculo: Vinculo }) {
+  const t = useT();
   const router = useRouter();
   const [vinculo, setVinculo] = useState<Vinculo>(defaultVinculo);
   const [sending, setSending] = useState(false);
@@ -49,27 +51,27 @@ export function NewUserForm({ defaultVinculo }: { defaultVinculo: Vinculo }) {
         ...(vinculo === "empresa" ? { cliente_id: org } : { instituicaoUnidade_id: org }),
         setor_id: form.get("setor"),
       });
-      toast.success("Usuário cadastrado com sucesso!");
+      toast.success(t({ pt: "Usuário cadastrado com sucesso!", en: "User created successfully!" }));
       if (form.get("another")) {
         formElement.reset();
       } else {
         router.push("/dashboard/usuarios");
       }
     } catch (error) {
-      toast.error(apiErrorMessage(error, "Erro ao cadastrar usuário."));
+      toast.error(apiErrorMessage(error, t({ pt: "Erro ao cadastrar usuário.", en: "Couldn't create the user." })));
     } finally {
       setSending(false);
     }
   }
 
   const tabs: { key: Vinculo; label: string; icon: React.ReactNode }[] = [
-    { key: "empresa", label: "Empresa", icon: <TbBuildingStore /> },
-    { key: "instituicao", label: "Instituição", icon: <TbBuildingCommunity /> },
+    { key: "empresa", label: t({ pt: "Empresa", en: "Company" }), icon: <TbBuildingStore /> },
+    { key: "instituicao", label: t({ pt: "Instituição", en: "Institution" }), icon: <TbBuildingCommunity /> },
   ];
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-      <div role="radiogroup" aria-label="Vínculo do usuário" className="grid grid-cols-2 gap-1 rounded-btn border border-border bg-fill-1 p-1">
+      <div role="radiogroup" aria-label={t({ pt: "Vínculo do usuário", en: "User belongs to" })} className="grid grid-cols-2 gap-1 rounded-btn border border-border bg-fill-1 p-1">
         {tabs.map((tab) => (
           <button
             key={tab.key}
@@ -92,23 +94,23 @@ export function NewUserForm({ defaultVinculo }: { defaultVinculo: Vinculo }) {
 
       {failed.length > 0 && (
         <p className="rounded-btn border border-warning/25 bg-lightwarning px-4 py-3 text-sm text-warningtext">
-          Não foi possível carregar algumas listas. Verifique se você está logado como administrador.
+          {t({ pt: "Não foi possível carregar algumas listas. Verifique se você está logado como administrador.", en: "Some lists couldn't be loaded. Make sure you're signed in as an admin." })}
         </p>
       )}
 
-      <Field label="Nome completo" htmlFor="name" required>
+      <Field label={t({ pt: "Nome completo", en: "Full name" })} htmlFor="name" required>
         <AuthInput id="name" name="name" autoComplete="name" required />
       </Field>
       <Field label="E-mail" htmlFor="email" required>
         <EmailInput id="email" name="email" required />
       </Field>
-      <Field label="Senha" htmlFor="password" required hint="Mínimo de 4 caracteres.">
+      <Field label={t({ pt: "Senha", en: "Password" })} htmlFor="password" required hint={t({ pt: "Mínimo de 4 caracteres.", en: "At least 4 characters." })}>
         <PasswordInput id="password" name="password" autoComplete="new-password" minLength={4} required />
       </Field>
-      <Field label={vinculo === "empresa" ? "Empresa" : "Instituição"} htmlFor="org" required>
+      <Field label={vinculo === "empresa" ? t({ pt: "Empresa", en: "Company" }) : t({ pt: "Instituição", en: "Institution" })} htmlFor="org" required>
         <AuthSelect id="org" name="org" required defaultValue="" key={vinculo} disabled={loading}>
           <option value="" disabled>
-            {loading ? "Carregando..." : "Selecione"}
+            {loading ? t({ pt: "Carregando...", en: "Loading..." }) : t({ pt: "Selecione", en: "Select" })}
           </option>
           {orgOptions.map((option) => (
             <option key={option.value} value={option.value}>
@@ -117,10 +119,10 @@ export function NewUserForm({ defaultVinculo }: { defaultVinculo: Vinculo }) {
           ))}
         </AuthSelect>
       </Field>
-      <Field label="Setor" htmlFor="setor" required>
+      <Field label={t({ pt: "Setor", en: "Department" })} htmlFor="setor" required>
         <AuthSelect id="setor" name="setor" required defaultValue="" disabled={loading}>
           <option value="" disabled>
-            {loading ? "Carregando..." : "Selecione"}
+            {loading ? t({ pt: "Carregando...", en: "Loading..." }) : t({ pt: "Selecione", en: "Select" })}
           </option>
           {setorOptions.map((option) => (
             <option key={option.value} value={option.value}>
@@ -132,11 +134,11 @@ export function NewUserForm({ defaultVinculo }: { defaultVinculo: Vinculo }) {
 
       <label className="flex items-center gap-2 text-sm text-bodytext">
         <input type="checkbox" name="another" className="h-4 w-4 rounded accent-[var(--primary)]" />
-        Cadastrar outro em seguida
+        {t({ pt: "Cadastrar outro em seguida", en: "Add another one next" })}
       </label>
 
       <AuthButton loading={sending} disabled={loading}>
-        Cadastrar usuário
+        {t({ pt: "Cadastrar usuário", en: "Create user" })}
       </AuthButton>
     </form>
   );

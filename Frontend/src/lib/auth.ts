@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import type { Localized, Translate } from "@/i18n/text";
 
 const THIRTY_DAYS = 60 * 60 * 24 * 30; // seconds — cookie maxAge is in seconds
 
@@ -16,13 +17,26 @@ export async function setSessionCookie(token: string) {
   });
 }
 
-export const loginErrors: Record<string, string> = {
-  credentials: "E-mail ou senha incorretos.",
-  no_admin: "Acesso negado: este portal é exclusivo para administradores e técnicos.",
-  server: "Não foi possível conectar ao servidor. Tente novamente em instantes.",
+export const loginErrors: Record<string, Localized> = {
+  credentials: { pt: "E-mail ou senha incorretos.", en: "Incorrect email or password." },
+  no_admin: {
+    pt: "Acesso negado: este portal é exclusivo para administradores e técnicos.",
+    en: "Access denied: this portal is only for admins and technicians.",
+  },
+  server: {
+    pt: "Não foi possível conectar ao servidor. Tente novamente em instantes.",
+    en: "Couldn't reach the server. Please try again in a moment.",
+  },
+  invalid: { pt: "Dados inválidos", en: "Invalid data" },
+  email_required: { pt: "E-mail é obrigatório", en: "Email is required" },
+  email_invalid: { pt: "Formato de e-mail inválido", en: "Invalid email format" },
+  password_required: { pt: "Senha é obrigatória", en: "Password is required" },
+  password_short: { pt: "Senha deve ter no mínimo 4 caracteres", en: "Password must be at least 4 characters" },
 };
 
-export function loginErrorMessage(code?: string) {
+/** Message for the `?error=` code of the login pages, in the current language. */
+export function loginErrorMessage(code: string | undefined, t: Translate) {
   if (!code) return null;
-  return loginErrors[code] ?? decodeURIComponent(code);
+  const message = loginErrors[code];
+  return message ? t(message) : decodeURIComponent(code);
 }
