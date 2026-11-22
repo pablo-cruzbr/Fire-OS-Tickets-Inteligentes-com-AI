@@ -1,3 +1,4 @@
+import { ta } from "@/i18n/active";
 import type { FormField } from "@/components/data/EntityForm";
 import type { ComprasProps } from "@/lib/getCompras.type";
 
@@ -11,11 +12,11 @@ function statusId(compra?: ComprasProps) {
 /** Fields shared by the "nova compra" page and the edit modal. */
 export function compraFields(compra?: ComprasProps): FormField[] {
   return [
-    { name: "itemSolicitado", label: "Item solicitado", required: true, initial: compra?.itemSolicitado, full: true },
-    { name: "solicitante", label: "Solicitante", required: true, initial: compra?.solicitante },
+    { name: "itemSolicitado", label: ta({ pt: "Item solicitado", en: "Requested item" }), required: true, initial: compra?.itemSolicitado, full: true },
+    { name: "solicitante", label: ta({ pt: "Solicitante", en: "Requester" }), required: true, initial: compra?.solicitante },
     {
       name: "preco",
-      label: "Preço (R$)",
+      label: ta({ pt: "Preço (R$)", en: "Price (R$)" }),
       type: "number",
       step: "0.01",
       required: true,
@@ -23,14 +24,14 @@ export function compraFields(compra?: ComprasProps): FormField[] {
     },
     {
       name: "motivoDaSolicitacao",
-      label: "Motivo da solicitação",
+      label: ta({ pt: "Motivo da solicitação", en: "Reason for the request" }),
       type: "textarea",
       required: true,
       initial: compra?.motivoDaSolicitacao,
     },
     {
       name: "linkDeCompra",
-      label: "Link de compra",
+      label: ta({ pt: "Link de compra", en: "Purchase link" }),
       type: "url",
       required: true,
       placeholder: "https://",
@@ -39,7 +40,7 @@ export function compraFields(compra?: ComprasProps): FormField[] {
     },
     {
       name: "statusCompras_id",
-      label: "Status",
+      label: ta({ pt: "Status", en: "Status" }),
       type: "select",
       required: true,
       lookup: statusLookup,

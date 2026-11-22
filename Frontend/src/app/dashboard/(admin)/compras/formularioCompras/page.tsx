@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { useRouter } from "next/navigation";
 import { EntityForm } from "@/components/data/EntityForm";
 import { FormPage } from "@/components/data/FormPage";
@@ -9,12 +10,12 @@ export default function FormularioCompras() {
   const router = useRouter();
 
   return (
-    <FormPage title="Nova solicitação de compra" backHref="/dashboard/compras" backLabel="Compras">
+    <FormPage title={ta({ pt: "Nova solicitação de compra", en: "New purchase request" })} backHref="/dashboard/compras" backLabel={ta({ pt: "Compras", en: "Purchasing" })}>
       <EntityForm
         fields={compraFields()}
         request={{ method: "post", url: "/solicitacaodecompras" }}
-        submitLabel="Enviar solicitação"
-        successMessage="Solicitação enviada!"
+        submitLabel={ta({ pt: "Enviar solicitação", en: "Send request" })}
+        successMessage={ta({ pt: "Solicitação enviada!", en: "Request sent!" })}
         onSuccess={() => router.push("/dashboard/compras")}
       />
     </FormPage>

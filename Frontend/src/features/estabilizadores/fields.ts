@@ -1,3 +1,4 @@
+import { ta } from "@/i18n/active";
 import type { FormField } from "@/components/data/EntityForm";
 import type { Lookup } from "@/components/data/useLookups";
 import { fromDateInput, toDateInput } from "@/lib/format";
@@ -26,20 +27,20 @@ export function controleEstabilizadorFields(controle?: EstabilizadoresProps): Fo
   const optionalDate = creating ? undefined : (value: string) => (value ? fromDateInput(value) : undefined);
 
   const fields: FormField[] = [];
-  if (creating) fields.push({ name: "idChamado", label: "ID do chamado", required: true });
+  if (creating) fields.push({ name: "idChamado", label: ta({ pt: "ID do chamado", en: "Ticket ID" }), required: true });
 
   fields.push(
-    { name: "problema", label: "Problema", required: true, initial: controle?.problema, serialize: optionalText },
+    { name: "problema", label: ta({ pt: "Problema", en: "Problem" }), required: true, initial: controle?.problema, serialize: optionalText },
     {
       name: "osdaAssistencia",
-      label: "OS da assistência",
+      label: ta({ pt: "OS da assistência", en: "Repair work order" }),
       required: true,
       initial: controle?.osdaAssistencia,
       serialize: optionalText,
     },
     {
       name: "datadeChegada",
-      label: "Data de chegada",
+      label: ta({ pt: "Data de chegada", en: "Arrival date" }),
       type: "date",
       required: creating,
       initial: toDateInput(controle?.datadeChegada),
@@ -47,7 +48,7 @@ export function controleEstabilizadorFields(controle?: EstabilizadoresProps): Fo
     },
     {
       name: "datadeRetirada",
-      label: "Data de retirada",
+      label: ta({ pt: "Data de retirada", en: "Pickup date" }),
       type: "date",
       required: creating,
       initial: toDateInput(controle?.datadeRetirada),
@@ -55,7 +56,7 @@ export function controleEstabilizadorFields(controle?: EstabilizadoresProps): Fo
     },
     {
       name: "estabilizadores_id",
-      label: "Estabilizador",
+      label: ta({ pt: "Estabilizador", en: "Stabilizer" }),
       type: "select",
       required: creating,
       lookup: estabilizadorLookup(creating ? "/list/estabilizadores" : "/list/estabilizador"),
@@ -63,7 +64,7 @@ export function controleEstabilizadorFields(controle?: EstabilizadoresProps): Fo
     },
     {
       name: "statusEstabilizadores_id",
-      label: "Status",
+      label: ta({ pt: "Status", en: "Status" }),
       type: "select",
       required: creating,
       lookup: statusEstabilizadoresLookup,
@@ -71,7 +72,7 @@ export function controleEstabilizadorFields(controle?: EstabilizadoresProps): Fo
     },
     {
       name: "instituicaoUnidade_id",
-      label: "Instituição/unidade",
+      label: ta({ pt: "Instituição/unidade", en: "Institution/unit" }),
       type: "select",
       required: creating,
       lookup: instituicaoLookup,
@@ -79,9 +80,9 @@ export function controleEstabilizadorFields(controle?: EstabilizadoresProps): Fo
     },
     {
       name: "observacoes",
-      label: "Observações",
+      label: ta({ pt: "Observações", en: "Notes" }),
       type: "textarea",
-      placeholder: "Opcional",
+      placeholder: ta({ pt: "Opcional", en: "Optional" }),
       initial: controle?.observacoes,
     },
   );
@@ -92,10 +93,10 @@ export function controleEstabilizadorFields(controle?: EstabilizadoresProps): Fo
 /** Registers a new stabilizer device (name + patrimônio). */
 export function novoEstabilizadorFields(): FormField[] {
   return [
-    { name: "name", label: "Nome do estabilizador", required: true },
+    { name: "name", label: ta({ pt: "Nome do estabilizador", en: "Stabilizer name" }), required: true },
     {
       name: "patrimonio",
-      label: "Patrimônio",
+      label: ta({ pt: "Patrimônio", en: "Asset tag" }),
       type: "number",
       required: true,
       // the API stores patrimônio as text, as the old form sent it

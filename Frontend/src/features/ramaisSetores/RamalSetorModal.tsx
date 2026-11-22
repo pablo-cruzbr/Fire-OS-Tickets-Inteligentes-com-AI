@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { DetailModal } from "@/components/data/DetailModal";
 import { EntityForm } from "@/components/data/EntityForm";
 import type { RamaisSetoresProps } from "@/lib/getRamaisSetores.type";
@@ -10,15 +11,15 @@ export function RamalSetorModal({ data: ramal, onClose }: EntityModalProps<Ramai
   return (
     <DetailModal
       title={ramal.usuario}
-      subtitle={`Ramal ${ramal.ramal}`}
+      subtitle={ta({ pt: `Ramal ${ramal.ramal}`, en: `Extension ${ramal.ramal}` })}
       onClose={onClose}
       fields={[
-        { label: "Ramal", value: ramal.ramal },
-        { label: "Andar", value: ramal.andar },
-        { label: "Setor", value: ramal.setor?.name },
-        { label: "Vínculo", value: ramal.cliente?.name ?? ramal.instituicaoUnidade?.name ?? "Nenhum vínculo" },
+        { label: ta({ pt: "Ramal", en: "Extension" }), value: ramal.ramal },
+        { label: ta({ pt: "Andar", en: "Floor" }), value: ramal.andar },
+        { label: ta({ pt: "Setor", en: "Department" }), value: ramal.setor?.name },
+        { label: ta({ pt: "Vínculo", en: "Link" }), value: ramal.cliente?.name ?? ramal.instituicaoUnidade?.name ?? "Nenhum vínculo" },
         {
-          label: "Localização",
+          label: ta({ pt: "Localização", en: "Location" }),
           value: ramal.cliente?.endereco ?? ramal.instituicaoUnidade?.endereco,
           full: true,
         },
@@ -28,8 +29,8 @@ export function RamalSetorModal({ data: ramal, onClose }: EntityModalProps<Ramai
           fields={ramalSetorFields(ramal)}
           request={{ method: "patch", url: `/informacoessetor/${ramal.id}` }}
           transform={(payload) => ({ id: ramal.id, ...payload })}
-          submitLabel="Salvar alterações"
-          successMessage="Ramal atualizado!"
+          submitLabel={ta({ pt: "Salvar alterações", en: "Save changes" })}
+          successMessage={ta({ pt: "Ramal atualizado!", en: "Extension updated!" })}
           onSuccess={done}
           onCancel={cancel}
         />

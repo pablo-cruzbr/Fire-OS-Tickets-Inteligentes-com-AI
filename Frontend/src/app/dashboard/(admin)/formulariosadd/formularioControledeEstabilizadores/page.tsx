@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { useRouter } from "next/navigation";
 import { EntityForm } from "@/components/data/EntityForm";
 import { FormPage } from "@/components/data/FormPage";
@@ -10,15 +11,15 @@ export default function FormularioControledeEstabilizadores() {
 
   return (
     <FormPage
-      title="Novo controle de estabilizador"
+      title={ta({ pt: "Novo controle de estabilizador", en: "New stabilizer control" })}
       backHref="/dashboard/controles/estabilizadores"
-      backLabel="Estabilizadores"
+      backLabel={ta({ pt: "Estabilizadores", en: "Stabilizers" })}
     >
       <EntityForm
         fields={controleEstabilizadorFields()}
         request={{ method: "post", url: "/controledeestabilizadores" }}
-        submitLabel="Enviar solicitação"
-        successMessage="Solicitação enviada com sucesso!"
+        submitLabel={ta({ pt: "Enviar solicitação", en: "Send request" })}
+        successMessage={ta({ pt: "Solicitação enviada com sucesso!", en: "Request sent successfully!" })}
         onSuccess={() => router.push("/dashboard/controles/estabilizadores")}
       />
     </FormPage>

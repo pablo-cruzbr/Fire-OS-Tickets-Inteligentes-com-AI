@@ -1,3 +1,4 @@
+import { ta } from "@/i18n/active";
 import type { FormField } from "@/components/data/EntityForm";
 import { toDateInput } from "@/lib/format";
 import type { LaudoTecnicoProps } from "@/lib/getLaudoTecnico.type";
@@ -8,12 +9,12 @@ export function laudoTecnicoFields(laudo?: LaudoTecnicoProps): FormField[] {
   const creating = !laudo;
 
   return [
-    { name: "osLab", label: "OS do laboratório", required: true, initial: laudo?.osLab },
+    { name: "osLab", label: ta({ pt: "OS do laboratório", en: "Lab work order" }), required: true, initial: laudo?.osLab },
     // The old forms used a full date picker for "mês/ano", so the day is kept.
-    { name: "mesAno", label: "Data (mês/ano)", type: "date", required: true, initial: toDateInput(laudo?.mesAno) },
+    { name: "mesAno", label: ta({ pt: "Data (mês/ano)", en: "Date (month/year)" }), type: "date", required: true, initial: toDateInput(laudo?.mesAno) },
     {
       name: "equipamento_id",
-      label: "Equipamento",
+      label: ta({ pt: "Equipamento", en: "Equipment" }),
       type: "select",
       required: creating,
       lookup: equipamentoLookup,
@@ -21,7 +22,7 @@ export function laudoTecnicoFields(laudo?: LaudoTecnicoProps): FormField[] {
     },
     {
       name: "instituicaoUnidade_id",
-      label: "Instituição/unidade",
+      label: ta({ pt: "Instituição/unidade", en: "Institution/unit" }),
       type: "select",
       required: true,
       lookup: instituicaoLookup,
@@ -29,7 +30,7 @@ export function laudoTecnicoFields(laudo?: LaudoTecnicoProps): FormField[] {
     },
     {
       name: "tecnico_id",
-      label: "Técnico",
+      label: ta({ pt: "Técnico", en: "Technician" }),
       type: "select",
       required: true,
       lookup: tecnicoLookup,
@@ -37,7 +38,7 @@ export function laudoTecnicoFields(laudo?: LaudoTecnicoProps): FormField[] {
     },
     {
       name: "descricaodoProblema",
-      label: "Descrição do problema",
+      label: ta({ pt: "Descrição do problema", en: "Problem description" }),
       type: "textarea",
       required: true,
       initial: laudo?.descricaodoProblema,

@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { useState } from "react";
 import { EntityForm } from "@/components/data/EntityForm";
 import { FormPage } from "@/components/data/FormPage";
@@ -11,13 +12,13 @@ export default function FormularioClientesMunicipais() {
   const [formKey, setFormKey] = useState(0);
 
   return (
-    <FormPage title="Novo cliente municipal" backHref="/dashboard/clientesMunicipais" backLabel="Clientes municipais">
+    <FormPage title={ta({ pt: "Novo cliente municipal", en: "New municipal customer" })} backHref="/dashboard/clientesMunicipais" backLabel={ta({ pt: "Clientes municipais", en: "Municipal customers" })}>
       <EntityForm
         key={formKey}
         fields={clienteMunicipalFields()}
         request={{ method: "post", url: "/categoryintituicao" }}
-        submitLabel="Cadastrar instituição"
-        successMessage="Cliente municipal cadastrado com sucesso!"
+        submitLabel={ta({ pt: "Cadastrar instituição", en: "Add institution" })}
+        successMessage={ta({ pt: "Cliente municipal cadastrado com sucesso!", en: "Municipal customer added successfully!" })}
         onSuccess={() => setFormKey((key) => key + 1)}
       />
     </FormPage>

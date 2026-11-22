@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { TbCalendarMonth, TbFileCertificate } from "react-icons/tb";
 import { CellTitle, EntityList } from "@/components/data/EntityList";
 import { useGlobalModal } from "@/provider/GlobalModalProvider";
@@ -18,48 +19,48 @@ export default function LaudoTecnicoList({ items }: { items: LaudoTecnicoProps[]
 
   return (
     <EntityList<LaudoTecnicoProps>
-      title="Laudo técnico"
-      breadcrumbs={[{ label: "Controles" }, { label: "Laudo técnico" }]}
+      title={ta({ pt: "Laudo técnico", en: "Technical report" })}
+      breadcrumbs={[{ label: ta({ pt: "Controles", en: "Controls" }) }, { label: ta({ pt: "Laudo técnico", en: "Technical report" }) }]}
       items={items}
       rowKey={(laudo) => laudo.id}
       stats={[
-        { label: "Total de laudos", value: items.length, tone: "primary", icon: <TbFileCertificate /> },
+        { label: ta({ pt: "Total de laudos", en: "Total reports" }), value: items.length, tone: "primary", icon: <TbFileCertificate /> },
         {
-          label: "Criados neste mês",
+          label: ta({ pt: "Criados neste mês", en: "Created this month" }),
           value: items.filter((laudo) => isThisMonth(laudo.created_at)).length,
           tone: "secondary",
           icon: <TbCalendarMonth />,
         },
       ]}
       search={{
-        placeholder: "Buscar patrimônio ou OS...",
+        placeholder: ta({ pt: "Buscar patrimônio ou OS...", en: "Search asset tag or work order..." }),
         text: (laudo) => [laudo.equipamento?.patrimonio, laudo.equipamento?.name, laudo.osLab],
       }}
       columns={[
         {
-          header: "OS do laboratório",
+          header: ta({ pt: "OS do laboratório", en: "Lab work order" }),
           cell: (laudo) => <CellTitle title={laudo.osLab || "—"} subtitle={laudo.descricaodoProblema} />,
         },
         {
-          header: "Equipamento",
+          header: ta({ pt: "Equipamento", en: "Equipment" }),
           cell: (laudo) => (
             <CellTitle
               title={laudo.equipamento?.name ?? "—"}
-              subtitle={laudo.equipamento?.patrimonio ? `Patrimônio ${laudo.equipamento.patrimonio}` : undefined}
+              subtitle={laudo.equipamento?.patrimonio ? ta({ pt: `Patrimônio ${laudo.equipamento.patrimonio}`, en: `Asset tag ${laudo.equipamento.patrimonio}` }) : undefined}
             />
           ),
         },
-        { header: "Instituição/unidade", cell: (laudo) => laudo.instituicaoUnidade?.name ?? "—" },
-        { header: "Data do laudo", cell: (laudo) => formatDate(laudo.mesAno), className: "whitespace-nowrap" },
-        { header: "Criado em", cell: (laudo) => formatDateTime(laudo.created_at), className: "whitespace-nowrap" },
+        { header: ta({ pt: "Instituição/unidade", en: "Institution/unit" }), cell: (laudo) => laudo.instituicaoUnidade?.name ?? "—" },
+        { header: ta({ pt: "Data do laudo", en: "Report date" }), cell: (laudo) => formatDate(laudo.mesAno), className: "whitespace-nowrap" },
+        { header: ta({ pt: "Criado em", en: "Created on" }), cell: (laudo) => formatDateTime(laudo.created_at), className: "whitespace-nowrap" },
       ]}
-      add={{ href: "/dashboard/formulariosadd/formularioLaudoTecnico", label: "Novo registro" }}
+      add={{ href: "/dashboard/formulariosadd/formularioLaudoTecnico", label: ta({ pt: "Novo registro", en: "New record" }) }}
       onOpen={(laudo) => openModal("laudotecnico", laudo)}
       remove={{
         request: (laudo) => ({ url: `/deletecontroledelaudotecnico/${laudo.id}` }),
         describe: (laudo) => (laudo.osLab ? `Laudo ${laudo.osLab}` : "este laudo"),
       }}
-      emptyMessage="Nenhum laudo técnico ainda."
+      emptyMessage={ta({ pt: "Nenhum laudo técnico ainda.", en: "No technical reports yet." })}
     />
   );
 }

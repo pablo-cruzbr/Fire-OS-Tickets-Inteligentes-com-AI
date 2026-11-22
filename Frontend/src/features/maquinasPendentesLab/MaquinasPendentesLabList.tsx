@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { TbDeviceDesktopCog, TbHourglass, TbReplace } from "react-icons/tb";
 import { CellTitle, EntityList, optionsFrom } from "@/components/data/EntityList";
 import { StatusBadge } from "@/components/ui";
@@ -12,45 +13,45 @@ export default function MaquinasPendentesLabList({ data }: { data: MaquinasPende
 
   return (
     <EntityList<MaquinasPendentesLabProps>
-      title="Máquinas pendentes laboratório"
-      breadcrumbs={[{ label: "Controles" }, { label: "Pendentes laboratório" }]}
+      title={ta({ pt: "Máquinas pendentes laboratório", en: "Machines pending in lab" })}
+      breadcrumbs={[{ label: ta({ pt: "Controles", en: "Controls" }) }, { label: ta({ pt: "Pendentes laboratório", en: "Pending in lab" }) }]}
       items={data.controles ?? []}
       rowKey={(maquina) => maquina.id}
       stats={[
-        { label: "Total", value: data.total ?? 0, tone: "primary", icon: <TbDeviceDesktopCog /> },
-        { label: "Pendente ORO", value: data.totalPendenteOro ?? 0, tone: "warning", icon: <TbHourglass /> },
-        { label: "Substituta", value: data.totalSubstituta ?? 0, tone: "secondary", icon: <TbReplace /> },
+        { label: ta({ pt: "Total", en: "Total" }), value: data.total ?? 0, tone: "primary", icon: <TbDeviceDesktopCog /> },
+        { label: ta({ pt: "Pendente ORO", en: "Pending ORO" }), value: data.totalPendenteOro ?? 0, tone: "warning", icon: <TbHourglass /> },
+        { label: ta({ pt: "Substituta", en: "Replacement" }), value: data.totalSubstituta ?? 0, tone: "secondary", icon: <TbReplace /> },
       ]}
       search={{
-        placeholder: "Buscar patrimônio ou OS...",
+        placeholder: ta({ pt: "Buscar patrimônio ou OS...", en: "Search asset tag or work order..." }),
         text: (maquina) => [maquina.equipamento?.patrimonio, maquina.idDaOs],
       }}
       filters={[
         {
-          label: "Status",
+          label: ta({ pt: "Status", en: "Status" }),
           options: (items) => optionsFrom(items, (maquina) => maquina.statusMaquinasPendentesLab?.name),
           match: (maquina, value) => maquina.statusMaquinasPendentesLab?.name === value,
         },
       ]}
       columns={[
         {
-          header: "Máquina",
+          header: ta({ pt: "Máquina", en: "Machine" }),
           cell: (maquina) => (
             <CellTitle title={maquina.equipamento?.name ?? "—"} subtitle={maquina.equipamento?.patrimonio} />
           ),
         },
-        { header: "OS", cell: (maquina) => maquina.idDaOs ?? "—", className: "whitespace-nowrap" },
-        { header: "SSD", cell: (maquina) => maquina.ssd ?? "—" },
-        { header: "Status", cell: (maquina) => <StatusBadge status={maquina.statusMaquinasPendentesLab?.name} /> },
-        { header: "Data", cell: (maquina) => formatDateTime(maquina.created_at), className: "whitespace-nowrap" },
+        { header: ta({ pt: "OS", en: "WO" }), cell: (maquina) => maquina.idDaOs ?? "—", className: "whitespace-nowrap" },
+        { header: ta({ pt: "SSD", en: "SSD" }), cell: (maquina) => maquina.ssd ?? "—" },
+        { header: ta({ pt: "Status", en: "Status" }), cell: (maquina) => <StatusBadge status={maquina.statusMaquinasPendentesLab?.name} /> },
+        { header: ta({ pt: "Data", en: "Date" }), cell: (maquina) => formatDateTime(maquina.created_at), className: "whitespace-nowrap" },
       ]}
-      add={{ href: "/dashboard/formulariosadd/formularioPendentesLab", label: "Novo registro" }}
+      add={{ href: "/dashboard/formulariosadd/formularioPendentesLab", label: ta({ pt: "Novo registro", en: "New record" }) }}
       onOpen={(maquina) => openModal("maquinasPendentesLab", maquina)}
       remove={{
         request: (maquina) => ({ url: `/deletecontroledemaquinaspendenteslab/${maquina.id}` }),
         describe: (maquina) => maquina.equipamento?.patrimonio ?? maquina.numeroDeSerie,
       }}
-      emptyMessage="Nenhuma máquina pendente no laboratório."
+      emptyMessage={ta({ pt: "Nenhuma máquina pendente no laboratório.", en: "No machines pending in the lab." })}
     />
   );
 }

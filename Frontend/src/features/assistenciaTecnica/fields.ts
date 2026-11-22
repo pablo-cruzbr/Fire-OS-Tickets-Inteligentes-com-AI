@@ -1,3 +1,4 @@
+import { ta } from "@/i18n/active";
 import type { FormField } from "@/components/data/EntityForm";
 import { toDateInput, toMonthInput } from "@/lib/format";
 import type { AssistenciaTecnicaProps } from "@/lib/getAssistenciaTecnica.type";
@@ -13,21 +14,21 @@ export function assistenciaTecnicaFields(assistencia?: AssistenciaTecnicaProps):
   const creating = !assistencia;
 
   return [
-    { name: "name", label: "Nome do registro", required: true, initial: assistencia?.name, full: true },
-    { name: "mesAno", label: "Mês/ano", type: "month", required: true, initial: toMonthInput(assistencia?.mesAno) },
+    { name: "name", label: ta({ pt: "Nome do registro", en: "Record name" }), required: true, initial: assistencia?.name, full: true },
+    { name: "mesAno", label: ta({ pt: "Mês/ano", en: "Month/year" }), type: "month", required: true, initial: toMonthInput(assistencia?.mesAno) },
     {
       name: "dataDeRetirada",
-      label: "Data de retirada",
+      label: ta({ pt: "Data de retirada", en: "Pickup date" }),
       type: "date",
       required: true,
       initial: toDateInput(assistencia?.dataDeRetirada),
     },
-    { name: "idChamado", label: "ID do chamado", required: true, initial: assistencia?.idChamado },
-    { name: "assistencia", label: "Assistência", required: true, initial: assistencia?.assistencia },
-    { name: "osDaAssistencia", label: "OS da assistência", required: true, initial: assistencia?.osDaAssistencia },
+    { name: "idChamado", label: ta({ pt: "ID do chamado", en: "Ticket ID" }), required: true, initial: assistencia?.idChamado },
+    { name: "assistencia", label: ta({ pt: "Assistência", en: "Repair service" }), required: true, initial: assistencia?.assistencia },
+    { name: "osDaAssistencia", label: ta({ pt: "OS da assistência", en: "Repair work order" }), required: true, initial: assistencia?.osDaAssistencia },
     {
       name: "statusReparo_id",
-      label: "Status do reparo",
+      label: ta({ pt: "Status do reparo", en: "Repair status" }),
       type: "select",
       required: creating,
       lookup: statusReparoLookup,
@@ -35,7 +36,7 @@ export function assistenciaTecnicaFields(assistencia?: AssistenciaTecnicaProps):
     },
     {
       name: "equipamento_id",
-      label: "Equipamento",
+      label: ta({ pt: "Equipamento", en: "Equipment" }),
       type: "select",
       required: creating,
       lookup: equipamentoLookup,
@@ -43,7 +44,7 @@ export function assistenciaTecnicaFields(assistencia?: AssistenciaTecnicaProps):
     },
     {
       name: "instituicaoUnidade_id",
-      label: "Instituição/unidade",
+      label: ta({ pt: "Instituição/unidade", en: "Institution/unit" }),
       type: "select",
       required: creating,
       lookup: instituicaoLookup,
@@ -51,7 +52,7 @@ export function assistenciaTecnicaFields(assistencia?: AssistenciaTecnicaProps):
     },
     {
       name: "tecnico_id",
-      label: "Técnico",
+      label: ta({ pt: "Técnico", en: "Technician" }),
       type: "select",
       required: true,
       lookup: tecnicoLookup,
@@ -59,7 +60,7 @@ export function assistenciaTecnicaFields(assistencia?: AssistenciaTecnicaProps):
     },
     {
       name: "cliente_id",
-      label: "Cliente",
+      label: ta({ pt: "Cliente", en: "Customer" }),
       type: "select",
       required: true,
       lookup: clienteLookup,
@@ -67,9 +68,9 @@ export function assistenciaTecnicaFields(assistencia?: AssistenciaTecnicaProps):
     },
     {
       name: "observacoes",
-      label: "Observações",
+      label: ta({ pt: "Observações", en: "Notes" }),
       type: "textarea",
-      placeholder: "Opcional",
+      placeholder: ta({ pt: "Opcional", en: "Optional" }),
       initial: assistencia?.observacoes,
     },
   ];

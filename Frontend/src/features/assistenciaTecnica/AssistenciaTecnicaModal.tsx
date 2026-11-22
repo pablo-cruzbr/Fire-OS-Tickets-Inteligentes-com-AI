@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { DetailModal } from "@/components/data/DetailModal";
 import { EntityForm } from "@/components/data/EntityForm";
 import { StatusBadge } from "@/components/ui";
@@ -13,29 +14,29 @@ export function AssistenciaTecnicaModal({ data: assistencia, onClose }: EntityMo
 
   return (
     <DetailModal
-      title={assistencia.name || equipamento?.name || "Assistência técnica"}
-      subtitle="Assistência técnica"
+      title={assistencia.name || equipamento?.name || ta({ pt: "Assistência técnica", en: "Repair service" })}
+      subtitle={ta({ pt: "Assistência técnica", en: "Repair service" })}
       onClose={onClose}
       fields={[
-        { label: "Status", value: <StatusBadge status={assistencia.statusReparo?.name} /> },
-        { label: "Cliente", value: assistencia.cliente?.name },
-        { label: "Equipamento", value: equipamento?.name },
-        { label: "Patrimônio", value: equipamento?.patrimonio },
-        { label: "Assistência", value: assistencia.assistencia },
-        { label: "OS da assistência", value: assistencia.osDaAssistencia },
-        { label: "ID do chamado", value: assistencia.idChamado },
-        { label: "Técnico responsável", value: assistencia.tecnico?.name },
-        { label: "Instituição/unidade", value: assistencia.instituicaoUnidade?.name },
-        { label: "Mês/ano", value: formatMonthYear(assistencia.mesAno) },
-        { label: "Data de retirada", value: formatDate(assistencia.dataDeRetirada) },
-        { label: "Criado em", value: formatDateTime(assistencia.created_at) },
-        { label: "Observações", value: assistencia.observacoes, full: true },
+        { label: ta({ pt: "Status", en: "Status" }), value: <StatusBadge status={assistencia.statusReparo?.name} /> },
+        { label: ta({ pt: "Cliente", en: "Customer" }), value: assistencia.cliente?.name },
+        { label: ta({ pt: "Equipamento", en: "Equipment" }), value: equipamento?.name },
+        { label: ta({ pt: "Patrimônio", en: "Asset tag" }), value: equipamento?.patrimonio },
+        { label: ta({ pt: "Assistência", en: "Repair service" }), value: assistencia.assistencia },
+        { label: ta({ pt: "OS da assistência", en: "Repair work order" }), value: assistencia.osDaAssistencia },
+        { label: ta({ pt: "ID do chamado", en: "Ticket ID" }), value: assistencia.idChamado },
+        { label: ta({ pt: "Técnico responsável", en: "Technician in charge" }), value: assistencia.tecnico?.name },
+        { label: ta({ pt: "Instituição/unidade", en: "Institution/unit" }), value: assistencia.instituicaoUnidade?.name },
+        { label: ta({ pt: "Mês/ano", en: "Month/year" }), value: formatMonthYear(assistencia.mesAno) },
+        { label: ta({ pt: "Data de retirada", en: "Pickup date" }), value: formatDate(assistencia.dataDeRetirada) },
+        { label: ta({ pt: "Criado em", en: "Created on" }), value: formatDateTime(assistencia.created_at) },
+        { label: ta({ pt: "Observações", en: "Notes" }), value: assistencia.observacoes, full: true },
       ]}
       renderEdit={(done, cancel) => (
         <EntityForm
           fields={assistenciaTecnicaFields(assistencia)}
           request={{ method: "patch", url: `/assistenciatecnica/update/${assistencia.id}` }}
-          successMessage="Assistência técnica atualizada!"
+          successMessage={ta({ pt: "Assistência técnica atualizada!", en: "Repair service updated!" })}
           onSuccess={done}
           onCancel={cancel}
         />

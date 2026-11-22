@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { DetailModal } from "@/components/data/DetailModal";
 import { EntityForm } from "@/components/data/EntityForm";
 import { formatDate, formatDateTime } from "@/lib/format";
@@ -10,25 +11,25 @@ import { laudoTecnicoFields } from "./fields";
 export function LaudoTecnicoModal({ data: laudo, onClose }: EntityModalProps<LaudoTecnicoProps>) {
   return (
     <DetailModal
-      title={laudo.osLab ? `Laudo ${laudo.osLab}` : "Laudo técnico"}
-      subtitle="Laudo técnico"
+      title={laudo.osLab ? ta({ pt: `Laudo ${laudo.osLab}`, en: `Report ${laudo.osLab}` }) : ta({ pt: "Laudo técnico", en: "Technical report" })}
+      subtitle={ta({ pt: "Laudo técnico", en: "Technical report" })}
       onClose={onClose}
       fields={[
-        { label: "OS do laboratório", value: laudo.osLab },
-        { label: "Data (mês/ano)", value: formatDate(laudo.mesAno) },
-        { label: "Equipamento", value: laudo.equipamento?.name },
-        { label: "Patrimônio", value: laudo.equipamento?.patrimonio },
-        { label: "Instituição/unidade", value: laudo.instituicaoUnidade?.name },
-        { label: "Endereço", value: laudo.instituicaoUnidade?.endereco },
-        { label: "Técnico responsável", value: laudo.tecnico?.name },
-        { label: "Criado em", value: formatDateTime(laudo.created_at) },
-        { label: "Descrição do problema", value: laudo.descricaodoProblema, full: true },
+        { label: ta({ pt: "OS do laboratório", en: "Lab work order" }), value: laudo.osLab },
+        { label: ta({ pt: "Data (mês/ano)", en: "Date (month/year)" }), value: formatDate(laudo.mesAno) },
+        { label: ta({ pt: "Equipamento", en: "Equipment" }), value: laudo.equipamento?.name },
+        { label: ta({ pt: "Patrimônio", en: "Asset tag" }), value: laudo.equipamento?.patrimonio },
+        { label: ta({ pt: "Instituição/unidade", en: "Institution/unit" }), value: laudo.instituicaoUnidade?.name },
+        { label: ta({ pt: "Endereço", en: "Address" }), value: laudo.instituicaoUnidade?.endereco },
+        { label: ta({ pt: "Técnico responsável", en: "Technician in charge" }), value: laudo.tecnico?.name },
+        { label: ta({ pt: "Criado em", en: "Created on" }), value: formatDateTime(laudo.created_at) },
+        { label: ta({ pt: "Descrição do problema", en: "Problem description" }), value: laudo.descricaodoProblema, full: true },
       ]}
       renderEdit={(done, cancel) => (
         <EntityForm
           fields={laudoTecnicoFields(laudo)}
           request={{ method: "patch", url: `/laudotecnico/update/${laudo.id}` }}
-          successMessage="Laudo técnico atualizado!"
+          successMessage={ta({ pt: "Laudo técnico atualizado!", en: "Technical report updated!" })}
           onSuccess={done}
           onCancel={cancel}
         />

@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { TbCircleCheck, TbShoppingCart, TbTruckDelivery, TbHourglass } from "react-icons/tb";
 import { CellTitle, EntityList, optionsFrom } from "@/components/data/EntityList";
 import { StatusBadge } from "@/components/ui";
@@ -13,38 +14,38 @@ export default function ComprasList({ data }: { data: ComprasResponse }) {
 
   return (
     <EntityList<ComprasProps>
-      title="Compras"
-      breadcrumbs={[{ label: "Controles" }, { label: "Compras" }]}
+      title={ta({ pt: "Compras", en: "Purchasing" })}
+      breadcrumbs={[{ label: ta({ pt: "Controles", en: "Controls" }) }, { label: ta({ pt: "Compras", en: "Purchasing" }) }]}
       items={data.controles}
       rowKey={(compra) => compra.id}
       stats={[
-        { label: "Total", value: data.total, tone: "primary", icon: <TbShoppingCart /> },
-        { label: "Aguardando compra", value: data.totalAguardandoCompra, tone: "warning", icon: <TbHourglass /> },
-        { label: "Aguardando entrega", value: data.totalAguardandoEntrega, tone: "secondary", icon: <TbTruckDelivery /> },
-        { label: "Compra finalizada", value: data.totalCompraFinalizada, tone: "success", icon: <TbCircleCheck /> },
+        { label: ta({ pt: "Total", en: "Total" }), value: data.total, tone: "primary", icon: <TbShoppingCart /> },
+        { label: ta({ pt: "Aguardando compra", en: "Awaiting purchase" }), value: data.totalAguardandoCompra, tone: "warning", icon: <TbHourglass /> },
+        { label: ta({ pt: "Aguardando entrega", en: "Awaiting delivery" }), value: data.totalAguardandoEntrega, tone: "secondary", icon: <TbTruckDelivery /> },
+        { label: ta({ pt: "Compra finalizada", en: "Purchase completed" }), value: data.totalCompraFinalizada, tone: "success", icon: <TbCircleCheck /> },
       ]}
       search={{
-        placeholder: "Buscar item ou solicitante...",
+        placeholder: ta({ pt: "Buscar item ou solicitante...", en: "Search item or requester..." }),
         text: (compra) => [compra.itemSolicitado, compra.solicitante],
       }}
       filters={[
         {
-          label: "Status",
+          label: ta({ pt: "Status", en: "Status" }),
           options: (items) => optionsFrom(items, (compra) => relationName(compra.statusCompras, "")),
           match: (compra, value) => relationName(compra.statusCompras) === value,
         },
       ]}
       columns={[
         {
-          header: "Item",
+          header: ta({ pt: "Item", en: "Item" }),
           cell: (compra) => <CellTitle title={compra.itemSolicitado} subtitle={compra.motivoDaSolicitacao} />,
         },
-        { header: "Solicitante", cell: (compra) => compra.solicitante },
-        { header: "Preço", cell: (compra) => formatCurrency(compra.preco), className: "whitespace-nowrap" },
-        { header: "Status", cell: (compra) => <StatusBadge status={relationName(compra.statusCompras, "")} /> },
-        { header: "Data", cell: (compra) => formatDateTime(compra.created_at), className: "whitespace-nowrap" },
+        { header: ta({ pt: "Solicitante", en: "Requester" }), cell: (compra) => compra.solicitante },
+        { header: ta({ pt: "Preço", en: "Price" }), cell: (compra) => formatCurrency(compra.preco), className: "whitespace-nowrap" },
+        { header: ta({ pt: "Status", en: "Status" }), cell: (compra) => <StatusBadge status={relationName(compra.statusCompras, "")} /> },
+        { header: ta({ pt: "Data", en: "Date" }), cell: (compra) => formatDateTime(compra.created_at), className: "whitespace-nowrap" },
       ]}
-      add={{ href: "/dashboard/compras/formularioCompras", label: "Fazer um pedido" }}
+      add={{ href: "/dashboard/compras/formularioCompras", label: ta({ pt: "Fazer um pedido", en: "Place an order" }) }}
       onOpen={(compra) => openModal("compras", compra)}
       remove={{
         request: (compra) => ({
@@ -53,7 +54,7 @@ export default function ComprasList({ data }: { data: ComprasResponse }) {
         }),
         describe: (compra) => compra.itemSolicitado,
       }}
-      emptyMessage="Nenhuma solicitação de compra ainda."
+      emptyMessage={ta({ pt: "Nenhuma solicitação de compra ainda.", en: "No purchase requests yet." })}
     />
   );
 }

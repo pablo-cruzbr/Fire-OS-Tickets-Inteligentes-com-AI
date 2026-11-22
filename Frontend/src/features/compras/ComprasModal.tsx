@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { DetailModal } from "@/components/data/DetailModal";
 import { EntityForm } from "@/components/data/EntityForm";
 import { StatusBadge } from "@/components/ui";
@@ -13,16 +14,16 @@ export function ComprasModal({ data: compra, onClose }: EntityModalProps<Compras
   return (
     <DetailModal
       title={compra.itemSolicitado}
-      subtitle="Solicitação de compra"
+      subtitle={ta({ pt: "Solicitação de compra", en: "Purchase request" })}
       onClose={onClose}
       fields={[
-        { label: "Solicitante", value: compra.solicitante },
-        { label: "Status", value: <StatusBadge status={relationName(compra.statusCompras, "")} /> },
-        { label: "Preço", value: formatCurrency(compra.preco) },
-        { label: "Criado em", value: formatDateTime(compra.created_at) },
-        { label: "Motivo da solicitação", value: compra.motivoDaSolicitacao, full: true },
+        { label: ta({ pt: "Solicitante", en: "Requester" }), value: compra.solicitante },
+        { label: ta({ pt: "Status", en: "Status" }), value: <StatusBadge status={relationName(compra.statusCompras, "")} /> },
+        { label: ta({ pt: "Preço", en: "Price" }), value: formatCurrency(compra.preco) },
+        { label: ta({ pt: "Criado em", en: "Created on" }), value: formatDateTime(compra.created_at) },
+        { label: ta({ pt: "Motivo da solicitação", en: "Reason for the request" }), value: compra.motivoDaSolicitacao, full: true },
         {
-          label: "Link de compra",
+          label: ta({ pt: "Link de compra", en: "Purchase link" }),
           full: true,
           value: compra.linkDeCompra ? (
             <a
@@ -40,7 +41,7 @@ export function ComprasModal({ data: compra, onClose }: EntityModalProps<Compras
         <EntityForm
           fields={compraFields(compra)}
           request={{ method: "patch", url: `/compra/update/${compra.id}` }}
-          successMessage="Compra atualizada!"
+          successMessage={ta({ pt: "Compra atualizada!", en: "Purchase updated!" })}
           onSuccess={done}
           onCancel={cancel}
         />

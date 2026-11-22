@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { TbBuildingCommunity } from "react-icons/tb";
 import { CellTitle, EntityList, optionsFrom } from "@/components/data/EntityList";
 import { Badge } from "@/components/ui";
@@ -13,20 +14,20 @@ export default function ClienteMunicipalList({ data }: { data: ClienteMunicipais
 
   return (
     <EntityList<ClientesMunicipaisProps>
-      title="Clientes municipais"
-      breadcrumbs={[{ label: "Cadastros" }, { label: "Clientes municipais" }]}
+      title={ta({ pt: "Clientes municipais", en: "Municipal customers" })}
+      breadcrumbs={[{ label: ta({ pt: "Cadastros", en: "New records" }) }, { label: ta({ pt: "Clientes municipais", en: "Municipal customers" }) }]}
       items={instituicoes}
       rowKey={(instituicao) => instituicao.id}
       stats={[
         {
-          label: "Total de instituições",
+          label: ta({ pt: "Total de instituições", en: "Total institutions" }),
           value: data.total ?? instituicoes.length,
           tone: "primary",
           icon: <TbBuildingCommunity />,
         },
       ]}
       search={{
-        placeholder: "Buscar nome, endereço, telefone ou tipo...",
+        placeholder: ta({ pt: "Buscar nome, endereço, telefone ou tipo...", en: "Search name, address, phone or type..." }),
         text: (instituicao) => [
           instituicao.name,
           instituicao.endereco,
@@ -36,39 +37,39 @@ export default function ClienteMunicipalList({ data }: { data: ClienteMunicipais
       }}
       filters={[
         {
-          label: "Tipo",
+          label: ta({ pt: "Tipo", en: "Type" }),
           options: (items) => optionsFrom(items, (instituicao) => instituicao.tipodeinstituicaoUnidade?.name),
           match: (instituicao, value) => instituicao.tipodeinstituicaoUnidade?.name === value,
         },
       ]}
       columns={[
         {
-          header: "Instituição",
+          header: ta({ pt: "Instituição", en: "Institution" }),
           cell: (instituicao) => <CellTitle title={instituicao.name} subtitle={instituicao.endereco} />,
         },
         {
-          header: "Tipo",
+          header: ta({ pt: "Tipo", en: "Type" }),
           cell: (instituicao) =>
             instituicao.tipodeinstituicaoUnidade?.name ? (
               <Badge tone="secondary">{instituicao.tipodeinstituicaoUnidade.name}</Badge>
             ) : (
-              "Não informado"
+              ta({ pt: "Não informado", en: "Not provided" })
             ),
         },
-        { header: "Telefone", cell: (instituicao) => instituicao.telefone || "—", className: "whitespace-nowrap" },
+        { header: ta({ pt: "Telefone", en: "Phone" }), cell: (instituicao) => instituicao.telefone || "—", className: "whitespace-nowrap" },
         {
-          header: "Cadastrado em",
+          header: ta({ pt: "Cadastrado em", en: "Registered on" }),
           cell: (instituicao) => formatDateTime(instituicao.created_at),
           className: "whitespace-nowrap",
         },
       ]}
-      add={{ href: "/dashboard/formulariosadd/formularioClientesMunicipais", label: "Nova instituição" }}
+      add={{ href: "/dashboard/formulariosadd/formularioClientesMunicipais", label: ta({ pt: "Nova instituição", en: "New institution" }) }}
       onOpen={(instituicao) => openModal("clienteMunicipal", instituicao)}
       remove={{
         request: (instituicao) => ({ url: "/deleteinstituicao", params: { instituicao_id: instituicao.id } }),
         describe: (instituicao) => instituicao.name,
       }}
-      emptyMessage="Nenhum cliente municipal cadastrado."
+      emptyMessage={ta({ pt: "Nenhum cliente municipal cadastrado.", en: "No municipal customers yet." })}
     />
   );
 }

@@ -1,3 +1,4 @@
+import { ta } from "@/i18n/active";
 import type { FormField } from "@/components/data/EntityForm";
 import type { MaquinasPendentesLabProps } from "@/lib/getMaquinasPendentesLab.type";
 import { equipamentoLookup, instituicaoLookup } from "@/features/equipamentos/fields";
@@ -9,48 +10,48 @@ export function maquinaPendenteLabFields(maquina?: MaquinasPendentesLabProps): F
   return [
     {
       name: "equipamento_id",
-      label: "Equipamento",
+      label: ta({ pt: "Equipamento", en: "Equipment" }),
       type: "select",
       required: true,
       lookup: equipamentoLookup,
-      placeholder: "Selecione o equipamento",
+      placeholder: ta({ pt: "Selecione o equipamento", en: "Select the equipment" }),
       initial: maquina?.equipamento?.id ?? "",
       full: true,
     },
     {
       name: "numeroDeSerie",
-      label: "Número de série",
+      label: ta({ pt: "Número de série", en: "Serial number" }),
       required: true,
-      placeholder: "Número de série",
+      placeholder: ta({ pt: "Número de série", en: "Serial number" }),
       initial: maquina?.numeroDeSerie,
     },
-    { name: "ssd", label: "SSD", required: true, placeholder: "Possui SSD? (Sim/Não)", initial: maquina?.ssd },
-    { name: "idDaOs", label: "ID da OS", required: true, placeholder: "ID da OS", initial: maquina?.idDaOs },
+    { name: "ssd", label: ta({ pt: "SSD", en: "SSD" }), required: true, placeholder: ta({ pt: "Possui SSD? (Sim/Não)", en: "Has an SSD? (Yes/No)" }), initial: maquina?.ssd },
+    { name: "idDaOs", label: ta({ pt: "ID da OS", en: "Work order ID" }), required: true, placeholder: ta({ pt: "ID da OS", en: "Work order ID" }), initial: maquina?.idDaOs },
     {
       name: "statusMaquinasPendentesLab_id",
-      label: "Status",
+      label: ta({ pt: "Status", en: "Status" }),
       type: "select",
       required: true,
       lookup: statusLookup,
-      placeholder: "Selecione o status",
+      placeholder: ta({ pt: "Selecione o status", en: "Select the status" }),
       initial: maquina?.statusMaquinasPendentesLab?.id ?? "",
     },
     {
       name: "instituicaoUnidade_id",
-      label: "Instituição / unidade",
+      label: ta({ pt: "Instituição / unidade", en: "Institution / unit" }),
       type: "select",
       required: true,
       lookup: instituicaoLookup,
-      placeholder: "Selecione a instituição",
+      placeholder: ta({ pt: "Selecione a instituição", en: "Select the institution" }),
       initial: maquina?.instituicaoUnidade?.id ?? "",
       full: true,
     },
     {
       name: "obs",
-      label: "Observações",
+      label: ta({ pt: "Observações", en: "Notes" }),
       type: "textarea",
       required: !maquina,
-      placeholder: "Observações",
+      placeholder: ta({ pt: "Observações", en: "Notes" }),
       initial: maquina?.obs,
     },
   ];

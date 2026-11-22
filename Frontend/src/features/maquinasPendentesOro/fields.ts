@@ -1,3 +1,4 @@
+import { ta } from "@/i18n/active";
 import type { FormField } from "@/components/data/EntityForm";
 import { fromDateInput, toDateInput } from "@/lib/format";
 import type { MaquinasPendentesOroProps } from "@/lib/getMaquinasPendentesOro.type";
@@ -11,17 +12,17 @@ export function maquinaPendenteOroFields(maquina?: MaquinasPendentesOroProps): F
   return [
     {
       name: "equipamento_id",
-      label: "Equipamento",
+      label: ta({ pt: "Equipamento", en: "Equipment" }),
       type: "select",
       required: !editing,
       lookup: equipamentoLookup,
-      placeholder: "Selecione o equipamento",
+      placeholder: ta({ pt: "Selecione o equipamento", en: "Select the equipment" }),
       initial: maquina?.equipamento?.id ?? "",
       full: true,
     },
     {
       name: "datadaInstalacao",
-      label: "Data da instalação",
+      label: ta({ pt: "Data da instalação", en: "Installation date" }),
       type: "date",
       required: !editing,
       initial: toDateInput(maquina?.datadaInstalacao),
@@ -30,34 +31,34 @@ export function maquinaPendenteOroFields(maquina?: MaquinasPendentesOroProps): F
     },
     {
       name: "statusMaquinasPendentesOro_id",
-      label: "Status",
+      label: ta({ pt: "Status", en: "Status" }),
       type: "select",
       required: !editing,
       lookup: statusLookup,
-      placeholder: "Selecione o status",
+      placeholder: ta({ pt: "Selecione o status", en: "Select the status" }),
       initial: maquina?.statusMaquinasPendentesOro?.id ?? "",
     },
     {
       name: "osInstalacao",
-      label: "OS de instalação",
+      label: ta({ pt: "OS de instalação", en: "Installation work order" }),
       required: true,
-      placeholder: "OS de instalação",
+      placeholder: ta({ pt: "OS de instalação", en: "Installation work order" }),
       initial: maquina?.osInstalacao,
     },
     {
       name: "osRetirada",
-      label: "OS de retirada",
+      label: ta({ pt: "OS de retirada", en: "Pickup work order" }),
       required: true,
-      placeholder: "OS de retirada",
+      placeholder: ta({ pt: "OS de retirada", en: "Pickup work order" }),
       initial: maquina?.osRetirada,
     },
     {
       name: "instituicaoUnidade_id",
-      label: "Instituição / unidade",
+      label: ta({ pt: "Instituição / unidade", en: "Institution / unit" }),
       type: "select",
       required: !editing,
       lookup: instituicaoLookup,
-      placeholder: "Selecione a instituição",
+      placeholder: ta({ pt: "Selecione a instituição", en: "Select the institution" }),
       initial: maquina?.instituicaoUnidade?.id ?? "",
       full: true,
     },

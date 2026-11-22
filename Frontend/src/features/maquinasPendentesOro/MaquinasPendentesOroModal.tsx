@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { DetailModal } from "@/components/data/DetailModal";
 import { EntityForm } from "@/components/data/EntityForm";
 import { StatusBadge } from "@/components/ui";
@@ -11,23 +12,23 @@ import { maquinaPendenteOroFields } from "./fields";
 export function MaquinasPendentesOroModal({ data: maquina, onClose }: EntityModalProps<MaquinasPendentesOroProps>) {
   return (
     <DetailModal
-      title={maquina.equipamento?.name ?? "Máquina pendente"}
-      subtitle="Máquina pendente ORO"
+      title={maquina.equipamento?.name ?? ta({ pt: "Máquina pendente", en: "Pending machine" })}
+      subtitle={ta({ pt: "Máquina pendente ORO", en: "Pending ORO machine" })}
       onClose={onClose}
       fields={[
-        { label: "Patrimônio", value: maquina.equipamento?.patrimonio },
-        { label: "Status", value: <StatusBadge status={maquina.statusMaquinasPendentesOro?.name} /> },
-        { label: "Data da instalação", value: formatDate(maquina.datadaInstalacao) },
-        { label: "Instituição / unidade", value: maquina.instituicaoUnidade?.name },
-        { label: "OS de instalação", value: maquina.osInstalacao },
-        { label: "OS de retirada", value: maquina.osRetirada },
-        { label: "Criado em", value: formatDateTime(maquina.created_at) },
+        { label: ta({ pt: "Patrimônio", en: "Asset tag" }), value: maquina.equipamento?.patrimonio },
+        { label: ta({ pt: "Status", en: "Status" }), value: <StatusBadge status={maquina.statusMaquinasPendentesOro?.name} /> },
+        { label: ta({ pt: "Data da instalação", en: "Installation date" }), value: formatDate(maquina.datadaInstalacao) },
+        { label: ta({ pt: "Instituição / unidade", en: "Institution / unit" }), value: maquina.instituicaoUnidade?.name },
+        { label: ta({ pt: "OS de instalação", en: "Installation work order" }), value: maquina.osInstalacao },
+        { label: ta({ pt: "OS de retirada", en: "Pickup work order" }), value: maquina.osRetirada },
+        { label: ta({ pt: "Criado em", en: "Created on" }), value: formatDateTime(maquina.created_at) },
       ]}
       renderEdit={(done, cancel) => (
         <EntityForm
           fields={maquinaPendenteOroFields(maquina)}
           request={{ method: "patch", url: `/controledemaquinaspendentesoro/update/${maquina.id}` }}
-          successMessage="Máquina pendente atualizada!"
+          successMessage={ta({ pt: "Máquina pendente atualizada!", en: "Pending machine updated!" })}
           onSuccess={done}
           onCancel={cancel}
         />

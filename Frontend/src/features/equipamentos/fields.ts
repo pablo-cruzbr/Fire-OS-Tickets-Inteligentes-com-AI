@@ -1,3 +1,4 @@
+import { ta } from "@/i18n/active";
 import type { FormField } from "@/components/data/EntityForm";
 import type { Lookup } from "@/components/data/useLookups";
 import type { EquipamentoProps } from "@/lib/getEquipamento.type";
@@ -23,25 +24,25 @@ export function equipamentoFields(equipamento?: EquipamentoProps): FormField[] {
   const fields: FormField[] = [
     {
       name: "name",
-      label: "Nome do equipamento",
+      label: ta({ pt: "Nome do equipamento", en: "Equipment name" }),
       required: true,
-      placeholder: "Ex.: Notebook Dell Latitude",
+      placeholder: ta({ pt: "Ex.: Notebook Dell Latitude", en: "E.g. Dell Latitude laptop" }),
       initial: equipamento?.name,
     },
     {
       name: "patrimonio",
-      label: "Patrimônio",
+      label: ta({ pt: "Patrimônio", en: "Asset tag" }),
       required: true,
-      placeholder: "Número do patrimônio",
+      placeholder: ta({ pt: "Número do patrimônio", en: "Asset tag number" }),
       initial: equipamento?.patrimonio,
     },
     {
       name: "instituicaoUnidade_id",
-      label: "Instituição / unidade",
+      label: ta({ pt: "Instituição / unidade", en: "Institution / unit" }),
       type: "select",
       required: !equipamento,
       lookup: instituicaoLookup,
-      placeholder: "Selecione a unidade",
+      placeholder: ta({ pt: "Selecione a unidade", en: "Select the unit" }),
       initial: equipamento?.instituicaoUnidade?.id ?? "",
     },
   ];
@@ -49,10 +50,10 @@ export function equipamentoFields(equipamento?: EquipamentoProps): FormField[] {
   if (equipamento) {
     fields.push({
       name: "tipodeEquipamento_id",
-      label: "Tipo do equipamento",
+      label: ta({ pt: "Tipo do equipamento", en: "Equipment type" }),
       type: "select",
       lookup: tipoLookup,
-      placeholder: "Selecione o tipo",
+      placeholder: ta({ pt: "Selecione o tipo", en: "Select the type" }),
       initial: equipamento.tipodeEquipamento?.id ?? "",
     });
   }

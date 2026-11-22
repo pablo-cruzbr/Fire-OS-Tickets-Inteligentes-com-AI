@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { useRouter } from "next/navigation";
 import { EntityForm } from "@/components/data/EntityForm";
 import { FormPage } from "@/components/data/FormPage";
@@ -10,15 +11,15 @@ export default function FormularioDocumentacaoTecnica() {
 
   return (
     <FormPage
-      title="Nova documentação técnica"
+      title={ta({ pt: "Nova documentação técnica", en: "New technical documentation" })}
       backHref="/dashboard/documentacaoTecnica"
-      backLabel="Documentação técnica"
+      backLabel={ta({ pt: "Documentação técnica", en: "Technical documentation" })}
     >
       <EntityForm
         fields={documentacaoFields()}
         request={{ method: "post", url: "/documentacaotecnica" }}
-        submitLabel="Salvar documentação"
-        successMessage="Documentação criada!"
+        submitLabel={ta({ pt: "Salvar documentação", en: "Save documentation" })}
+        successMessage={ta({ pt: "Documentação criada!", en: "Documentation created!" })}
         onSuccess={() => router.push("/dashboard/documentacaoTecnica")}
       />
     </FormPage>

@@ -1,3 +1,4 @@
+import { ta } from "@/i18n/active";
 import type { FormField } from "@/components/data/EntityForm";
 import type { DocumentacaoTecnicaProps } from "@/lib/getDocumentacaoTecnica.type";
 
@@ -13,18 +14,18 @@ const instituicoesLookup = { endpoint: "/listinstuicao" };
  */
 export function documentacaoFields(doc?: DocumentacaoTecnicaProps): FormField[] {
   return [
-    { name: "titulo", label: "Título", required: true, initial: doc?.titulo, full: true },
+    { name: "titulo", label: ta({ pt: "Título", en: "Title" }), required: true, initial: doc?.titulo, full: true },
     {
       name: "descricao",
-      label: "Descrição",
+      label: ta({ pt: "Descrição", en: "Description" }),
       type: "textarea",
       required: true,
-      placeholder: "Adicione suas anotações",
+      placeholder: ta({ pt: "Adicione suas anotações", en: "Add your notes" }),
       initial: doc?.descricao,
     },
     {
       name: "tecnico_id",
-      label: "Técnico",
+      label: ta({ pt: "Técnico", en: "Technician" }),
       type: "select",
       required: true,
       lookup: tecnicosLookup,
@@ -32,17 +33,17 @@ export function documentacaoFields(doc?: DocumentacaoTecnicaProps): FormField[] 
     },
     {
       name: "cliente_id",
-      label: "Cliente",
+      label: ta({ pt: "Cliente", en: "Customer" }),
       type: "select",
-      placeholder: "Nenhum (opcional)",
+      placeholder: ta({ pt: "Nenhum (opcional)", en: "None (optional)" }),
       lookup: clientesLookup,
       initial: doc?.cliente?.id,
     },
     {
       name: "instituicaoUnidade_id",
-      label: "Instituição / unidade",
+      label: ta({ pt: "Instituição / unidade", en: "Institution / unit" }),
       type: "select",
-      placeholder: "Nenhuma (opcional)",
+      placeholder: ta({ pt: "Nenhuma (opcional)", en: "None (optional)" }),
       lookup: instituicoesLookup,
       initial: doc?.instituicaoUnidade?.id,
     },

@@ -1,3 +1,4 @@
+import { ta } from "@/i18n/active";
 import type { FormField } from "@/components/data/EntityForm";
 import type { UsuariosProps } from "@/lib/getUsuario.type";
 
@@ -14,29 +15,29 @@ const instituicoesLookup = { endpoint: "/listinstuicao" };
  */
 export function usuarioEditFields(usuario: UsuariosProps): FormField[] {
   return [
-    { name: "name", label: "Nome do usuário", required: true, initial: usuario.name },
-    { name: "email", label: "E-mail", type: "email", required: true, initial: usuario.email },
+    { name: "name", label: ta({ pt: "Nome do usuário", en: "User name" }), required: true, initial: usuario.name },
+    { name: "email", label: ta({ pt: "E-mail", en: "Email" }), type: "email", required: true, initial: usuario.email },
     {
       name: "setor_id",
-      label: "Setor",
+      label: ta({ pt: "Setor", en: "Department" }),
       type: "select",
-      placeholder: "Selecione um setor",
+      placeholder: ta({ pt: "Selecione um setor", en: "Select a department" }),
       lookup: setoresLookup,
       initial: usuario.setor?.id,
     },
     {
       name: "cliente_id",
-      label: "Cliente / empresa",
+      label: ta({ pt: "Cliente / empresa", en: "Customer / company" }),
       type: "select",
-      placeholder: "Selecione um cliente",
+      placeholder: ta({ pt: "Selecione um cliente", en: "Select a customer" }),
       lookup: clientesLookup,
       initial: usuario.cliente?.id,
     },
     {
       name: "instituicaoUnidade_id",
-      label: "Instituição / unidade",
+      label: ta({ pt: "Instituição / unidade", en: "Institution / unit" }),
       type: "select",
-      placeholder: "Selecione uma instituição",
+      placeholder: ta({ pt: "Selecione uma instituição", en: "Select an institution" }),
       lookup: instituicoesLookup,
       initial: usuario.instituicaoUnidade?.id,
       full: true,

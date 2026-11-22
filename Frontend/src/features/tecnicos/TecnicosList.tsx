@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { TbTool } from "react-icons/tb";
 import { CellTitle, EntityList } from "@/components/data/EntityList";
 import { useGlobalModal } from "@/provider/GlobalModalProvider";
@@ -11,23 +12,23 @@ export default function TecnicosList({ data }: { data: TecnicoPropsResponse }) {
 
   return (
     <EntityList<TecnicosProps>
-      title="Técnicos"
-      breadcrumbs={[{ label: "Administração" }, { label: "Técnicos" }]}
+      title={ta({ pt: "Técnicos", en: "Technicians" })}
+      breadcrumbs={[{ label: ta({ pt: "Administração", en: "Administration" }) }, { label: ta({ pt: "Técnicos", en: "Technicians" }) }]}
       items={data.controles ?? []}
       rowKey={(tecnico) => tecnico.id}
-      stats={[{ label: "Técnicos cadastrados", value: data.total ?? 0, tone: "primary", icon: <TbTool /> }]}
-      search={{ placeholder: "Buscar técnico...", text: (tecnico) => [tecnico.name] }}
+      stats={[{ label: ta({ pt: "Técnicos cadastrados", en: "Registered technicians" }), value: data.total ?? 0, tone: "primary", icon: <TbTool /> }]}
+      search={{ placeholder: ta({ pt: "Buscar técnico...", en: "Search technician..." }), text: (tecnico) => [tecnico.name] }}
       columns={[
-        { header: "Nome", cell: (tecnico) => <CellTitle title={tecnico.name} /> },
-        { header: "Cadastro", cell: (tecnico) => formatDateTime(tecnico.created_at), className: "whitespace-nowrap" },
+        { header: ta({ pt: "Nome", en: "Name" }), cell: (tecnico) => <CellTitle title={tecnico.name} /> },
+        { header: ta({ pt: "Cadastro", en: "Registration" }), cell: (tecnico) => formatDateTime(tecnico.created_at), className: "whitespace-nowrap" },
       ]}
-      add={{ href: "/dashboard/formulariosadd/formularioTecnicoAdd", label: "Novo técnico" }}
+      add={{ href: "/dashboard/formulariosadd/formularioTecnicoAdd", label: ta({ pt: "Novo técnico", en: "New technician" }) }}
       onOpen={(tecnico) => openModal("tecnico", tecnico)}
       remove={{
         request: (tecnico) => ({ url: `/removertecnico/${tecnico.id}`, params: { tecnico_id: tecnico.id } }),
         describe: (tecnico) => tecnico.name,
       }}
-      emptyMessage="Nenhum técnico cadastrado ainda."
+      emptyMessage={ta({ pt: "Nenhum técnico cadastrado ainda.", en: "No technicians yet." })}
     />
   );
 }

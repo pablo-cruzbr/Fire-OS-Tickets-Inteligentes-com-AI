@@ -1,3 +1,4 @@
+import { ta } from "@/i18n/active";
 import type { FormField, Payload } from "@/components/data/EntityForm";
 import { fromDateInput, toDateInput } from "@/lib/format";
 import type { LaboratorioProps } from "@/lib/getLaboratorio.type";
@@ -17,19 +18,19 @@ export function laboratorioFields(laboratorio?: LaboratorioProps): FormField[] {
   const optionalDate = creating ? undefined : (value: string) => (value ? fromDateInput(value) : undefined);
 
   const fields: FormField[] = [
-    { name: "nomedoEquipamento", label: "Nome do equipamento", required: true, initial: laboratorio?.nomedoEquipamento },
-    { name: "marca", label: "Marca", required: true, initial: laboratorio?.marca },
-    { name: "osDeAbertura", label: "OS de abertura", required: true, initial: laboratorio?.osDeAbertura },
+    { name: "nomedoEquipamento", label: ta({ pt: "Nome do equipamento", en: "Equipment name" }), required: true, initial: laboratorio?.nomedoEquipamento },
+    { name: "marca", label: ta({ pt: "Marca", en: "Brand" }), required: true, initial: laboratorio?.marca },
+    { name: "osDeAbertura", label: ta({ pt: "OS de abertura", en: "Opening work order" }), required: true, initial: laboratorio?.osDeAbertura },
     {
       name: "osDeDevolucao",
-      label: "OS de devolução",
+      label: ta({ pt: "OS de devolução", en: "Return work order" }),
       required: creating,
       initial: laboratorio?.osDeDevolucao,
       serialize: optionalText,
     },
     {
       name: "data_de_Chegada",
-      label: "Data de chegada",
+      label: ta({ pt: "Data de chegada", en: "Arrival date" }),
       type: "date",
       required: creating,
       initial: toDateInput(laboratorio?.data_de_Chegada),
@@ -37,7 +38,7 @@ export function laboratorioFields(laboratorio?: LaboratorioProps): FormField[] {
     },
     {
       name: "data_de_Finalizacao",
-      label: "Data de finalização",
+      label: ta({ pt: "Data de finalização", en: "Completion date" }),
       type: "date",
       required: creating,
       initial: toDateInput(laboratorio?.data_de_Finalizacao),
@@ -45,7 +46,7 @@ export function laboratorioFields(laboratorio?: LaboratorioProps): FormField[] {
     },
     {
       name: "equipamento_id",
-      label: "Equipamento",
+      label: ta({ pt: "Equipamento", en: "Equipment" }),
       type: "select",
       required: true,
       lookup: equipamentoLookup,
@@ -53,7 +54,7 @@ export function laboratorioFields(laboratorio?: LaboratorioProps): FormField[] {
     },
     {
       name: "statusControledeLaboratorio_id",
-      label: "Status",
+      label: ta({ pt: "Status", en: "Status" }),
       type: "select",
       required: true,
       lookup: statusLaboratorioLookup,
@@ -61,7 +62,7 @@ export function laboratorioFields(laboratorio?: LaboratorioProps): FormField[] {
     },
     {
       name: "instituicaoUnidade_id",
-      label: "Instituição/unidade",
+      label: ta({ pt: "Instituição/unidade", en: "Institution/unit" }),
       type: "select",
       required: true,
       lookup: instituicaoLookup,
@@ -71,12 +72,12 @@ export function laboratorioFields(laboratorio?: LaboratorioProps): FormField[] {
 
   if (creating) {
     fields.push(
-      { name: "tecnico_id", label: "Técnico", type: "select", required: true, lookup: tecnicoLookup },
-      { name: "cliente_id", label: "Cliente", type: "select", required: true, lookup: clienteLookup },
+      { name: "tecnico_id", label: ta({ pt: "Técnico", en: "Technician" }), type: "select", required: true, lookup: tecnicoLookup },
+      { name: "cliente_id", label: ta({ pt: "Cliente", en: "Customer" }), type: "select", required: true, lookup: clienteLookup },
     );
   }
 
-  fields.push({ name: "defeito", label: "Defeito", type: "textarea", required: true, initial: laboratorio?.defeito });
+  fields.push({ name: "defeito", label: ta({ pt: "Defeito", en: "Defect" }), type: "textarea", required: true, initial: laboratorio?.defeito });
   return fields;
 }
 

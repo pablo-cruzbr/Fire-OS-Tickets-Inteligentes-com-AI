@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { useRouter } from "next/navigation";
 import { EntityForm } from "@/components/data/EntityForm";
 import { FormPage } from "@/components/data/FormPage";
@@ -9,12 +10,12 @@ export default function FormularioMaquinas() {
   const router = useRouter();
 
   return (
-    <FormPage title="Novo equipamento" backHref="/dashboard/controles/equipamentos" backLabel="Equipamentos">
+    <FormPage title={ta({ pt: "Novo equipamento", en: "New equipment" })} backHref="/dashboard/controles/equipamentos" backLabel={ta({ pt: "Equipamentos", en: "Equipment" })}>
       <EntityForm
         fields={equipamentoFields()}
         request={{ method: "post", url: "/equipamento" }}
-        submitLabel="Cadastrar"
-        successMessage="Equipamento cadastrado!"
+        submitLabel={ta({ pt: "Cadastrar", en: "Register" })}
+        successMessage={ta({ pt: "Equipamento cadastrado!", en: "Equipment added!" })}
         onSuccess={() => router.push("/dashboard/controles/equipamentos")}
       />
     </FormPage>
