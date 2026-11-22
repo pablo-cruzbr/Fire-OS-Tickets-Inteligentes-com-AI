@@ -1,6 +1,7 @@
 "use client";
 
 import { ta } from "@/i18n/active";
+import { statusLabel } from "@/lib/status";
 import { useT } from "@/i18n/text";
 import { ReactNode, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -194,10 +195,10 @@ export function EntityList<T>({
                       setPage(1);
                     }}
                   >
-                    <option value="">{filter.label}: todos</option>
+                    <option value="">{filter.label}{ta({ pt: ": todos", en: ": all" })}</option>
                     {options.map((option) => (
                       <option key={option.value} value={option.value}>
-                        {option.label}
+                        {statusLabel(option.label)}
                       </option>
                     ))}
                   </Select>
@@ -205,7 +206,7 @@ export function EntityList<T>({
               );
             })}
             <p className="text-xs text-muted md:ml-auto">
-              {filtered.length} de {items.length} registro{items.length === 1 ? "" : "s"}
+              {filtered.length} {ta({ pt: "de", en: "of" })} {items.length} {ta({ pt: "registro", en: "record" })}{items.length === 1 ? "" : "s"}
             </p>
           </div>
         )}
@@ -232,7 +233,7 @@ export function EntityList<T>({
                   ))}
                   {remove && (
                     <th scope="col" className="w-16 px-5 py-3.5">
-                      <span className="sr-only">Ações</span>
+                      <span className="sr-only">{ta({ pt: "Ações", en: "Actions" })}</span>
                     </th>
                   )}
                 </tr>
@@ -291,7 +292,7 @@ export function EntityList<T>({
         {pages > 1 && (
           <div className="flex items-center justify-between gap-3 border-t border-border px-5 py-3.5">
             <p className="text-xs text-muted">
-              Página {current} de {pages}
+              {ta({ pt: "Página", en: "Page" })} {current} {ta({ pt: "de", en: "of" })} {pages}
             </p>
             <div className="flex gap-1">
               <Button

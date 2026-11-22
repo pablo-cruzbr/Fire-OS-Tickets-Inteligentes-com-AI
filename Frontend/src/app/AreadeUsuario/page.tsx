@@ -67,7 +67,7 @@ export default async function AreadeUsuario({ searchParams }: PageProps) {
     >
       <AuthError message={loginErrorMessage(error, t)} />
       <form action={handleLogin} className="flex flex-col gap-5">
-        <Field label="E-mail" htmlFor="email">
+        <Field label={t({ pt: "E-mail", en: "Email" })} htmlFor="email">
           <EmailInput id="email" name="email" required />
         </Field>
         <Field label={t({ pt: "Senha", en: "Password" })} htmlFor="password">

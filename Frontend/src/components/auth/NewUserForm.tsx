@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -101,7 +102,7 @@ export function NewUserForm({ defaultVinculo }: { defaultVinculo: Vinculo }) {
       <Field label={t({ pt: "Nome completo", en: "Full name" })} htmlFor="name" required>
         <AuthInput id="name" name="name" autoComplete="name" required />
       </Field>
-      <Field label="E-mail" htmlFor="email" required>
+      <Field label={ta({ pt: "E-mail", en: "Email" })} htmlFor="email" required>
         <EmailInput id="email" name="email" required />
       </Field>
       <Field label={t({ pt: "Senha", en: "Password" })} htmlFor="password" required hint={t({ pt: "Mínimo de 4 caracteres.", en: "At least 4 characters." })}>

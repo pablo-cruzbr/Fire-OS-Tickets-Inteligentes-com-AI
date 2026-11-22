@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { cn } from "@/lib/cn";
-import { statusTone, Tone } from "@/lib/status";
+import { statusLabel, statusTone, Tone } from "@/lib/status";
 
 const tones: Record<Tone, string> = {
   primary: "bg-lightprimary text-primarytext",
@@ -35,5 +35,5 @@ export function Badge({ tone = "primary", children, className }: BadgeProps) {
 /** Badge whose colour is derived from the status name. */
 export function StatusBadge({ status, fallback = "—" }: { status?: string | null; fallback?: string }) {
   if (!status) return <span className="text-muted">{fallback}</span>;
-  return <Badge tone={statusTone(status)}>{status}</Badge>;
+  return <Badge tone={statusTone(status)}>{statusLabel(status)}</Badge>;
 }

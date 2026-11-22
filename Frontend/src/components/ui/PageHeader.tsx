@@ -22,7 +22,7 @@ export function PageHeader({ title, description, breadcrumbs = [], actions }: Pa
       <div className="relative z-10 flex flex-wrap items-center justify-between gap-4">
         <div className="min-w-0">
           <h1 className="text-xl font-semibold text-link">{title}</h1>
-          <nav aria-label="Trilha" className="mt-1.5 flex flex-wrap items-center gap-1 text-sm">
+          <nav aria-label={t({ pt: "Trilha", en: "Breadcrumb" })} className="mt-1.5 flex flex-wrap items-center gap-1 text-sm">
             {crumbs.map((crumb, index) => {
               const last = index === crumbs.length - 1;
               return (
