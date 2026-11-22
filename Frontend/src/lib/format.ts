@@ -6,7 +6,12 @@
  * with timeZone "UTC" for the same reason.
  */
 
+import { activeLang } from "@/i18n/active";
+
 type DateInput = string | number | Date | null | undefined;
+
+/** Language used by every formatter below: the active app language (see i18n/active). */
+const lang = () => activeLang();
 
 function toDate(value: DateInput) {
   if (value === null || value === undefined || value === "") return null;
@@ -14,17 +19,17 @@ function toDate(value: DateInput) {
   return Number.isNaN(date.getTime()) ? null : date;
 }
 
-/** 24/09/2026 — for date-only values stored as UTC. */
+/** 24/09/2026 (09/24/2026 in English) — for date-only values stored as UTC. */
 export function formatDate(value: DateInput, fallback = "—") {
   const date = toDate(value);
-  return date ? date.toLocaleDateString("pt-BR", { timeZone: "UTC" }) : fallback;
+  return date ? date.toLocaleDateString(lang(), { timeZone: "UTC" }) : fallback;
 }
 
 /** 24/09/2026 14:05 — for timestamps such as created_at. */
 export function formatDateTime(value: DateInput, fallback = "—") {
   const date = toDate(value);
   return date
-    ? date.toLocaleString("pt-BR", {
+    ? date.toLocaleString(lang(), {
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
@@ -38,7 +43,7 @@ export function formatDateTime(value: DateInput, fallback = "—") {
 export function formatMonthYear(value: DateInput, fallback = "—") {
   const date = toDate(value);
   return date
-    ? date.toLocaleDateString("pt-BR", { month: "2-digit", year: "numeric", timeZone: "UTC" })
+    ? date.toLocaleDateString(lang(), { month: "2-digit", year: "numeric", timeZone: "UTC" })
     : fallback;
 }
 
@@ -67,5 +72,5 @@ export function fromMonthInput(value: string) {
 export function formatCurrency(value: number | string | null | undefined, fallback = "—") {
   const number = typeof value === "string" ? Number(value) : value;
   if (number === null || number === undefined || Number.isNaN(number)) return fallback;
-  return number.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  return number.toLocaleString(lang(), { style: "currency", currency: "BRL" });
 }
