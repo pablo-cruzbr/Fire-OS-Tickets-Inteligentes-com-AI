@@ -2,10 +2,13 @@ import { Fragment } from "react";
 import { TbFlag, TbTargetArrow, TbTimeline } from "react-icons/tb";
 import { SectionHeading } from "@/components/ui";
 import { cn } from "@/lib/cn";
-import { gateNote, phases, roadmapSection } from "../content";
+import { useT } from "@/i18n/text";
+import { useAgnisContent } from "../content";
 
 /** "Evolução": the seven phases as a vertical timeline, with the decision gate after the MVP. */
 export function Roadmap() {
+  const { gateNote, phases, roadmapSection } = useAgnisContent();
+  const t = useT();
   return (
     <section id="evolucao" aria-labelledby="evolucao-title" className="relative overflow-hidden py-20 sm:py-28">
       <div className="container-page">
@@ -35,7 +38,7 @@ export function Roadmap() {
                   )}
                 >
                   {phase.mvp ? <span aria-hidden className="absolute inset-0 -z-10 rounded-full bg-primary/50 blur-md" /> : null}
-                  <span className="sr-only">Fase </span>
+                  <span className="sr-only">{t({ pt: "Fase ", en: "Phase " })}</span>
                   {phase.n}
                 </span>
 
@@ -52,7 +55,7 @@ export function Roadmap() {
                       <h3 className="text-lg font-semibold text-link sm:text-xl">{phase.title}</h3>
                       {phase.mvp ? (
                         <span className="rounded-chip bg-lightsuccess px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.03em] text-successtext">
-                          MVP · em construção
+                          {t({ pt: "MVP · em construção", en: "MVP · in progress" })}
                         </span>
                       ) : null}
                       <span className="rounded-chip border border-border bg-fill-2 px-2 py-0.5 text-xs text-muted">{phase.weeks}</span>
@@ -63,7 +66,7 @@ export function Roadmap() {
                     <TbTargetArrow aria-hidden className="mt-0.5 shrink-0 text-accent-2" />
                     <p className="leading-snug text-bodytext">
                       <span className="block text-xs font-semibold uppercase tracking-[0.04em] text-muted">
-                        {phase.exitLabel ?? "Critério de saída"}
+                        {phase.exitLabel ?? t({ pt: "Critério de saída", en: "Exit criterion" })}
                       </span>
                       {phase.exit}
                     </p>
@@ -78,7 +81,7 @@ export function Roadmap() {
                   </span>
                   <p className="rounded-card border border-dashed border-warning/60 bg-lightwarning/40 p-4 text-sm leading-normal text-link sm:p-5 sm:text-base">
                     <span className="mr-2 inline-flex rounded-chip bg-lightwarning px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.03em] text-warningtext">
-                      Ponto de decisão
+                      {t({ pt: "Ponto de decisão", en: "Decision point" })}
                     </span>
                     {gateNote}
                   </p>

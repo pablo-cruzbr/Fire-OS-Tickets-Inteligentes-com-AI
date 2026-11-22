@@ -1,11 +1,14 @@
 import { TbCheck, TbMessageChatbot } from "react-icons/tb";
 import { AutoVideo } from "@/components/media/AutoVideo";
 import { SectionHeading } from "@/components/ui";
-import { videoSection } from "../content";
+import { useT } from "@/i18n/text";
+import { useAgnisContent } from "../content";
 import { agnisDemo } from "../media";
 
 /** Real recording of the "Pergunte à Agnis" chat prototype, in a glass frame. */
 export function AgnisVideo() {
+  const { videoSection } = useAgnisContent();
+  const t = useT();
   return (
     <section aria-labelledby="agnis-video-title" className="relative overflow-hidden py-20 sm:py-28">
       <div
@@ -47,7 +50,7 @@ export function AgnisVideo() {
                 poster={agnisDemo.poster}
                 mode="inview"
                 preload="metadata"
-                label={agnisDemo.title}
+                label={t(agnisDemo.title)}
                 showToggle
                 className="aspect-[700/780] w-full"
                 videoClassName="object-top"

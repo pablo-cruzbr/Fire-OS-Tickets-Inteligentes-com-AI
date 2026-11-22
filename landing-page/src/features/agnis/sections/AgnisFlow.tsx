@@ -12,13 +12,14 @@ import {
 } from "react-icons/tb";
 import { SectionHeading } from "@/components/ui";
 import { cn } from "@/lib/cn";
-import { flowSection, flowSteps, profiles } from "../content";
+import { useAgnisContent } from "../content";
 
 const stepIcons = [<TbHeadset key="1" />, <TbCalendarStats key="2" />, <TbRoute key="3" />, <TbTool key="4" />, <TbSignature key="5" />, <TbChartBar key="6" />];
 const profileIcons = [<TbUserShield key="a" />, <TbUserCog key="b" />, <TbUsers key="c" />];
 
 /** "Agnis no fluxo do Fire OS": where the module shows up in each step, then per profile. */
 export function AgnisFlow() {
+  const { flowSection, flowSteps, profiles } = useAgnisContent();
   return (
     <section id="fluxo" aria-labelledby="fluxo-title" className="relative overflow-hidden bg-surface/60 py-20 sm:py-28">
       <div
@@ -40,7 +41,7 @@ export function AgnisFlow() {
           />
           {flowSteps.map((step, index) => (
             <li
-              key={step.title}
+              key={step.phase + step.title}
               className={cn(
                 "relative flex gap-4 rounded-card border p-4 lg:flex-col lg:items-center lg:gap-0 lg:p-5 lg:text-center",
                 step.core

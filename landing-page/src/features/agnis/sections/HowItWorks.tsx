@@ -1,7 +1,8 @@
 import { TbChevronRight, TbCode, TbPlugConnectedX, TbSparkles, TbUser } from "react-icons/tb";
 import { SectionHeading } from "@/components/ui";
 import { cn } from "@/lib/cn";
-import { actorLabel, detectors, fallbackNote, howSection, pipeline, type Actor } from "../content";
+import { useT } from "@/i18n/text";
+import { useAgnisContent, type Actor } from "../content";
 
 /** One colour per actor: code = blue, AI = violet, person = green. */
 const actorStyle: Record<Actor, { chip: string; node: string; icon: React.ReactNode }> = {
@@ -15,6 +16,7 @@ const actorStyle: Record<Actor, { chip: string; node: string; icon: React.ReactN
 };
 
 function ActorChip({ actor }: { actor: Actor }) {
+  const { actorLabel } = useAgnisContent();
   return (
     <span className={cn("inline-flex items-center gap-1 rounded-chip px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.03em]", actorStyle[actor].chip)}>
       <span aria-hidden className="text-xs">{actorStyle[actor].icon}</span>
@@ -25,6 +27,8 @@ function ActorChip({ actor }: { actor: Actor }) {
 
 /** "Como funciona": who does what in each card, the no-AI fallback and the six detectors. */
 export function HowItWorks() {
+  const { detectors, detectorsIntro, fallbackNote, howSection, pipeline } = useAgnisContent();
+  const t = useT();
   return (
     <section id="como-funciona" aria-labelledby="como-title" className="relative overflow-hidden py-20 sm:py-28">
       <div className="container-page">
@@ -66,9 +70,9 @@ export function HowItWorks() {
         </div>
 
         <div className="mt-20">
-          <h3 className="text-center text-xl font-semibold text-link sm:text-2xl">Os seis detectores do MVP</h3>
+          <h3 className="text-center text-xl font-semibold text-link sm:text-2xl">{t({ pt: "Os seis detectores do MVP", en: "The six MVP detectors" })}</h3>
           <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-bodytext sm:text-base">
-            Cada cartão nasce de uma regra escrita em código, nunca de um palpite do modelo.
+            {detectorsIntro}
           </p>
 
           {/* Table on md+ */}
@@ -76,9 +80,9 @@ export function HowItWorks() {
             <table className="w-full text-left text-sm">
               <thead className="bg-fill-2 text-xs uppercase tracking-[0.04em] text-muted">
                 <tr>
-                  <th scope="col" className="px-5 py-3.5 font-semibold">Detector</th>
-                  <th scope="col" className="px-5 py-3.5 font-semibold">Regra no código</th>
-                  <th scope="col" className="px-5 py-3.5 font-semibold">Ações sugeridas</th>
+                  <th scope="col" className="px-5 py-3.5 font-semibold">{t({ pt: "Detector", en: "Detector" })}</th>
+                  <th scope="col" className="px-5 py-3.5 font-semibold">{t({ pt: "Regra no código", en: "Rule in code" })}</th>
+                  <th scope="col" className="px-5 py-3.5 font-semibold">{t({ pt: "Ações sugeridas", en: "Suggested actions" })}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">

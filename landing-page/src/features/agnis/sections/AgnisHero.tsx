@@ -1,10 +1,10 @@
 import { TbArrowDown, TbArrowRight, TbSparkles } from "react-icons/tb";
 import { ButtonLink, Eyebrow } from "@/components/ui";
-import { agnisHero } from "../content";
+import { useAgnisContent } from "../content";
 import { DecisionQueue } from "../DecisionQueue";
 
 function HeroTitle() {
-  const { title, highlight } = agnisHero;
+  const { title, highlight } = useAgnisContent().agnisHero;
   const start = title.indexOf(highlight);
   if (start < 0) return <>{title}</>;
   return (
@@ -18,6 +18,7 @@ function HeroTitle() {
 
 /** Hero: pitch on the left, the interactive "Decisões de hoje" queue on the right. */
 export function AgnisHero() {
+  const { agnisHero } = useAgnisContent();
   return (
     <section aria-labelledby="agnis-title" className="relative isolate overflow-hidden">
       <div aria-hidden className="glow-radial absolute inset-0 -z-10" />
@@ -54,7 +55,7 @@ export function AgnisHero() {
 
           <dl className="mt-2 grid w-full max-w-xl grid-cols-3 divide-x divide-border border-y border-border">
             {agnisHero.facts.map((fact) => (
-              <div key={fact.value} className="flex flex-col gap-1 px-3 py-4 first:pl-0 sm:px-5">
+              <div key={fact.label} className="flex flex-col gap-1 px-3 py-4 first:pl-0 sm:px-5">
                 <dt className="sr-only">{fact.label}</dt>
                 <dd className="text-sm font-semibold leading-tight text-link sm:text-base">{fact.value}</dd>
                 <dd className="text-xs leading-snug text-muted sm:text-sm">{fact.label}</dd>

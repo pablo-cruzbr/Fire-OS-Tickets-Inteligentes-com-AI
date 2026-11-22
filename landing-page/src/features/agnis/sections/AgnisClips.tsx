@@ -1,8 +1,9 @@
 import { TbPlayerPlay, TbSparkles } from "react-icons/tb";
 import { AutoVideo } from "@/components/media/AutoVideo";
 import { SectionHeading } from "@/components/ui";
-import { clipsSection } from "../content";
-import { agnisClips, resolveClip, type ResolvedClip } from "../media";
+import { useT } from "@/i18n/text";
+import { useAgnisContent } from "../content";
+import { resolveClip, type ResolvedClip } from "../media";
 
 /** Keeps very tall or very wide recordings inside a sensible frame. */
 function frameRatio(ratio: number | null) {
@@ -10,7 +11,7 @@ function frameRatio(ratio: number | null) {
 }
 
 function ClipMedia({ clip, aspectRatio }: { clip: ResolvedClip; aspectRatio: string }) {
-
+  const t = useT();
   if (clip.src) {
     return (
       <div className="dark overflow-hidden rounded-[12px] border border-border bg-background" style={{ aspectRatio }}>
@@ -42,7 +43,7 @@ function ClipMedia({ clip, aspectRatio }: { clip: ResolvedClip; aspectRatio: str
   return (
     <div
       role="img"
-      aria-label={`Gravação de ${clip.screen} em breve`}
+      aria-label={t({ pt: `Gravação de ${clip.screen} em breve`, en: `${clip.screen} recording coming soon` })}
       className="relative flex flex-col overflow-hidden rounded-[12px] border border-dashed border-border-strong bg-fill-1 p-5"
       style={{ aspectRatio }}
     >
@@ -60,7 +61,7 @@ function ClipMedia({ clip, aspectRatio }: { clip: ResolvedClip; aspectRatio: str
         <span aria-hidden className="flex h-7 w-7 items-center justify-center rounded-full border border-border bg-background text-sm text-periwinkle">
           <TbPlayerPlay />
         </span>
-        Gravação em breve
+        {t({ pt: "Gravação em breve", en: "Recording coming soon" })}
       </div>
     </div>
   );
@@ -72,7 +73,8 @@ function ClipMedia({ clip, aspectRatio }: { clip: ResolvedClip; aspectRatio: str
  * missing recording renders a placeholder instead of a broken video.
  */
 export function AgnisClips() {
-  const clips = agnisClips.map(resolveClip);
+  const { clips: clipCopy, clipsSection } = useAgnisContent();
+  const clips = clipCopy.map(resolveClip);
   // One frame shape for the whole row (from the first recording found), so the cards line up.
   const aspectRatio = String(frameRatio(clips.find((clip) => clip.ratio)?.ratio ?? null));
 

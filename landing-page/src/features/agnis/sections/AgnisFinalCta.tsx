@@ -1,10 +1,14 @@
 import { TbArrowRight } from "react-icons/tb";
 import { ButtonLink } from "@/components/ui";
 import { appUrl } from "@/lib/appUrl";
-import { agnisFinal } from "../content";
+import { useAppLocale, useT } from "@/i18n/text";
+import { useAgnisContent } from "../content";
 
 /** Closing band (always dark-scoped): status of the module + the two exits. */
 export function AgnisFinalCta() {
+  const { agnisFinal } = useAgnisContent();
+  const t = useT();
+  const locale = useAppLocale();
   return (
     <section aria-labelledby="agnis-final-title" className="dark relative isolate overflow-hidden bg-background">
       <div aria-hidden className="bg-grid absolute inset-0 -z-10" />
@@ -21,7 +25,7 @@ export function AgnisFinalCta() {
             <span aria-hidden className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-60" />
             <span aria-hidden className="relative inline-flex h-2 w-2 rounded-full bg-success" />
           </span>
-          {agnisFinal.eyebrow} · protótipo
+          {agnisFinal.eyebrow} · {t({ pt: "protótipo", en: "prototype" })}
         </span>
         <h2 id="agnis-final-title" className="mt-6 max-w-3xl text-[32px] font-semibold leading-[1.15] text-white sm:text-5xl lg:text-[56px]">
           {agnisFinal.title}
@@ -29,7 +33,7 @@ export function AgnisFinalCta() {
         <p className="mt-5 max-w-2xl text-base leading-relaxed text-bodytext sm:text-lg">{agnisFinal.text}</p>
         <div className="mt-10 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
           <ButtonLink
-            href={appUrl(agnisFinal.primary.path)}
+            href={appUrl(agnisFinal.primary.path, locale)}
             size="xl"
             iconRight={<TbArrowRight aria-hidden />}
             className="w-full sm:w-auto sm:min-w-[240px]"

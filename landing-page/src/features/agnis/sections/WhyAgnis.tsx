@@ -1,11 +1,12 @@
 import { TbArrowRight, TbCheck, TbClockExclamation, TbFileText, TbListCheck, TbMessageCircle, TbRepeat, TbScale, TbX } from "react-icons/tb";
 import { SectionHeading } from "@/components/ui";
-import { pains, shift, whySection } from "../content";
+import { useAgnisContent } from "../content";
 
 const painIcons = [<TbClockExclamation key="a" />, <TbScale key="b" />, <TbRepeat key="c" />, <TbFileText key="d" />];
 
 /** "Por que a Agnis": four pains, then the shift from an obvious chat to a decision queue. */
 export function WhyAgnis() {
+  const { pains, shift, whySection } = useAgnisContent();
   return (
     <section id="por-que" aria-labelledby="por-que-title" className="relative overflow-hidden py-20 sm:py-28">
       <div className="container-page">

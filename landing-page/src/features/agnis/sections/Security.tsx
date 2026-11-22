@@ -1,11 +1,12 @@
 import { TbCheck, TbLock, TbPlugConnected, TbShieldCheck, TbShieldLock, TbUserCheck } from "react-icons/tb";
 import { SectionHeading } from "@/components/ui";
-import { securityExtras, securityItems, securitySection } from "../content";
+import { useAgnisContent } from "../content";
 
 const icons = [<TbLock key="a" />, <TbUserCheck key="b" />, <TbShieldCheck key="c" />, <TbPlugConnected key="d" />];
 
 /** Short "Segurança" block: what never leaves, what never runs alone. */
 export function Security() {
+  const { securityExtras, securityItems, securitySection } = useAgnisContent();
   return (
     <section id="seguranca" aria-labelledby="seguranca-title" className="relative overflow-hidden bg-surface/60 py-20 sm:py-28">
       <div

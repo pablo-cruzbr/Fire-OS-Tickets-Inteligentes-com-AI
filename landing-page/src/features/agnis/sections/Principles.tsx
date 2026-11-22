@@ -1,9 +1,10 @@
 import { TbCompass } from "react-icons/tb";
 import { SectionHeading } from "@/components/ui";
-import { principles, principlesSection } from "../content";
+import { useAgnisContent } from "../content";
 
 /** "Princípios": the six rules every Agnis feature follows. */
 export function Principles() {
+  const { principles, principlesSection } = useAgnisContent();
   return (
     <section id="principios" aria-labelledby="principios-title" className="relative overflow-hidden py-20 sm:py-28">
       <div className="container-page">

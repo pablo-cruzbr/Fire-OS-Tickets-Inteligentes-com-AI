@@ -3,14 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import { TbCheck, TbClockPause, TbRefresh, TbSparkles } from "react-icons/tb";
 import { cn } from "@/lib/cn";
-import { decisions, queueNote, SKIP_AUDIT, SKIP_LABEL, type Severity } from "./content";
+import { type Localized, useT } from "@/i18n/text";
+import { useAgnisContent, type Severity } from "./content";
 
 type Resolution = { kind: "approved" | "skipped"; audit: string };
 
-const severity: Record<Severity, { stripe: string; chip: string; label: string }> = {
-  crit: { stripe: "bg-error", chip: "bg-lighterror text-errortext", label: "Crítico" },
-  warn: { stripe: "bg-warning", chip: "bg-lightwarning text-warningtext", label: "Atenção" },
-  info: { stripe: "bg-accent-2", chip: "bg-lightinfo text-info", label: "Informativo" },
+const severity: Record<Severity, { stripe: string; chip: string; label: Localized }> = {
+  crit: { stripe: "bg-error", chip: "bg-lighterror text-errortext", label: { pt: "Crítico", en: "Critical" } },
+  warn: { stripe: "bg-warning", chip: "bg-lightwarning text-warningtext", label: { pt: "Atenção", en: "Warning" } },
+  info: { stripe: "bg-accent-2", chip: "bg-lightinfo text-info", label: { pt: "Informativo", en: "Info" } },
 };
 
 const actionBase =
@@ -23,6 +24,12 @@ const actionBase =
  * keyboard users never lose their place.
  */
 export function DecisionQueue({ className }: { className?: string }) {
+  const { decisions, queueNote, skipAudit, skipLabel } = useAgnisContent();
+  const t = useT();
+  const RESET_ANNOUNCEMENT = t({
+    pt: "Exemplo reiniciado: 3 decisões pendentes.",
+    en: "Example restarted: 3 pending decisions.",
+  });
   const [resolved, setResolved] = useState<Record<string, Resolution>>({});
   const [announcement, setAnnouncement] = useState("");
   const [focusTarget, setFocusTarget] = useState<string | null>(null);
@@ -49,7 +56,7 @@ export function DecisionQueue({ className }: { className?: string }) {
 
   function reset() {
     setResolved({});
-    setAnnouncement("Exemplo reiniciado: 3 decisões pendentes.");
+    setAnnouncement(RESET_ANNOUNCEMENT);
     setFocusTarget(decisions[0].id);
   }
 
@@ -67,8 +74,8 @@ export function DecisionQueue({ className }: { className?: string }) {
             <TbSparkles />
           </span>
           <p className="min-w-0 text-sm leading-tight">
-            <span className="block font-semibold text-link">Decisões de hoje</span>
-            <span className="block truncate text-xs text-muted">painel do Fire OS · 07:00</span>
+            <span className="block font-semibold text-link">{t({ pt: "Decisões de hoje", en: "Today's decisions" })}</span>
+            <span className="block truncate text-xs text-muted">{t({ pt: "painel do Fire OS · 07:00", en: "Fire OS dashboard · 07:00" })}</span>
           </p>
         </div>
         <span
@@ -78,11 +85,13 @@ export function DecisionQueue({ className }: { className?: string }) {
           )}
         >
           <span aria-hidden className={cn("h-1.5 w-1.5 rounded-full", pending ? "bg-accent-2" : "bg-success")} />
-          {pending ? `${pending} ${pending === 1 ? "pendente" : "pendentes"}` : "tudo resolvido"}
+          {pending
+            ? `${pending} ${t(pending === 1 ? { pt: "pendente", en: "pending" } : { pt: "pendentes", en: "pending" })}`
+            : t({ pt: "tudo resolvido", en: "all done" })}
         </span>
       </div>
 
-      <ol className="flex flex-col gap-3 p-3 sm:p-4" aria-label="Decisões sugeridas pela Agnis">
+      <ol className="flex flex-col gap-3 p-3 sm:p-4" aria-label={t({ pt: "Decisões sugeridas pela Agnis", en: "Decisions suggested by Agnis" })}>
         {decisions.map((d) => {
           const tone = severity[d.severity];
           const done = resolved[d.id];
@@ -101,7 +110,7 @@ export function DecisionQueue({ className }: { className?: string }) {
               <div className={cn("transition-opacity duration-300", done && "opacity-55")}>
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
                   <span className={cn("rounded-chip px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.03em]", tone.chip)}>
-                    <span className="sr-only">{tone.label}: </span>
+                    <span className="sr-only">{t(tone.label)}: </span>
                     {d.chip}
                   </span>
                   <code className="truncate font-mono text-[11px] text-muted">{d.tool}()</code>
@@ -143,10 +152,10 @@ export function DecisionQueue({ className }: { className?: string }) {
                   ))}
                   <button
                     type="button"
-                    onClick={() => resolve(d.id, { kind: "skipped", audit: SKIP_AUDIT })}
+                    onClick={() => resolve(d.id, { kind: "skipped", audit: skipAudit })}
                     className={cn(actionBase, "border border-transparent text-muted hover:bg-fill-2 hover:text-link")}
                   >
-                    {SKIP_LABEL}
+                    {skipLabel}
                   </button>
                 </div>
               )}
@@ -165,15 +174,15 @@ export function DecisionQueue({ className }: { className?: string }) {
             className={cn(actionBase, "shrink-0 gap-1.5 self-start border border-border bg-fill-2 text-link hover:border-border-strong sm:self-auto")}
           >
             <TbRefresh aria-hidden className="h-4 w-4" />
-            Reiniciar exemplo
+            {t({ pt: "Reiniciar exemplo", en: "Restart example" })}
           </button>
         ) : null}
       </div>
 
       <p aria-live="polite" role="status" className="sr-only">
         {announcement}
-        {pending === 0 && announcement && !announcement.startsWith("Exemplo")
-          ? ` Tudo resolvido: ${approved} ${approved === 1 ? "aprovada" : "aprovadas"}.`
+        {pending === 0 && announcement && announcement !== RESET_ANNOUNCEMENT
+          ? t({ pt: ` Tudo resolvido: ${approved} ${approved === 1 ? "aprovada" : "aprovadas"}.`, en: ` All done: ${approved} approved.` })
           : ""}
       </p>
     </div>
