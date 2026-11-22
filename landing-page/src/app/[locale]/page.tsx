@@ -9,6 +9,7 @@ import { Hero } from "@/features/landing/sections/Hero";
 import { SegmentStrip } from "@/features/landing/sections/SegmentStrip";
 import { StatsStrip } from "@/features/landing/sections/StatsStrip";
 import { VideoSegments } from "@/features/landing/sections/VideoSegments";
+import { ValidatedBy } from "@/features/landing/sections/ValidatedBy";
 import { Workflow } from "@/features/landing/sections/Workflow";
 
 /*
@@ -30,6 +31,7 @@ export default function LandingPage({ params }: { params: Promise<{ locale: stri
         <VideoSegments />
         <Workflow />
         <FeatureBento />
+        <ValidatedBy />
         <FinalCta />
       </main>
 
