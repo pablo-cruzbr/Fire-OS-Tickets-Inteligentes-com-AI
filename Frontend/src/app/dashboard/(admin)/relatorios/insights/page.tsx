@@ -1,3 +1,5 @@
+import { getT } from "@/i18n/server";
+import { useT } from "@/i18n/text";
 import {
   TbAlertTriangle,
   TbBulb,
@@ -12,93 +14,89 @@ import {
 import { Badge, Card, CardHeader, StatGrid } from "@/components/ui";
 import { HeroCard } from "@/features/dashboard/HeroCard";
 
-export const metadata = {
-  title: "Relatório Mensal com IA — Fire OS",
-};
+export async function generateMetadata() {
+  const t = await getT();
+  return { title: t({ pt: "Relatório Mensal com IA — Fire OS", en: "AI Monthly Report — Fire OS" }) };
+}
 
 const stats = [
-  { label: "OS abertas no mês", value: 142, tone: "primary" as const, icon: <TbClipboardCheck /> },
-  { label: "Variação vs. mês anterior", value: "+18%", tone: "success" as const, icon: <TbTrendingUp /> },
-  { label: "Tempo médio por OS", value: "1h52", tone: "warning" as const, icon: <TbClockHour4 /> },
-  { label: "Equipamentos recorrentes", value: 4, tone: "error" as const, icon: <TbAlertTriangle /> },
+  { label: { pt: "OS abertas no mês", en: "Work orders opened this month" }, value: 142, tone: "primary" as const, icon: <TbClipboardCheck /> },
+  { label: { pt: "Variação vs. mês anterior", en: "Change vs. previous month" }, value: "+18%", tone: "success" as const, icon: <TbTrendingUp /> },
+  { label: { pt: "Tempo médio por OS", en: "Average time per work order" }, value: "1h52", tone: "warning" as const, icon: <TbClockHour4 /> },
+  { label: { pt: "Equipamentos recorrentes", en: "Recurring equipment" }, value: 4, tone: "error" as const, icon: <TbAlertTriangle /> },
 ];
 
 const highlights = [
-  "A Secretaria de Educação concentrou 38% das ordens de serviço do mês, puxada pelas EMEFs Monteiro Lobato e Paulo Freire.",
-  "O tempo médio de atendimento caiu de 2h10 para 1h52 (-14%), principalmente nos chamados de informática.",
-  "4 equipamentos voltaram com o mesmo defeito mais de uma vez — ver seção “Pontos de atenção” abaixo.",
+  { pt: "A Secretaria de Educação concentrou 38% das ordens de serviço do mês, puxada pelas EMEFs Monteiro Lobato e Paulo Freire.", en: "The Department of Education accounted for 38% of the month's work orders, driven by the Monteiro Lobato and Paulo Freire schools." },
+  { pt: "O tempo médio de atendimento caiu de 2h10 para 1h52 (-14%), principalmente nos chamados de informática.", en: "Average service time dropped from 2h10 to 1h52 (-14%), mostly on IT tickets." },
+  { pt: "4 equipamentos voltaram com o mesmo defeito mais de uma vez — ver seção “Pontos de atenção” abaixo.", en: "4 pieces of equipment came back with the same fault more than once — see “Points of attention” below." },
 ];
 
 const attention = [
   {
-    title: "Impressora HP LaserJet (patrimônio 00245)",
-    text: "Retornou 3 vezes em 30 dias com o mesmo defeito de rolete. Recomenda-se avaliar troca em vez de novo reparo.",
+    title: { pt: "Impressora HP LaserJet (patrimônio 00245)", en: "HP LaserJet printer (asset tag 00245)" },
+    text: { pt: "Retornou 3 vezes em 30 dias com o mesmo defeito de rolete. Recomenda-se avaliar troca em vez de novo reparo.", en: "Came back 3 times in 30 days with the same roller fault. Consider replacing it instead of another repair." },
   },
   {
-    title: "Técnico Carlos Souza sobrecarregado",
-    text: "28 atendimentos no mês, 40% acima da média da equipe (20). Considerar redistribuir chamados da UBS Jardim das Flores.",
+    title: { pt: "Técnico Carlos Souza sobrecarregado", en: "Technician Carlos Souza overloaded" },
+    text: { pt: "28 atendimentos no mês, 40% acima da média da equipe (20). Considerar redistribuir chamados da UBS Jardim das Flores.", en: "28 jobs this month, 40% above the team average (20). Consider redistributing the UBS Jardim das Flores tickets." },
   },
 ];
 
 const recommendations = [
-  "Priorizar a troca (não o conserto) da impressora de patrimônio 00245 no próximo chamado.",
-  "Redistribuir parte da carteira de Carlos Souza para Juliana Rocha, que está com 35% de capacidade ociosa.",
-  "Agendar manutenção preventiva nas EMEFs com mais chamados recorrentes antes do próximo bimestre.",
+  { pt: "Priorizar a troca (não o conserto) da impressora de patrimônio 00245 no próximo chamado.", en: "On the next ticket, replace (not repair) the printer with asset tag 00245." },
+  { pt: "Redistribuir parte da carteira de Carlos Souza para Juliana Rocha, que está com 35% de capacidade ociosa.", en: "Move part of Carlos Souza's workload to Juliana Rocha, who has 35% spare capacity." },
+  { pt: "Agendar manutenção preventiva nas EMEFs com mais chamados recorrentes antes do próximo bimestre.", en: "Schedule preventive maintenance at the schools with the most recurring tickets before the next term." },
 ];
 
 export default function MonthlyInsightsPage() {
+  const t = useT();
   return (
     <div className="flex flex-col gap-6">
       <HeroCard>
         <div className="relative z-10 flex flex-wrap items-start justify-between gap-4">
           <div>
             <Badge tone="primary" className="ring-1 ring-inset ring-primary/20">
-              <TbSparkles className="mr-1 inline h-3.5 w-3.5" /> Gerado por IA
+              <TbSparkles className="mr-1 inline h-3.5 w-3.5" /> {t({ pt: "Gerado por IA", en: "Generated by AI" })}
             </Badge>
-            <h1 className="mt-3 text-2xl font-semibold text-link">Relatório de Setembro/2026</h1>
-            <p className="mt-1 text-sm text-bodytext">Comparado com agosto/2026 · gerado automaticamente todo dia 1º</p>
+            <h1 className="mt-3 text-2xl font-semibold text-link">{t({ pt: "Relatório de Setembro/2026", en: "September/2026 report" })}</h1>
+            <p className="mt-1 text-sm text-bodytext">{t({ pt: "Comparado com agosto/2026 · gerado automaticamente todo dia 1º", en: "Compared with August/2026 · generated automatically on the 1st of every month" })}</p>
           </div>
           <div className="flex items-center gap-2 rounded-lg bg-card px-4 py-2.5 text-xs text-bodytext shadow-md">
             <TbCalendarEvent className="h-4 w-4 text-primarytext" />
-            Próximo relatório: 01/11/2026
+            {t({ pt: "Próximo relatório: 01/11/2026", en: "Next report: 11/01/2026" })}
           </div>
         </div>
       </HeroCard>
 
       <div className="rounded-lg border border-warning/30 bg-lightwarning px-4 py-3 text-sm text-warningtext">
-        <strong className="font-semibold">Protótipo de interface:</strong> os números e o texto abaixo são fixos, só
-        para visualizar o layout. A geração real por IA (job agendado, cálculo dos fatos e redação do texto) ainda
-        não foi implementada — ver <code className="rounded bg-card px-1 py-0.5">GUIA-IA-FIRE-OS.md</code>.
+        <strong className="font-semibold">{t({ pt: "Protótipo de interface:", en: "Interface prototype:" })}</strong> {t({ pt: "os números e o texto abaixo são fixos, só para visualizar o layout. A geração real por IA (job agendado, cálculo dos fatos e redação do texto) ainda não foi implementada — ver", en: "the numbers and text below are fixed, just to preview the layout. Real AI generation (scheduled job, computing the facts and writing the text) isn't implemented yet — see" })} <code className="rounded bg-card px-1 py-0.5">{t({ pt: "GUIA-IA-FIRE-OS.md", en: "GUIA-IA-FIRE-OS.md" })}</code>.
       </div>
 
-      <StatGrid stats={stats} />
+      <StatGrid stats={stats.map((stat) => ({ ...stat, label: t(stat.label) }))} />
 
       <Card>
         <CardHeader
-          title="Resumo do mês"
-          subtitle="Escrito a partir dos números acima — a IA não calcula nada, só redige"
+          title={t({ pt: "Resumo do mês", en: "Month summary" })}
+          subtitle={t({ pt: "Escrito a partir dos números acima — a IA não calcula nada, só redige", en: "Written from the numbers above — the AI computes nothing, it only writes" })}
         />
         <div className="flex flex-col gap-3 text-sm leading-relaxed text-bodytext">
           <p>
-            Setembro teve <strong className="text-link">142 ordens de serviço</strong>, 18% a mais que agosto. O
-            destaque foi a <strong className="text-link">Secretaria de Educação</strong>, que concentrou mais de um
-            terço dos chamados do mês — um volume puxado principalmente por duas unidades escolares.
+            {t({ pt: "Setembro teve", en: "September had" })} <strong className="text-link">{t({ pt: "142 ordens de serviço", en: "142 work orders" })}</strong>{t({ pt: ", 18% a mais que agosto. O destaque foi a", en: ", 18% more than August. The highlight was the" })} <strong className="text-link">{t({ pt: "Secretaria de Educação", en: "Department of Education" })}</strong>{t({ pt: ", que concentrou mais de um terço dos chamados do mês — um volume puxado principalmente por duas unidades escolares.", en: ", which accounted for more than a third of the month's tickets — volume driven mainly by two schools." })}
           </p>
           <p>
-            Apesar do aumento de volume, o <strong className="text-link">tempo médio de atendimento melhorou</strong>,
-            caindo para 1h52 por OS. Isso sugere que a equipe está absorvendo a demanda extra sem perder eficiência,
-            mas vale observar a carga por técnico (ver pontos de atenção).
+            {t({ pt: "Apesar do aumento de volume, o", en: "Despite the higher volume, the" })} <strong className="text-link">{t({ pt: "tempo médio de atendimento melhorou", en: "average service time improved" })}</strong>{t({ pt: ", caindo para 1h52 por OS. Isso sugere que a equipe está absorvendo a demanda extra sem perder eficiência, mas vale observar a carga por técnico (ver pontos de atenção).", en: ", down to 1h52 per work order. This suggests the team is absorbing the extra demand without losing efficiency, but the workload per technician is worth watching (see points of attention)." })}
           </p>
         </div>
 
         <h6 className="mt-6 mb-3 flex items-center gap-2 text-sm font-semibold text-link">
-          <TbTrendingUp className="h-4 w-4 text-success" /> Destaques
+          <TbTrendingUp className="h-4 w-4 text-success" /> {t({ pt: "Destaques", en: "Highlights" })}
         </h6>
         <ul className="flex flex-col gap-2">
           {highlights.map((item) => (
-            <li key={item} className="flex items-start gap-2.5 text-sm text-bodytext">
+            <li key={item.pt} className="flex items-start gap-2.5 text-sm text-bodytext">
               <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-              {item}
+              {t(item)}
             </li>
           ))}
         </ul>
@@ -106,16 +104,16 @@ export default function MonthlyInsightsPage() {
 
       <Card>
         <CardHeader
-          title="Pontos de atenção"
-          subtitle="Equipamentos recorrentes e carga de trabalho fora do padrão"
+          title={t({ pt: "Pontos de atenção", en: "Points of attention" })}
+          subtitle={t({ pt: "Equipamentos recorrentes e carga de trabalho fora do padrão", en: "Recurring equipment and unusual workload" })}
         />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {attention.map((item) => (
-            <div key={item.title} className="flex gap-3 rounded-lg bg-lighterror p-4">
+            <div key={item.title.pt} className="flex gap-3 rounded-lg bg-lighterror p-4">
               <TbAlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-errortext" />
               <div>
-                <p className="text-sm font-semibold text-link">{item.title}</p>
-                <p className="mt-1 text-sm text-bodytext">{item.text}</p>
+                <p className="text-sm font-semibold text-link">{t(item.title)}</p>
+                <p className="mt-1 text-sm text-bodytext">{t(item.text)}</p>
               </div>
             </div>
           ))}
@@ -123,14 +121,14 @@ export default function MonthlyInsightsPage() {
       </Card>
 
       <Card>
-        <CardHeader title="Recomendações" subtitle="Sugestões de ação para o gestor — ninguém é executado sozinho" />
+        <CardHeader title={t({ pt: "Recomendações", en: "Recommendations" })} subtitle={t({ pt: "Sugestões de ação para o gestor — ninguém é executado sozinho", en: "Suggested actions for the manager — nothing runs on its own" })} />
         <ul className="flex flex-col gap-3">
           {recommendations.map((item, index) => (
-            <li key={item} className="flex items-start gap-3 text-sm text-bodytext">
+            <li key={item.pt} className="flex items-start gap-3 text-sm text-bodytext">
               <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-lightprimary text-xs font-semibold text-primarytext">
                 {index + 1}
               </span>
-              {item}
+              {t(item)}
             </li>
           ))}
         </ul>
@@ -138,7 +136,7 @@ export default function MonthlyInsightsPage() {
 
       <div className="flex items-center gap-2 text-xs text-muted">
         <TbTool className="h-4 w-4" /> <TbBulb className="h-4 w-4" />
-        Todo número acima tem origem numa consulta ao banco — a IA só escreve o texto em volta deles.
+        {t({ pt: "Todo número acima tem origem numa consulta ao banco — a IA só escreve o texto em volta deles.", en: "Every number above comes from a database query — the AI only writes the text around them." })}
       </div>
     </div>
   );
