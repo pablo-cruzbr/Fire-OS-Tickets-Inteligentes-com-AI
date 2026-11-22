@@ -1,4 +1,5 @@
-import Link from "next/link";
+import NextLink from "next/link";
+import { Link } from "@/i18n/navigation";
 import { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { Spinner } from "./Spinner";
@@ -85,12 +86,25 @@ type ButtonLinkProps = ComponentProps<typeof Link> & {
   iconRight?: ReactNode;
 };
 
+/** Internal paths ("/x") get the locale prefix; hashes and absolute URLs are left as they are. */
 export function ButtonLink({ variant, size, icon, iconRight, className, children, ...props }: ButtonLinkProps) {
-  return (
-    <Link className={buttonClasses(variant, size, className)} {...props}>
+  const content = (
+    <>
       {icon}
       {children}
       {iconRight}
+    </>
+  );
+  if (typeof props.href === "string" && !props.href.startsWith("/")) {
+    return (
+      <NextLink className={buttonClasses(variant, size, className)} {...props} href={props.href}>
+        {content}
+      </NextLink>
+    );
+  }
+  return (
+    <Link className={buttonClasses(variant, size, className)} {...props}>
+      {content}
     </Link>
   );
 }

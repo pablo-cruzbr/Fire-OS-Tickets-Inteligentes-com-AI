@@ -1,3 +1,5 @@
+import { use } from "react";
+import { setRequestLocale } from "next-intl/server";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { DashboardTour } from "@/features/landing/sections/DashboardTour";
@@ -13,7 +15,9 @@ import { Workflow } from "@/features/landing/sections/Workflow";
  * Landing composition. Each section lives in src/features/landing/sections/
  * and pulls its copy from content.tsx and its media from media.ts.
  */
-export default function LandingPage() {
+export default function LandingPage({ params }: { params: Promise<{ locale: string }> }) {
+  setRequestLocale(use(params).locale);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
