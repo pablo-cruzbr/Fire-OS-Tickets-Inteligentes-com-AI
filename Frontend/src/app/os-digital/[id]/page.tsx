@@ -1,3 +1,4 @@
+import { getT } from "@/i18n/server";
 import type { Metadata } from "next";
 import { serverGet } from "@/lib/serverApi";
 import type { OrdemdeServicoProps } from "@/lib/getOrdemdeServico.type";
@@ -6,7 +7,10 @@ import { OSDigitalView } from "@/features/ordens/OSDigitalView";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = { title: "Ordem de serviço digital" };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getT();
+  return { title: t({ pt: "Ordem de serviço digital", en: "Digital work order" }) };
+}
 
 export default async function OSDigitalPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

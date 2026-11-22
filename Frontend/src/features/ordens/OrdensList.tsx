@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -55,49 +56,52 @@ export default function OrdensList({ data }: { data: OrdemdeServicoResponseData 
   return (
     <>
       <EntityList<OrdemdeServicoProps>
-        title="Chamados"
-        breadcrumbs={[{ label: "Chamados" }, { label: "Lista de chamados" }]}
-        description={`${data.total ?? items.length} chamados no total, do mais recente para o mais antigo.`}
+        title={ta({ pt: "Chamados", en: "Tickets" })}
+        breadcrumbs={[{ label: ta({ pt: "Chamados", en: "Tickets" }) }, { label: ta({ pt: "Lista de chamados", en: "Ticket list" }) }]}
+        description={ta({
+        pt: `${data.total ?? items.length} chamados no total, do mais recente para o mais antigo.`,
+        en: `${data.total ?? items.length} tickets in total, newest first.`,
+      })}
         items={items}
         rowKey={(os) => os.id}
         stats={[
-          { label: "Abertas", value: data.totalAberta ?? 0, tone: "warning", icon: <TbTicket /> },
-          { label: "Em andamento", value: data.totalEmAndamento ?? 0, tone: "primary", icon: <TbPlayerPlay /> },
-          { label: "Pausadas", value: data.totalPausada ?? 0, tone: "secondary", icon: <TbClockPause /> },
-          { label: "Concluídas", value: data.totalConcluida ?? 0, tone: "success", icon: <TbCircleCheck /> },
+          { label: ta({ pt: "Abertas", en: "Open" }), value: data.totalAberta ?? 0, tone: "warning", icon: <TbTicket /> },
+          { label: ta({ pt: "Em andamento", en: "In progress" }), value: data.totalEmAndamento ?? 0, tone: "primary", icon: <TbPlayerPlay /> },
+          { label: ta({ pt: "Pausadas", en: "Paused" }), value: data.totalPausada ?? 0, tone: "secondary", icon: <TbClockPause /> },
+          { label: ta({ pt: "Concluídas", en: "Completed" }), value: data.totalConcluida ?? 0, tone: "success", icon: <TbCircleCheck /> },
         ]}
         search={{
-          placeholder: "Buscar por nº da OS, solicitante ou local...",
+          placeholder: ta({ pt: "Buscar por nº da OS, solicitante ou local...", en: "Search by work order no., requester or location..." }),
           text: (os) => [os.numeroOS?.toString(), os.name, osPlaceName(os)],
         }}
         filters={[
           {
-            label: "Status",
+            label: ta({ pt: "Status", en: "Status" }),
             options: (rows) => optionsFrom(rows, (os) => os.statusOrdemdeServico?.name),
             match: (os, value) => os.statusOrdemdeServico?.name === value,
           },
           {
-            label: "Tipo",
+            label: ta({ pt: "Tipo", en: "Type" }),
             options: (rows) => optionsFrom(rows, (os) => os.tipodeOrdemdeServico?.name),
             match: (os, value) => os.tipodeOrdemdeServico?.name === value,
           },
           {
-            label: "Prioridade",
+            label: ta({ pt: "Prioridade", en: "Priority" }),
             options: (rows) => optionsFrom(rows, (os) => os.prioridade?.name),
             match: (os, value) => os.prioridade?.name === value,
           },
           {
-            label: "Tarefa",
+            label: ta({ pt: "Tarefa", en: "Task" }),
             options: (rows) => optionsFrom(rows, (os) => os.tarefa?.name),
             match: (os, value) => os.tarefa?.name === value,
           },
           {
-            label: "Técnico",
+            label: ta({ pt: "Técnico", en: "Technician" }),
             options: (rows) => optionsFrom(rows, (os) => os.tecnico?.name),
             match: (os, value) => os.tecnico?.name === value,
           },
           {
-            label: "Instituição",
+            label: ta({ pt: "Instituição", en: "Institution" }),
             options: (rows) => optionsFrom(rows, osInstituicaoName),
             match: (os, value) =>
               anyIs(
@@ -108,7 +112,7 @@ export default function OrdensList({ data }: { data: OrdemdeServicoResponseData 
               ),
           },
           {
-            label: "Cliente",
+            label: ta({ pt: "Cliente", en: "Customer" }),
             options: (rows) => optionsFrom(rows, osClienteName),
             match: (os, value) =>
               anyIs(value, os.cliente?.name, os.user?.cliente?.name, os.informacoesSetor?.cliente?.name),
@@ -116,29 +120,29 @@ export default function OrdensList({ data }: { data: OrdemdeServicoResponseData 
         ]}
         columns={[
           {
-            header: "Nº da OS",
+            header: ta({ pt: "Nº da OS", en: "Work order no." }),
             cell: (os) => (
               <CellTitle title={os.numeroOS ? `#${os.numeroOS}` : "—"} subtitle={os.tipodeOrdemdeServico?.name} />
             ),
           },
           {
-            header: "Solicitante",
+            header: ta({ pt: "Solicitante", en: "Requester" }),
             cell: (os) => <CellTitle title={os.name || "—"} subtitle={osPlaceName(os)} />,
           },
-          { header: "Status", cell: (os) => <StatusBadge status={os.statusOrdemdeServico?.name} /> },
-          { header: "Prioridade", cell: (os) => <StatusBadge status={os.prioridade?.name} /> },
-          { header: "Técnico", cell: (os) => os.tecnico?.name ?? <span className="text-muted">Não atribuído</span> },
-          { header: "Aberta em", cell: (os) => formatDateTime(os.created_at), className: "whitespace-nowrap" },
+          { header: ta({ pt: "Status", en: "Status" }), cell: (os) => <StatusBadge status={os.statusOrdemdeServico?.name} /> },
+          { header: ta({ pt: "Prioridade", en: "Priority" }), cell: (os) => <StatusBadge status={os.prioridade?.name} /> },
+          { header: ta({ pt: "Técnico", en: "Technician" }), cell: (os) => os.tecnico?.name ?? <span className="text-muted">{ta({ pt: "Não atribuído", en: "Unassigned" })}</span> },
+          { header: ta({ pt: "Aberta em", en: "Opened on" }), cell: (os) => formatDateTime(os.created_at), className: "whitespace-nowrap" },
           {
-            header: "Página",
+            header: ta({ pt: "Página", en: "Page" }),
             className: "w-16 text-right",
             cell: (os) => (
               <Link
                 href={`/dashboard/ordemdeservico/${os.id}`}
                 onClick={(event) => event.stopPropagation()}
                 onKeyDown={(event) => event.stopPropagation()}
-                aria-label={`Abrir a página da OS ${os.numeroOS ?? ""}`}
-                title="Abrir a página da OS"
+                aria-label={ta({ pt: `Abrir a página da OS ${os.numeroOS ?? ""}`, en: `Open the page of work order ${os.numeroOS ?? ""}` })}
+                title={ta({ pt: "Abrir a página da OS", en: "Open the work order page" })}
                 className="inline-flex h-9 w-9 items-center justify-center rounded-md text-bodytext transition-colors hover:bg-lightprimary hover:text-primarytext"
               >
                 <TbExternalLink className="h-4 w-4" />
@@ -153,36 +157,36 @@ export default function OrdensList({ data }: { data: OrdemdeServicoResponseData 
               onClick={() => setExportOpen(true)}
               icon={<TbFileSpreadsheet className="h-4 w-4" />}
             >
-              Relatório
+              {ta({ pt: "Relatório", en: "Report" })}
             </Button>
             <Button
               variant="surface"
               onClick={() => setSecretaria("educacao")}
               icon={<TbFileSpreadsheet className="h-4 w-4" />}
-              title="Relatório da Secretaria da Educação"
+              title={ta({ pt: "Relatório da Secretaria da Educação", en: "Department of Education report" })}
             >
-              Rel. Educação
+              {ta({ pt: "Rel. Educação", en: "Education rpt." })}
             </Button>
             <Button
               variant="surface"
               onClick={() => setSecretaria("saude")}
               icon={<TbFileSpreadsheet className="h-4 w-4" />}
-              title="Relatório da Secretaria da Saúde"
+              title={ta({ pt: "Relatório da Secretaria da Saúde", en: "Department of Health report" })}
             >
-              Rel. Saúde
+              {ta({ pt: "Rel. Saúde", en: "Health rpt." })}
             </Button>
             <ButtonLink
               href="/dashboard/formulariosadd/formularioOrdemdeServico"
               variant="light"
               icon={<TbListDetails className="h-4 w-4" />}
             >
-              Nova OS
+              {ta({ pt: "Nova OS", en: "New work order" })}
             </ButtonLink>
           </>
         }
-        add={{ href: "/dashboard/formulariosadd/formularioTicket", label: "Novo ticket" }}
+        add={{ href: "/dashboard/formulariosadd/formularioTicket", label: ta({ pt: "Novo ticket", en: "New ticket" }) }}
         onOpen={(os) => openModal("OrdemdeServico", os)}
-        emptyMessage="Nenhum chamado cadastrado ainda."
+        emptyMessage={ta({ pt: "Nenhum chamado cadastrado ainda.", en: "No tickets yet." })}
       />
 
       {exportOpen && <ExportOrdensModal onClose={() => setExportOpen(false)} />}

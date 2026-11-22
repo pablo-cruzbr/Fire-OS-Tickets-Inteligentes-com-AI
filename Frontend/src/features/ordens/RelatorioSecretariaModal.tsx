@@ -1,5 +1,7 @@
 "use client";
 
+import type { Localized } from "@/i18n/text";
+import { activeLang, ta } from "@/i18n/active";
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import { toast } from "sonner";
@@ -20,18 +22,18 @@ const PREFIXOS: Record<Secretaria, string[]> = {
   educacao: ["ESCOLA", "CRECHE", "SME"],
 };
 
-const TITULOS: Record<Secretaria, string> = {
-  saude: "RELATÓRIO DE TAREFAS SECRETARIA DA SAÚDE",
-  educacao: "RELATÓRIO DE TAREFAS SECRETARIA DA EDUCAÇÃO",
+const TITULOS: Record<Secretaria, Localized> = {
+  saude: { pt: "RELATÓRIO DE TAREFAS SECRETARIA DA SAÚDE", en: "DEPARTMENT OF HEALTH TASK REPORT" },
+  educacao: { pt: "RELATÓRIO DE TAREFAS SECRETARIA DA EDUCAÇÃO", en: "DEPARTMENT OF EDUCATION TASK REPORT" },
 };
 
 /** Timestamps (created_at...) in local time. */
 function localDate(value?: string | null) {
-  return value ? new Date(value).toLocaleDateString("pt-BR") : "-";
+  return value ? new Date(value).toLocaleDateString(activeLang()) : "-";
 }
 
 function localTime(value?: string | null) {
-  return value ? new Date(value).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : "-";
+  return value ? new Date(value).toLocaleTimeString(activeLang(), { hour: "2-digit", minute: "2-digit" }) : "-";
 }
 
 /** Spreadsheet of the OS opened in the units of one secretaria (saúde / educação). */
@@ -61,7 +63,7 @@ export function RelatorioSecretariaModal({ secretaria, onClose }: { secretaria: 
         );
       })
       .catch((error) => {
-        if (!cancelled) toast.error(apiErrorMessage(error, "Não foi possível carregar os tipos de instituição."));
+        if (!cancelled) toast.error(apiErrorMessage(error, ta({ pt: "Não foi possível carregar os tipos de instituição.", en: "Couldn't load the institution types." })));
       })
       .finally(() => {
         if (!cancelled) setLoadingTipos(false);
@@ -77,7 +79,7 @@ export function RelatorioSecretariaModal({ secretaria, onClose }: { secretaria: 
 
   async function handleGerar() {
     if (selecionados.length === 0) {
-      toast.error("Selecione ao menos um tipo de instituição.");
+      toast.error(ta({ pt: "Selecione ao menos um tipo de instituição.", en: "Select at least one institution type." }));
       return;
     }
     setGerando(true);
@@ -91,14 +93,17 @@ export function RelatorioSecretariaModal({ secretaria, onClose }: { secretaria: 
 
       // `yyyy-mm-dd` inputs are shown as UTC dates, so they don't roll back a day.
       const periodoTexto =
-        startDate && endDate ? `${formatDate(startDate)} a ${formatDate(endDate)}` : "Todos os períodos";
+        startDate && endDate ? `${formatDate(startDate)} ${ta({ pt: "a", en: "to" })} ${formatDate(endDate)}` : ta({ pt: "Todos os períodos", en: "All periods" });
 
       const rows: unknown[][] = [
         [titulo],
-        [`Total de chamados: ${ordens.length}`],
-        [`Período: ${periodoTexto}`],
+        [`${ta({ pt: "Total de chamados", en: "Total tickets" })}: ${ordens.length}`],
+        [`${ta({ pt: "Período", en: "Period" })}: ${periodoTexto}`],
         [],
-        ["Código", "Data", "Hora", "Tipo da tarefa", "Responsável", "Cliente", "Orientação", "Endereço", "Visualização", "OS Digital"],
+        ta({
+          pt: ["Código", "Data", "Hora", "Tipo da tarefa", "Responsável", "Cliente", "Orientação", "Endereço", "Visualização", "OS Digital"],
+          en: ["Code", "Date", "Time", "Task type", "Technician", "Customer", "Guidance", "Address", "View", "Digital WO"],
+        }),
         ...ordens.map((os) => [
           os.numeroOS,
           localDate(os.created_at),
@@ -124,10 +129,10 @@ export function RelatorioSecretariaModal({ secretaria, onClose }: { secretaria: 
       XLSX.utils.book_append_sheet(book, sheet, "RELATORIO DE TAREFAS");
       XLSX.writeFile(book, `Relatorio_${secretaria === "saude" ? "Saude" : "Educacao"}_${Date.now()}.xlsx`);
 
-      toast.success(`Relatório gerado com ${ordens.length} OS!`);
+      toast.success(ta({ pt: `Relatório gerado com ${ordens.length} OS!`, en: `Report generated with ${ordens.length} work orders!` }));
       onClose();
     } catch (error) {
-      toast.error(apiErrorMessage(error, "Erro ao gerar relatório."));
+      toast.error(apiErrorMessage(error, ta({ pt: "Erro ao gerar relatório.", en: "Couldn't generate the report." })));
     } finally {
       setGerando(false);
     }
@@ -138,12 +143,12 @@ export function RelatorioSecretariaModal({ secretaria, onClose }: { secretaria: 
       open
       onClose={onClose}
       size="lg"
-      title={secretaria === "saude" ? "Relatório da Secretaria da Saúde" : "Relatório da Secretaria da Educação"}
-      subtitle="Planilha de tarefas por tipo de instituição."
+      title={secretaria === "saude" ? ta({ pt: "Relatório da Secretaria da Saúde", en: "Department of Health report" }) : ta({ pt: "Relatório da Secretaria da Educação", en: "Department of Education report" })}
+      subtitle={ta({ pt: "Planilha de tarefas por tipo de instituição.", en: "Task sheet by institution type." })}
       footer={
         <>
           <Button variant="outline" onClick={onClose} disabled={gerando}>
-            Cancelar
+            {ta({ pt: "Cancelar", en: "Cancel" })}
           </Button>
           <Button
             onClick={handleGerar}
@@ -151,20 +156,20 @@ export function RelatorioSecretariaModal({ secretaria, onClose }: { secretaria: 
             disabled={selecionados.length === 0}
             icon={<TbFileSpreadsheet className="h-4 w-4" />}
           >
-            {gerando ? "Gerando..." : "Gerar Excel"}
+            {gerando ? ta({ pt: "Gerando...", en: "Generating..." }) : ta({ pt: "Gerar Excel", en: "Generate Excel" })}
           </Button>
         </>
       }
     >
       <div className="flex flex-col gap-6">
         <section>
-          <p className="mb-3 text-sm font-semibold text-link">Tipos de instituição</p>
+          <p className="mb-3 text-sm font-semibold text-link">{ta({ pt: "Tipos de instituição", en: "Institution types" })}</p>
           {loadingTipos ? (
             <div className="flex items-center gap-2 text-sm text-muted">
-              <Spinner className="h-4 w-4" /> Carregando...
+              <Spinner className="h-4 w-4" /> {ta({ pt: "Carregando...", en: "Loading..." })}
             </div>
           ) : tipos.length === 0 ? (
-            <p className="text-sm text-muted">Nenhum tipo de instituição cadastrado.</p>
+            <p className="text-sm text-muted">{ta({ pt: "Nenhum tipo de instituição cadastrado.", en: "No institution types yet." })}</p>
           ) : (
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               {tipos.map((tipo) => {
@@ -192,12 +197,12 @@ export function RelatorioSecretariaModal({ secretaria, onClose }: { secretaria: 
         </section>
 
         <section>
-          <p className="mb-3 text-sm font-semibold text-link">Período (opcional)</p>
+          <p className="mb-3 text-sm font-semibold text-link">{ta({ pt: "Período (opcional)", en: "Period (optional)" })}</p>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-            <Field label="De" htmlFor="secretaria-start">
+            <Field label={ta({ pt: "De", en: "From" })} htmlFor="secretaria-start">
               <Input id="secretaria-start" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
             </Field>
-            <Field label="Até" htmlFor="secretaria-end">
+            <Field label={ta({ pt: "Até", en: "To" })} htmlFor="secretaria-end">
               <Input id="secretaria-end" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
             </Field>
           </div>

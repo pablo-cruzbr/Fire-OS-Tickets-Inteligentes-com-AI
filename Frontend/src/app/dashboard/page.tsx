@@ -1,3 +1,4 @@
+import { getT } from "@/i18n/server";
 import Link from "next/link";
 import {
   TbArrowRight,
@@ -44,6 +45,7 @@ function place(os: OrdemdeServicoProps) {
 }
 
 export default async function DashboardHome() {
+  const t = await getT();
   const [user, data] = await Promise.all([
     getSessionUser(),
     serverGet<OrdemdeServicoResponseData>("/listordemdeservico", emptyTickets),
@@ -56,22 +58,22 @@ export default async function DashboardHome() {
     .slice(0, 6);
 
   const breakdown = [
-    { label: "Abertas", value: data.totalAberta ?? 0 },
-    { label: "Em deslocamento", value: data.totalEmDeslocamento ?? 0 },
-    { label: "Em andamento", value: data.totalEmAndamento ?? 0 },
-    { label: "Pausadas", value: data.totalPausada ?? 0 },
-    { label: "Concluídas", value: data.totalConcluida ?? 0 },
+    { label: t({ pt: "Abertas", en: "Open" }), value: data.totalAberta ?? 0 },
+    { label: t({ pt: "Em deslocamento", en: "On the way" }), value: data.totalEmDeslocamento ?? 0 },
+    { label: t({ pt: "Em andamento", en: "In progress" }), value: data.totalEmAndamento ?? 0 },
+    { label: t({ pt: "Pausadas", en: "Paused" }), value: data.totalPausada ?? 0 },
+    { label: t({ pt: "Concluídas", en: "Completed" }), value: data.totalConcluida ?? 0 },
   ];
   const max = Math.max(1, ...breakdown.map((row) => row.value));
 
   const shortcuts = [
-    { label: "Abrir um ticket", href: "/dashboard/formulariosadd/formularioTicket", icon: <TbTicket /> },
-    { label: "Abrir uma OS", href: "/dashboard/formulariosadd/formularioOrdemdeServico", icon: <TbListDetails /> },
-    { label: "Documentação técnica", href: "/dashboard/documentacaoTecnica", icon: <TbFileText /> },
+    { label: t({ pt: "Abrir um ticket", en: "Open a ticket" }), href: "/dashboard/formulariosadd/formularioTicket", icon: <TbTicket /> },
+    { label: t({ pt: "Abrir uma OS", en: "Open a work order" }), href: "/dashboard/formulariosadd/formularioOrdemdeServico", icon: <TbListDetails /> },
+    { label: t({ pt: "Documentação técnica", en: "Technical documentation" }), href: "/dashboard/documentacaoTecnica", icon: <TbFileText /> },
     ...(isAdmin
       ? [
-          { label: "Calendário técnico", href: "/dashboard/ticketscount", icon: <TbCalendarEvent /> },
-          { label: "Técnicos", href: "/dashboard/controles/tecnicos", icon: <TbTool /> },
+          { label: t({ pt: "Calendário técnico", en: "Technician calendar" }), href: "/dashboard/ticketscount", icon: <TbCalendarEvent /> },
+          { label: t({ pt: "Técnicos", en: "Technicians" }), href: "/dashboard/controles/tecnicos", icon: <TbTool /> },
         ]
       : []),
   ];
@@ -82,60 +84,60 @@ export default async function DashboardHome() {
         <HeroCard className="lg:col-span-7">
           <div className="relative z-10 max-w-md">
             <Badge tone="primary" className="ring-1 ring-inset ring-primary/20">
-              {isAdmin ? "Administrador" : "Técnico"}
+              {isAdmin ? t({ pt: "Administrador", en: "Admin" }) : t({ pt: "Técnico", en: "Technician" })}
             </Badge>
             <h2 className="mt-4 text-2xl font-semibold text-link">
-              Olá,{" "}
+              {t({ pt: "Olá,", en: "Hi," })}{" "}
               <span className="bg-[image:var(--gradient-brand,linear-gradient(97deg,var(--primary),#7989fa))] bg-clip-text text-transparent">
                 {firstName}
               </span>
               ! 👋
             </h2>
             <p className="mt-2 text-bodytext">
-              Você tem <strong className="text-link">{data.totalAberta ?? 0}</strong> chamados abertos e{" "}
-              <strong className="text-link">{data.totalEmAndamento ?? 0}</strong> em andamento.
+              {t({ pt: "Você tem", en: "You have" })} <strong className="text-link">{data.totalAberta ?? 0}</strong> {t({ pt: "chamados abertos e", en: "open tickets and" })}{" "}
+              <strong className="text-link">{data.totalEmAndamento ?? 0}</strong> {t({ pt: "em andamento.", en: "in progress." })}
             </p>
             <div className="mt-6 flex flex-wrap gap-2">
               <ButtonLink href="/dashboard/tickets" icon={<TbTicket className="h-4 w-4" />}>
-                Ver chamados
+                {t({ pt: "Ver chamados", en: "View tickets" })}
               </ButtonLink>
               <ButtonLink href="/dashboard/formulariosadd/formularioOrdemdeServico" variant="surface">
-                Nova OS
+                {t({ pt: "Nova OS", en: "New work order" })}
               </ButtonLink>
             </div>
           </div>
         </HeroCard>
 
         <div className="grid grid-cols-2 gap-4 lg:col-span-5">
-          <StatCard label="Total de chamados" value={data.total ?? 0} tone="primary" icon={<TbTicket />} />
-          <StatCard label="Em deslocamento" value={data.totalEmDeslocamento ?? 0} tone="secondary" icon={<TbRoute />} />
-          <StatCard label="Em andamento" value={data.totalEmAndamento ?? 0} tone="warning" icon={<TbPlayerPlay />} />
-          <StatCard label="Concluídos" value={data.totalConcluida ?? 0} tone="success" icon={<TbCircleCheck />} />
+          <StatCard label={t({ pt: "Total de chamados", en: "Total tickets" })} value={data.total ?? 0} tone="primary" icon={<TbTicket />} />
+          <StatCard label={t({ pt: "Em deslocamento", en: "On the way" })} value={data.totalEmDeslocamento ?? 0} tone="secondary" icon={<TbRoute />} />
+          <StatCard label={t({ pt: "Em andamento", en: "In progress" })} value={data.totalEmAndamento ?? 0} tone="warning" icon={<TbPlayerPlay />} />
+          <StatCard label={t({ pt: "Concluídos", en: "Completed" })} value={data.totalConcluida ?? 0} tone="success" icon={<TbCircleCheck />} />
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         <Card className="lg:col-span-8">
           <CardHeader
-            title="Chamados recentes"
-            subtitle="Os últimos chamados e ordens de serviço registrados"
+            title={t({ pt: "Chamados recentes", en: "Recent tickets" })}
+            subtitle={t({ pt: "Os últimos chamados e ordens de serviço registrados", en: "The latest tickets and work orders recorded" })}
             action={
               <Link href="/dashboard/tickets" className="flex items-center gap-1 text-sm font-medium text-primarytext">
-                Ver todos <TbArrowRight />
+                {t({ pt: "Ver todos", en: "View all" })} <TbArrowRight />
               </Link>
             }
           />
           {recent.length === 0 ? (
-            <p className="py-10 text-center text-bodytext">Nenhum chamado registrado ainda.</p>
+            <p className="py-10 text-center text-bodytext">{t({ pt: "Nenhum chamado registrado ainda.", en: "No tickets recorded yet." })}</p>
           ) : (
             <div className="-mx-6 overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead>
                   <tr className="border-b border-border">
-                    <th scope="col" className="px-6 py-3 font-semibold text-link">OS</th>
-                    <th scope="col" className="px-6 py-3 font-semibold text-link">Local</th>
-                    <th scope="col" className="px-6 py-3 font-semibold text-link">Técnico</th>
-                    <th scope="col" className="px-6 py-3 font-semibold text-link">Status</th>
+                    <th scope="col" className="px-6 py-3 font-semibold text-link">{t({ pt: "OS", en: "WO" })}</th>
+                    <th scope="col" className="px-6 py-3 font-semibold text-link">{t({ pt: "Local", en: "Location" })}</th>
+                    <th scope="col" className="px-6 py-3 font-semibold text-link">{t({ pt: "Técnico", en: "Technician" })}</th>
+                    <th scope="col" className="px-6 py-3 font-semibold text-link">{t({ pt: "Status", en: "Status" })}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -148,7 +150,7 @@ export default async function DashboardHome() {
                         <p className="text-xs text-muted">{formatDateTime(os.created_at)}</p>
                       </td>
                       <td className="max-w-[220px] truncate px-6 py-3.5 text-bodytext">{place(os)}</td>
-                      <td className="px-6 py-3.5 text-bodytext">{os.tecnico?.name ?? "Não atribuído"}</td>
+                      <td className="px-6 py-3.5 text-bodytext">{os.tecnico?.name ?? t({ pt: "Não atribuído", en: "Unassigned" })}</td>
                       <td className="px-6 py-3.5">
                         <StatusBadge status={os.statusOrdemdeServico?.name} />
                       </td>
@@ -162,7 +164,7 @@ export default async function DashboardHome() {
 
         <div className="flex flex-col gap-6 lg:col-span-4">
           <Card>
-            <CardHeader title="Chamados por status" subtitle={`${data.total ?? 0} no total`} />
+            <CardHeader title={t({ pt: "Chamados por status", en: "Tickets by status" })} subtitle={`${data.total ?? 0} no total`} />
             <ul className="flex flex-col gap-4">
               {breakdown.map((row) => (
                 <li key={row.label}>
@@ -181,13 +183,13 @@ export default async function DashboardHome() {
             </ul>
             {(data.totalPausada ?? 0) > 0 && (
               <p className="mt-5 flex items-center gap-2 rounded-md bg-lightwarning px-3 py-2 text-xs text-warningtext">
-                <TbClockPause className="h-4 w-4" /> {data.totalPausada} chamado(s) pausado(s) aguardando retomada.
+                <TbClockPause className="h-4 w-4" /> {data.totalPausada} {t({ pt: "chamado(s) pausado(s) aguardando retomada.", en: "ticket(s) paused, waiting to resume." })}
               </p>
             )}
           </Card>
 
           <Card>
-            <CardHeader title="Atalhos" />
+            <CardHeader title={t({ pt: "Atalhos", en: "Shortcuts" })} />
             <ul className="flex flex-col gap-1">
               {shortcuts.map((shortcut) => (
                 <li key={shortcut.href}>

@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { useState } from "react";
 import { TbFileSpreadsheet } from "react-icons/tb";
 import { Button, Field, Input, Modal } from "@/components/ui";
@@ -47,11 +48,11 @@ export function ExportOrdensModal({ onClose }: { onClose: () => void }) {
   }
 
   const selects: { key: keyof typeof empty; label: string; endpoint: string; placeholder: string }[] = [
-    { key: "tarefa_id", label: "Tarefa", endpoint: "/liststatustarefa", placeholder: "Todas as tarefas" },
-    { key: "instituicao_id", label: "Instituição", endpoint: "/listinstuicao", placeholder: "Todas as instituições" },
-    { key: "cliente_id", label: "Cliente", endpoint: "/listcliente", placeholder: "Todos os clientes" },
-    { key: "status_id", label: "Status", endpoint: "/liststatusordemdeservico", placeholder: "Todos os status" },
-    { key: "tipoOS_id", label: "Tipo de OS", endpoint: "/listtipodeordemdeservico", placeholder: "Todos os tipos" },
+    { key: "tarefa_id", label: ta({ pt: "Tarefa", en: "Task" }), endpoint: "/liststatustarefa", placeholder: ta({ pt: "Todas as tarefas", en: "All tasks" }) },
+    { key: "instituicao_id", label: ta({ pt: "Instituição", en: "Institution" }), endpoint: "/listinstuicao", placeholder: ta({ pt: "Todas as instituições", en: "All institutions" }) },
+    { key: "cliente_id", label: ta({ pt: "Cliente", en: "Customer" }), endpoint: "/listcliente", placeholder: ta({ pt: "Todos os clientes", en: "All customers" }) },
+    { key: "status_id", label: ta({ pt: "Status", en: "Status" }), endpoint: "/liststatusordemdeservico", placeholder: ta({ pt: "Todos os status", en: "All statuses" }) },
+    { key: "tipoOS_id", label: ta({ pt: "Tipo de OS", en: "Work order type" }), endpoint: "/listtipodeordemdeservico", placeholder: ta({ pt: "Todos os tipos", en: "All types" }) },
   ];
 
   return (
@@ -59,24 +60,24 @@ export function ExportOrdensModal({ onClose }: { onClose: () => void }) {
       open
       onClose={onClose}
       size="lg"
-      title="Gerar relatório de OS"
-      subtitle="Exporta as ordens de serviço filtradas para Excel."
+      title={ta({ pt: "Gerar relatório de OS", en: "Generate work order report" })}
+      subtitle={ta({ pt: "Exporta as ordens de serviço filtradas para Excel.", en: "Exports the filtered work orders to Excel." })}
       footer={
         <>
           <Button variant="outline" onClick={onClose} disabled={exporting}>
-            Cancelar
+            {ta({ pt: "Cancelar", en: "Cancel" })}
           </Button>
           <Button onClick={handleExport} loading={exporting} icon={<TbFileSpreadsheet className="h-4 w-4" />}>
-            {exporting ? "Processando..." : "Exportar Excel"}
+            {exporting ? ta({ pt: "Processando...", en: "Processing..." }) : ta({ pt: "Exportar Excel", en: "Export to Excel" })}
           </Button>
         </>
       }
     >
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <Field label="Início" htmlFor="export-start">
+        <Field label={ta({ pt: "Início", en: "Start" })} htmlFor="export-start">
           <Input id="export-start" type="date" value={filters.startDate} onChange={(e) => set("startDate", e.target.value)} />
         </Field>
-        <Field label="Fim" htmlFor="export-end">
+        <Field label={ta({ pt: "Fim", en: "End" })} htmlFor="export-end">
           <Input id="export-end" type="date" value={filters.endDate} onChange={(e) => set("endDate", e.target.value)} />
         </Field>
         {selects.map((select) => (

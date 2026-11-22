@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { TbFileDownload, TbPrinter } from "react-icons/tb";
@@ -75,7 +76,7 @@ export function OSDigitalView({ os, fotos }: { os: OrdemdeServicoProps | null; f
     try {
       await downloadPdf(sheetRef.current, `OS-${os.numeroOS ?? os.id}.pdf`);
     } catch {
-      toast.error("Não foi possível gerar o PDF. Tente imprimir e salvar como PDF.");
+      toast.error(ta({ pt: "Não foi possível gerar o PDF. Tente imprimir e salvar como PDF.", en: "Couldn't generate the PDF. Try printing and saving as PDF." }));
     } finally {
       setGenerating(false);
     }
@@ -84,7 +85,7 @@ export function OSDigitalView({ os, fotos }: { os: OrdemdeServicoProps | null; f
   if (!os) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-background p-4">
-        <EmptyState title="Ordem de serviço não encontrada" description="Verifique o link ou faça login para visualizar." />
+        <EmptyState title={ta({ pt: "Ordem de serviço não encontrada", en: "Work order not found" })} description={ta({ pt: "Verifique o link ou faça login para visualizar.", en: "Check the link or sign in to view it." })} />
       </main>
     );
   }
@@ -94,10 +95,10 @@ export function OSDigitalView({ os, fotos }: { os: OrdemdeServicoProps | null; f
       <OSDocument ref={sheetRef} os={os} fotos={fotos} crossOrigin />
       <div className="mx-auto mt-6 flex max-w-4xl flex-wrap justify-end gap-2 print:hidden">
         <Button variant="surface" onClick={() => window.print()} icon={<TbPrinter className="h-4 w-4" />}>
-          Imprimir
+          {ta({ pt: "Imprimir", en: "Print" })}
         </Button>
         <Button onClick={handleDownload} loading={generating} icon={<TbFileDownload className="h-4 w-4" />}>
-          {generating ? "Gerando PDF..." : "Baixar PDF"}
+          {generating ? ta({ pt: "Gerando PDF...", en: "Generating PDF..." }) : ta({ pt: "Baixar PDF", en: "Download PDF" })}
         </Button>
       </div>
     </main>

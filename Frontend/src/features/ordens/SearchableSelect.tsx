@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import ReactSelect from "react-select";
 import { cn } from "@/lib/cn";
 import type { Option } from "@/components/data/useLookups";
@@ -25,11 +26,11 @@ export function SearchableSelect({
   options,
   value,
   onChange,
-  placeholder = "Selecione",
+  placeholder = ta({ pt: "Selecione", en: "Select" }),
   loading,
   clearable = true,
   disabled,
-  noOptionsMessage = "Nenhuma opção encontrada",
+  noOptionsMessage = ta({ pt: "Nenhuma opção encontrada", en: "No options found" }),
 }: SearchableSelectProps) {
   const selected = options.find((option) => option.value === value) ?? null;
 
@@ -41,7 +42,7 @@ export function SearchableSelect({
       options={options}
       value={selected}
       onChange={(option) => onChange(option?.value ?? "")}
-      placeholder={loading ? "Carregando..." : placeholder}
+      placeholder={loading ? ta({ pt: "Carregando...", en: "Loading..." }) : placeholder}
       isLoading={loading}
       isDisabled={disabled || loading}
       isClearable={clearable}

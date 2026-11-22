@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -44,7 +45,7 @@ export function OrdemForm({ userId }: { userId: string }) {
   const [selects, setSelects] = useState(emptySelects);
   const [submitting, setSubmitting] = useState(false);
 
-  function select(key: SelectKey, label: string, placeholder = "Selecione...", className?: string, required?: boolean) {
+  function select(key: SelectKey, label: string, placeholder = ta({ pt: "Selecione...", en: "Select..." }), className?: string, required?: boolean) {
     return (
       <Field label={label} htmlFor={`os-${key}`} required={required} className={className}>
         <SearchableSelect
@@ -70,7 +71,7 @@ export function OrdemForm({ userId }: { userId: string }) {
     const contato = formData.get("nomedoContatoaserProcuradonoLocal")?.toString().trim();
 
     if (!name || !selects.tipodeChamado_id || !descricaodoProblemaouSolicitacao) {
-      toast.error("Preencha todos os campos obrigatórios.");
+      toast.error(ta({ pt: "Preencha todos os campos obrigatórios.", en: "Fill in all required fields." }));
       return;
     }
 
@@ -97,11 +98,11 @@ export function OrdemForm({ userId }: { userId: string }) {
     setSubmitting(true);
     try {
       await api.post("/ordemdeservico", payload);
-      toast.success("Ordem de serviço cadastrada!");
+      toast.success(ta({ pt: "Ordem de serviço cadastrada!", en: "Work order created!" }));
       router.push("/dashboard/tickets");
       router.refresh();
     } catch (error) {
-      toast.error(apiErrorMessage(error, "Erro ao enviar. Verifique os campos e tente novamente."));
+      toast.error(apiErrorMessage(error, ta({ pt: "Erro ao enviar. Verifique os campos e tente novamente.", en: "Couldn't send. Check the fields and try again." })));
       setSubmitting(false);
     }
   }
@@ -110,45 +111,45 @@ export function OrdemForm({ userId }: { userId: string }) {
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
       {failed.length > 0 && (
         <p className="rounded-md bg-lightwarning px-4 py-3 text-sm text-warningtext">
-          Algumas listas não puderam ser carregadas. Tente recarregar a página.
+          {ta({ pt: "Algumas listas não puderam ser carregadas. Tente recarregar a página.", en: "Some lists couldn't be loaded. Try reloading the page." })}
         </p>
       )}
 
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-        <SectionTitle>Informações gerais</SectionTitle>
-        <Field label="Nome do cliente" htmlFor="os-name" required>
-          <Input id="os-name" name="name" required placeholder="Digite o nome do cliente" />
+        <SectionTitle>{ta({ pt: "Informações gerais", en: "General information" })}</SectionTitle>
+        <Field label={ta({ pt: "Nome do cliente", en: "Customer name" })} htmlFor="os-name" required>
+          <Input id="os-name" name="name" required placeholder={ta({ pt: "Digite o nome do cliente", en: "Type the customer's name" })} />
         </Field>
-        {select("tipodeChamado_id", "Tipo de chamado", "Selecione o tipo de chamado...", undefined, true)}
-        <Field label="Descrição do problema / solicitação" htmlFor="os-descricao" required className="md:col-span-2">
+        {select("tipodeChamado_id", ta({ pt: "Tipo de chamado", en: "Ticket type" }), ta({ pt: "Selecione o tipo de chamado...", en: "Select the ticket type..." }), undefined, true)}
+        <Field label={ta({ pt: "Descrição do problema / solicitação", en: "Problem / request description" })} htmlFor="os-descricao" required className="md:col-span-2">
           <Textarea
             id="os-descricao"
             name="descricaodoProblemaouSolicitacao"
             required
-            placeholder="Descreva o problema ou solicitação..."
+            placeholder={ta({ pt: "Descreva o problema ou solicitação...", en: "Describe the problem or request..." })}
           />
         </Field>
-        <Field label="Nome do contato no local" htmlFor="os-contato" className="md:col-span-2">
-          <Input id="os-contato" name="nomedoContatoaserProcuradonoLocal" placeholder="Nome do contato (opcional)" />
+        <Field label={ta({ pt: "Nome do contato no local", en: "On-site contact name" })} htmlFor="os-contato" className="md:col-span-2">
+          <Input id="os-contato" name="nomedoContatoaserProcuradonoLocal" placeholder={ta({ pt: "Nome do contato (opcional)", en: "Contact name (optional)" })} />
         </Field>
 
-        <SectionTitle>Atribuição</SectionTitle>
-        {select("prioridade_id", "Prioridade")}
-        {select("tarefa_id", "Tarefa")}
-        {select("tecnico_id", "Técnico")}
-        {select("statusOrdemdeServico_id", "Status da OS")}
+        <SectionTitle>{ta({ pt: "Atribuição", en: "Assignment" })}</SectionTitle>
+        {select("prioridade_id", ta({ pt: "Prioridade", en: "Priority" }))}
+        {select("tarefa_id", ta({ pt: "Tarefa", en: "Task" }))}
+        {select("tecnico_id", ta({ pt: "Técnico", en: "Technician" }))}
+        {select("statusOrdemdeServico_id", ta({ pt: "Status da OS", en: "Work order status" }))}
 
-        <SectionTitle>Localização e cliente</SectionTitle>
-        {select("instituicaoUnidade_id", "Instituição / unidade", "Pesquise e selecione a unidade...")}
-        {select("cliente_id", "Cliente", "Selecione o cliente (opcional)...")}
+        <SectionTitle>{ta({ pt: "Localização e cliente", en: "Location and customer" })}</SectionTitle>
+        {select("instituicaoUnidade_id", ta({ pt: "Instituição / unidade", en: "Institution / unit" }), ta({ pt: "Pesquise e selecione a unidade...", en: "Search and select the unit..." }))}
+        {select("cliente_id", ta({ pt: "Cliente", en: "Customer" }), ta({ pt: "Selecione o cliente (opcional)...", en: "Select the customer (optional)..." }))}
       </div>
 
       <div className="flex flex-wrap justify-end gap-2 border-t border-border pt-5">
         <Button variant="outline" onClick={() => router.push("/dashboard/tickets")} disabled={submitting}>
-          Cancelar
+          {ta({ pt: "Cancelar", en: "Cancel" })}
         </Button>
         <Button type="submit" loading={submitting} disabled={loading} icon={<TbDeviceFloppy className="h-4 w-4" />}>
-          Concluir
+          {ta({ pt: "Concluir", en: "Complete" })}
         </Button>
       </div>
     </form>

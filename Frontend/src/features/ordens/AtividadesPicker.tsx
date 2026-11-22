@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { useEffect, useState } from "react";
 import { api } from "@/services/api";
 import { toArray } from "@/lib/toArray";
@@ -44,7 +45,7 @@ export function AtividadesPicker({ existing, selected, onChange }: AtividadesPic
   if (atividades === null) {
     return (
       <div className="flex items-center gap-2 text-sm text-muted">
-        <Spinner className="h-4 w-4" /> Carregando atividades...
+        <Spinner className="h-4 w-4" /> {ta({ pt: "Carregando atividades...", en: "Loading activities..." })}
       </div>
     );
   }
@@ -52,9 +53,9 @@ export function AtividadesPicker({ existing, selected, onChange }: AtividadesPic
 
   return (
     <fieldset>
-      <legend className="mb-1 text-sm font-semibold text-link">Atividades realizadas</legend>
+      <legend className="mb-1 text-sm font-semibold text-link">{ta({ pt: "Atividades realizadas", en: "Activities performed" })}</legend>
       <p className="mb-3 text-xs text-muted">
-        Marque as atividades novas. As já registradas não podem ser removidas por aqui.
+        {ta({ pt: "Marque as atividades novas. As já registradas não podem ser removidas por aqui.", en: "Check the new activities. Ones already recorded can't be removed here." })}
       </p>
       <div className="flex flex-col gap-4">
         {groupAtividades(atividades).map(([categoria, list]) => (
@@ -81,7 +82,7 @@ export function AtividadesPicker({ existing, selected, onChange }: AtividadesPic
                       className="h-4 w-4 shrink-0 accent-primary"
                     />
                     <span className="min-w-0 flex-1">{atividade.descricao}</span>
-                    {locked && <span className="shrink-0 text-xs font-medium text-successtext">já adicionada</span>}
+                    {locked && <span className="shrink-0 text-xs font-medium text-successtext">{ta({ pt: "já adicionada", en: "already added" })}</span>}
                   </label>
                 );
               })}

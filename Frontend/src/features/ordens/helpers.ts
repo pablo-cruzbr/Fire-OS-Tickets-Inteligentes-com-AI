@@ -1,3 +1,4 @@
+import { activeLang, ta } from "@/i18n/active";
 import type { OrdemdeServicoProps } from "@/lib/getOrdemdeServico.type";
 
 export type Foto = { id: string; url: string };
@@ -49,7 +50,7 @@ export function osEquipamento(os: OrdemdeServicoProps) {
 }
 
 /** Seconds → HH:MM:SS. */
-export function formatDuration(seconds?: number | null, fallback = "Sem duração") {
+export function formatDuration(seconds?: number | null, fallback = ta({ pt: "Sem duração", en: "No duration" })) {
   if (seconds === null || seconds === undefined || Number.isNaN(Number(seconds))) return fallback;
   const total = Math.floor(Math.abs(Number(seconds)));
   const h = Math.floor(total / 3600);
@@ -64,7 +65,7 @@ export function formatTime(value?: string | null, fallback = "—") {
   const date = new Date(value);
   return Number.isNaN(date.getTime())
     ? fallback
-    : date.toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit" });
+    : date.toLocaleTimeString(activeLang(), { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit" });
 }
 
 /** Activities grouped by category, categories sorted. */

@@ -1,5 +1,6 @@
 "use client";
 
+import { activeLang, ta } from "@/i18n/active";
 import { DragEvent, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -14,7 +15,7 @@ import {
 import { api } from "@/services/api";
 import { apiErrorMessage } from "@/lib/apiError";
 import { cn } from "@/lib/cn";
-import { statusTone, Tone } from "@/lib/status";
+import { statusLabel, statusTone, Tone } from "@/lib/status";
 import { useGlobalModal } from "@/provider/GlobalModalProvider";
 import { Badge, Button, Card, Field, Input, Modal } from "@/components/ui";
 import type { OrdemdeServicoProps } from "@/lib/getOrdemdeServico.type";
@@ -31,7 +32,10 @@ type CalendarEvent = {
   ordem: Ordem;
 };
 
-const WEEKDAYS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+const WEEKDAYS = {
+  pt: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
+  en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+};
 const MAX_PER_CELL = 3;
 
 const eventTone: Record<Tone, string> = {
@@ -70,8 +74,8 @@ const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(),
 const addDays = (date: Date, days: number) => new Date(date.getFullYear(), date.getMonth(), date.getDate() + days);
 const sameDay = (a: Date, b: Date) => startOfDay(a).getTime() === startOfDay(b).getTime();
 const dayKey = (date: Date) => `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-const time = (date: Date) => date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
-const longDate = (date: Date) => date.toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" });
+const time = (date: Date) => date.toLocaleTimeString(activeLang(), { hour: "2-digit", minute: "2-digit" });
+const longDate = (date: Date) => date.toLocaleDateString(activeLang(), { weekday: "long", day: "numeric", month: "long" });
 const pad = (value: number) => String(value).padStart(2, "0");
 const toDateValue = (date: Date) => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 const toTimeValue = (date: Date) => `${pad(date.getHours())}:${pad(date.getMinutes())}`;
@@ -110,7 +114,7 @@ function EventChip({
         clickEvent.stopPropagation();
         onOpen(event);
       }}
-      title={`${time(event.start)} · ${event.title}${event.status ? ` · ${event.status}` : ""}`}
+      title={`${time(event.start)} · ${event.title}${event.status ? ` · ${statusLabel(event.status)}` : ""}`}
       className={cn(
         "flex w-full cursor-grab items-center gap-1.5 truncate rounded-md border-l-[3px] px-2 text-left text-xs font-medium transition-opacity hover:opacity-80 active:cursor-grabbing",
         compact ? "py-0.5" : "py-1.5",
@@ -156,9 +160,9 @@ export function TechCalendar({ ordens }: { ordens: Ordem[] }) {
     view === "week"
       ? (() => {
           const days = weekDays(cursor);
-          return `${days[0].toLocaleDateString("pt-BR", { day: "numeric", month: "short" })} – ${days[6].toLocaleDateString("pt-BR", { day: "numeric", month: "short", year: "numeric" })}`;
+          return `${days[0].toLocaleDateString(activeLang(), { day: "numeric", month: "short" })} – ${days[6].toLocaleDateString(activeLang(), { day: "numeric", month: "short", year: "numeric" })}`;
         })()
-      : cursor.toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
+      : cursor.toLocaleDateString(activeLang(), { month: "long", year: "numeric" });
 
   function move(step: number) {
     setCursor((current) =>
@@ -202,10 +206,13 @@ export function TechCalendar({ ordens }: { ordens: Ordem[] }) {
             : item,
         ),
       );
-      toast.success(`OS #${reschedule.event.ordem.numeroOS} reagendada para ${longDate(next)}, ${time(next)}.`);
+      toast.success(ta({
+          pt: `OS #${reschedule.event.ordem.numeroOS} reagendada para ${longDate(next)}, ${time(next)}.`,
+          en: `WO #${reschedule.event.ordem.numeroOS} rescheduled to ${longDate(next)}, ${time(next)}.`,
+        }));
       setReschedule(null);
     } catch (error) {
-      toast.error(apiErrorMessage(error, "Não foi possível reagendar a OS."));
+      toast.error(apiErrorMessage(error, ta({ pt: "Não foi possível reagendar a OS.", en: "Couldn't reschedule the work order." })));
     } finally {
       setSaving(false);
     }
@@ -231,31 +238,31 @@ export function TechCalendar({ ordens }: { ordens: Ordem[] }) {
     .slice(0, 60);
 
   const views: { key: View; label: string }[] = [
-    { key: "month", label: "Mês" },
-    { key: "week", label: "Semana" },
-    { key: "agenda", label: "Agenda" },
+    { key: "month", label: ta({ pt: "Mês", en: "Month" }) },
+    { key: "week", label: ta({ pt: "Semana", en: "Week" }) },
+    { key: "agenda", label: ta({ pt: "Agenda", en: "Schedule" }) },
   ];
 
   return (
     <Card className="p-0">
       <div className="flex flex-wrap items-center gap-3 border-b border-border p-5">
         <div className="flex items-center gap-1">
-          <Button variant="outline" size="icon" aria-label="Anterior" onClick={() => move(-1)} disabled={view === "agenda"}>
+          <Button variant="outline" size="icon" aria-label={ta({ pt: "Anterior", en: "Previous" })} onClick={() => move(-1)} disabled={view === "agenda"}>
             <TbChevronLeft className="h-4 w-4" />
           </Button>
-          <Button variant="outline" size="icon" aria-label="Próximo" onClick={() => move(1)} disabled={view === "agenda"}>
+          <Button variant="outline" size="icon" aria-label={ta({ pt: "Próximo", en: "Next" })} onClick={() => move(1)} disabled={view === "agenda"}>
             <TbChevronRight className="h-4 w-4" />
           </Button>
           <Button variant="outline" size="sm" className="h-9" onClick={() => setCursor(startOfDay(new Date()))}>
-            Hoje
+            {ta({ pt: "Hoje", en: "Today" })}
           </Button>
         </div>
-        <h2 className="text-lg font-semibold text-link first-letter:uppercase">{view === "agenda" ? "Próximos atendimentos" : title}</h2>
+        <h2 className="text-lg font-semibold text-link first-letter:uppercase">{view === "agenda" ? ta({ pt: "Próximos atendimentos", en: "Upcoming jobs" }) : title}</h2>
         <div className="ml-auto flex items-center gap-2">
           <Button
             variant="ghost"
             size="icon"
-            aria-label="Atualizar"
+            aria-label={ta({ pt: "Atualizar", en: "Refresh" })}
             onClick={() => {
               setRefreshing(true);
               router.refresh();
@@ -263,7 +270,7 @@ export function TechCalendar({ ordens }: { ordens: Ordem[] }) {
           >
             <TbRefresh className={cn("h-4 w-4", refreshing && "animate-spin")} />
           </Button>
-          <div role="tablist" aria-label="Visualização" className="flex rounded-md bg-surface p-1">
+          <div role="tablist" aria-label={ta({ pt: "Visualização", en: "Preview" })} className="flex rounded-md bg-surface p-1">
             {views.map((item) => (
               <button
                 key={item.key}
@@ -286,7 +293,7 @@ export function TechCalendar({ ordens }: { ordens: Ordem[] }) {
         <div className="overflow-x-auto">
           <div className="min-w-[760px]">
             <div className="grid grid-cols-7 border-b border-border">
-              {WEEKDAYS.map((weekday) => (
+              {ta(WEEKDAYS).map((weekday) => (
                 <div key={weekday} className="px-3 py-2.5 text-xs font-semibold uppercase tracking-wide text-muted">
                   {weekday}
                 </div>
@@ -311,7 +318,7 @@ export function TechCalendar({ ordens }: { ordens: Ordem[] }) {
                     <button
                       type="button"
                       onClick={() => setDayOpen(day)}
-                      aria-label={`Ver ${longDate(day)}`}
+                      aria-label={ta({ pt: `Ver ${longDate(day)}`, en: `View ${longDate(day)}` })}
                       className={cn(
                         "mb-1 flex h-7 w-7 items-center justify-center rounded-full text-xs font-medium transition-colors hover:bg-lightprimary",
                         isToday ? "bg-primary text-white hover:bg-primary" : outside ? "text-muted" : "text-link",
@@ -329,7 +336,7 @@ export function TechCalendar({ ordens }: { ordens: Ordem[] }) {
                           onClick={() => setDayOpen(day)}
                           className="rounded px-2 text-left text-xs font-semibold text-primarytext hover:underline"
                         >
-                          +{list.length - MAX_PER_CELL} mais
+                          +{list.length - MAX_PER_CELL} {ta({ pt: "mais", en: "more" })}
                         </button>
                       )}
                     </div>
@@ -358,7 +365,7 @@ export function TechCalendar({ ordens }: { ordens: Ordem[] }) {
                   )}
                 >
                   <div className="mb-3 flex flex-col items-center gap-1 border-b border-border pb-3">
-                    <span className="text-xs font-semibold uppercase text-muted">{WEEKDAYS[day.getDay()]}</span>
+                    <span className="text-xs font-semibold uppercase text-muted">{ta(WEEKDAYS)[day.getDay()]}</span>
                     <span
                       className={cn(
                         "flex h-9 w-9 items-center justify-center rounded-full text-base font-semibold",
@@ -372,7 +379,7 @@ export function TechCalendar({ ordens }: { ordens: Ordem[] }) {
                     {list.map((event) => (
                       <EventChip key={event.id} event={event} onOpen={openEvent} />
                     ))}
-                    {list.length === 0 && <p className="pt-4 text-center text-xs text-muted">Sem atendimentos</p>}
+                    {list.length === 0 && <p className="pt-4 text-center text-xs text-muted">{ta({ pt: "Sem atendimentos", en: "No jobs" })}</p>}
                   </div>
                 </div>
               );
@@ -383,12 +390,12 @@ export function TechCalendar({ ordens }: { ordens: Ordem[] }) {
 
       {view === "agenda" && (
         <ul className="divide-y divide-border">
-          {agenda.length === 0 && <li className="p-10 text-center text-bodytext">Nenhum atendimento agendado.</li>}
+          {agenda.length === 0 && <li className="p-10 text-center text-bodytext">{ta({ pt: "Nenhum atendimento agendado.", en: "No jobs scheduled." })}</li>}
           {agenda.map((event) => (
             <li key={event.id} className="flex flex-wrap items-center gap-4 px-5 py-3.5">
               <div className="w-28 shrink-0">
                 <p className="text-sm font-semibold capitalize text-link">
-                  {event.start.toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit", month: "short" })}
+                  {event.start.toLocaleDateString(activeLang(), { weekday: "short", day: "2-digit", month: "short" })}
                 </p>
                 <p className="flex items-center gap-1 text-xs text-muted">
                   <TbClock /> {time(event.start)}
@@ -397,12 +404,12 @@ export function TechCalendar({ ordens }: { ordens: Ordem[] }) {
               <button type="button" onClick={() => openEvent(event)} className="min-w-0 flex-1 text-left">
                 <p className="truncate font-medium text-link hover:text-primarytext">{event.title}</p>
                 <p className="text-xs text-bodytext">
-                  OS #{event.ordem.numeroOS} · {event.ordem.tecnico?.name ?? "Técnico não atribuído"}
+                  {ta({ pt: "OS #", en: "WO #" })}{event.ordem.numeroOS} · {event.ordem.tecnico?.name ?? ta({ pt: "Técnico não atribuído", en: "Technician not assigned" })}
                 </p>
               </button>
-              {event.status && <Badge tone={event.tone}>{event.status}</Badge>}
+              {event.status && <Badge tone={event.tone}>{statusLabel(event.status)}</Badge>}
               <Button variant="light" size="sm" icon={<TbCalendarTime className="h-4 w-4" />} onClick={() => startReschedule(event)}>
-                Reagendar
+                {ta({ pt: "Reagendar", en: "Reschedule" })}
               </Button>
             </li>
           ))}
@@ -411,7 +418,7 @@ export function TechCalendar({ ordens }: { ordens: Ordem[] }) {
 
       <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-border px-5 py-3 text-xs text-bodytext">
         <span className="flex items-center gap-1.5">
-          <TbList /> Arraste um atendimento para outro dia para reagendar.
+          <TbList /> {ta({ pt: "Arraste um atendimento para outro dia para reagendar.", en: "Drag a job to another day to reschedule it." })}
         </span>
       </div>
 
@@ -420,10 +427,10 @@ export function TechCalendar({ ordens }: { ordens: Ordem[] }) {
         onClose={() => setDayOpen(null)}
         size="md"
         title={dayOpen ? longDate(dayOpen) : ""}
-        subtitle={`${dayEvents.length} atendimento(s)`}
+        subtitle={ta({ pt: `${dayEvents.length} atendimento(s)`, en: `${dayEvents.length} job(s)` })}
       >
         {dayEvents.length === 0 ? (
-          <p className="py-6 text-center text-bodytext">Nenhum atendimento neste dia.</p>
+          <p className="py-6 text-center text-bodytext">{ta({ pt: "Nenhum atendimento neste dia.", en: "No jobs on this day." })}</p>
         ) : (
           <ul className="flex flex-col gap-2">
             {dayEvents.map((event) => (
@@ -440,14 +447,14 @@ export function TechCalendar({ ordens }: { ordens: Ordem[] }) {
                     {time(event.start)} · {event.title}
                   </p>
                   <p className="text-xs text-bodytext">
-                    OS #{event.ordem.numeroOS} · {event.ordem.tecnico?.name ?? "Técnico não atribuído"}
+                    {ta({ pt: "OS #", en: "WO #" })}{event.ordem.numeroOS} · {event.ordem.tecnico?.name ?? ta({ pt: "Técnico não atribuído", en: "Technician not assigned" })}
                   </p>
                 </button>
                 <Button
                   variant="ghost"
                   size="icon"
-                  aria-label="Reagendar"
-                  title="Reagendar"
+                  aria-label={ta({ pt: "Reagendar", en: "Reschedule" })}
+                  title={ta({ pt: "Reagendar", en: "Reschedule" })}
                   onClick={() => {
                     setDayOpen(null);
                     startReschedule(event);
@@ -465,15 +472,15 @@ export function TechCalendar({ ordens }: { ordens: Ordem[] }) {
         open={Boolean(reschedule)}
         onClose={() => !saving && setReschedule(null)}
         size="md"
-        title="Confirmar reagendamento"
-        subtitle={reschedule ? `OS #${reschedule.event.ordem.numeroOS} · ${reschedule.event.title}` : undefined}
+        title={ta({ pt: "Confirmar reagendamento", en: "Confirm reschedule" })}
+        subtitle={reschedule ? ta({ pt: `OS #${reschedule.event.ordem.numeroOS} · ${reschedule.event.title}`, en: `WO #${reschedule.event.ordem.numeroOS} · ${reschedule.event.title}` }) : undefined}
         footer={
           <>
             <Button variant="outline" onClick={() => setReschedule(null)} disabled={saving}>
-              Cancelar
+              {ta({ pt: "Cancelar", en: "Cancel" })}
             </Button>
             <Button onClick={confirmReschedule} loading={saving}>
-              Confirmar
+              {ta({ pt: "Confirmar", en: "Confirm" })}
             </Button>
           </>
         }
@@ -481,13 +488,13 @@ export function TechCalendar({ ordens }: { ordens: Ordem[] }) {
         {reschedule && (
           <div className="flex flex-col gap-5">
             <p className="rounded-lg bg-surface px-4 py-3 text-sm text-bodytext">
-              Agendamento atual:{" "}
+              {ta({ pt: "Agendamento atual:", en: "Current schedule:" })}{" "}
               <strong className="text-link">
                 {longDate(reschedule.event.start)}, {time(reschedule.event.start)}
               </strong>
             </p>
             <div className="grid grid-cols-2 gap-4">
-              <Field label="Nova data" htmlFor="reschedule-date">
+              <Field label={ta({ pt: "Nova data", en: "New date" })} htmlFor="reschedule-date">
                 <Input
                   id="reschedule-date"
                   type="date"
@@ -495,7 +502,7 @@ export function TechCalendar({ ordens }: { ordens: Ordem[] }) {
                   onChange={(event) => setReschedule({ ...reschedule, date: event.target.value })}
                 />
               </Field>
-              <Field label="Horário" htmlFor="reschedule-time">
+              <Field label={ta({ pt: "Horário", en: "Time" })} htmlFor="reschedule-time">
                 <Input
                   id="reschedule-time"
                   type="time"

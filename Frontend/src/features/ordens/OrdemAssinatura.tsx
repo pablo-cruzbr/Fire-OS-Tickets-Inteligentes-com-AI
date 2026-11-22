@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { useEffect, useState } from "react";
 import { DetailGrid } from "@/components/data/DetailModal";
 import { EmptyState, Spinner } from "@/components/ui";
@@ -46,12 +47,12 @@ export function OrdemAssinatura({ os }: { os: OrdemdeServicoProps }) {
         <a href={url} target="_blank" rel="noopener noreferrer" className="block rounded-lg border border-border bg-surface p-4">
           {/* the signature is dark ink on a transparent background: keep it on white */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={url} alt="Assinatura do responsável" className="mx-auto max-h-56 rounded-md bg-white object-contain" />
+          <img src={url} alt={ta({ pt: "Assinatura do responsável", en: "Customer signature" })} className="mx-auto max-h-56 rounded-md bg-white object-contain" />
         </a>
       ) : (
-        <EmptyState title="Nenhuma assinatura encontrada" description="A assinatura é coletada pelo aplicativo ao concluir a OS." />
+        <EmptyState title={ta({ pt: "Nenhuma assinatura encontrada", en: "No signature found" })} description={ta({ pt: "A assinatura é coletada pelo aplicativo ao concluir a OS.", en: "The signature is collected in the app when the work order is completed." })} />
       )}
-      <DetailGrid fields={[{ label: "Quem assinou", value: os.assinante || "Não informado", full: true }]} />
+      <DetailGrid fields={[{ label: ta({ pt: "Quem assinou", en: "Who signed" }), value: os.assinante || "Não informado", full: true }]} />
     </div>
   );
 }

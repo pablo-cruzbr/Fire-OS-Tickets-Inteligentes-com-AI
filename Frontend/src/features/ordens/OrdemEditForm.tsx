@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
 import { TbDeviceFloppy } from "react-icons/tb";
@@ -92,34 +93,34 @@ export function OrdemEditForm({ os, onSaved, onCancel }: OrdemEditFormProps) {
     setSubmitting(true);
     try {
       await api.patch(`/ordemdeservico/update/${os.id}`, payload);
-      toast.success("Ordem de serviço atualizada com sucesso!");
+      toast.success(ta({ pt: "Ordem de serviço atualizada com sucesso!", en: "Work order updated successfully!" }));
       onSaved();
     } catch (error) {
-      toast.error(apiErrorMessage(error, "Erro ao enviar os dados da OS."));
+      toast.error(apiErrorMessage(error, ta({ pt: "Erro ao enviar os dados da OS.", en: "Couldn't send the work order data." })));
     } finally {
       setSubmitting(false);
     }
   }
 
   const nativeSelects: { key: keyof FormState; label: string; lookup: keyof typeof LOOKUPS }[] = [
-    { key: "prioridade_id", label: "Prioridade", lookup: "prioridade" },
-    { key: "tipodeOrdemdeServico_id", label: "Tipo de ordem de serviço", lookup: "tipo" },
-    { key: "tarefa_id", label: "Tarefa", lookup: "tarefa" },
-    { key: "tecnico_id", label: "Técnico", lookup: "tecnico" },
-    { key: "statusOrdemdeServico_id", label: "Status da OS", lookup: "status" },
+    { key: "prioridade_id", label: ta({ pt: "Prioridade", en: "Priority" }), lookup: "prioridade" },
+    { key: "tipodeOrdemdeServico_id", label: ta({ pt: "Tipo de ordem de serviço", en: "Work order type" }), lookup: "tipo" },
+    { key: "tarefa_id", label: ta({ pt: "Tarefa", en: "Task" }), lookup: "tarefa" },
+    { key: "tecnico_id", label: ta({ pt: "Técnico", en: "Technician" }), lookup: "tecnico" },
+    { key: "statusOrdemdeServico_id", label: ta({ pt: "Status da OS", en: "Work order status" }), lookup: "status" },
   ];
 
   const searchSelects: { key: keyof FormState; label: string; lookup: keyof typeof LOOKUPS; placeholder: string }[] = [
-    { key: "instituicaoUnidade_id", label: "Instituição / unidade", lookup: "instituicao", placeholder: "Pesquise a unidade..." },
-    { key: "cliente_id", label: "Cliente", lookup: "cliente", placeholder: "Selecione o cliente (opcional)" },
-    { key: "equipamento_id", label: "Equipamento", lookup: "equipamento", placeholder: "Pesquise por patrimônio ou nome (opcional)" },
+    { key: "instituicaoUnidade_id", label: ta({ pt: "Instituição / unidade", en: "Institution / unit" }), lookup: "instituicao", placeholder: ta({ pt: "Pesquise a unidade...", en: "Search the unit..." }) },
+    { key: "cliente_id", label: ta({ pt: "Cliente", en: "Customer" }), lookup: "cliente", placeholder: ta({ pt: "Selecione o cliente (opcional)", en: "Select the customer (optional)" }) },
+    { key: "equipamento_id", label: ta({ pt: "Equipamento", en: "Equipment" }), lookup: "equipamento", placeholder: ta({ pt: "Pesquise por patrimônio ou nome (opcional)", en: "Search by asset tag or name (optional)" }) },
   ];
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
       {failed.length > 0 && (
         <p className="rounded-md bg-lightwarning px-4 py-3 text-sm text-warningtext">
-          Algumas listas não puderam ser carregadas. Tente reabrir a OS.
+          {ta({ pt: "Algumas listas não puderam ser carregadas. Tente reabrir a OS.", en: "Some lists couldn't be loaded. Try reopening the work order." })}
         </p>
       )}
 
@@ -132,7 +133,7 @@ export function OrdemEditForm({ os, onSaved, onCancel }: OrdemEditFormProps) {
               disabled={loading}
               onChange={(event) => set(select.key, event.target.value)}
             >
-              <option value="">{loading ? "Carregando..." : "Selecione"}</option>
+              <option value="">{loading ? ta({ pt: "Carregando...", en: "Loading..." }) : ta({ pt: "Selecione", en: "Select" })}</option>
               {list(select.lookup).map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
@@ -158,20 +159,20 @@ export function OrdemEditForm({ os, onSaved, onCancel }: OrdemEditFormProps) {
             />
           </Field>
         ))}
-        <Field label="Orientação / descrição do problema" htmlFor="os-edit-descricao" className="md:col-span-2">
+        <Field label={ta({ pt: "Orientação / descrição do problema", en: "Guidance / problem description" })} htmlFor="os-edit-descricao" className="md:col-span-2">
           <Textarea
             id="os-edit-descricao"
             value={form.descricaodoProblemaouSolicitacao}
             onChange={(event) => set("descricaodoProblemaouSolicitacao", event.target.value)}
-            placeholder="Descreva o problema ou solicitação..."
+            placeholder={ta({ pt: "Descreva o problema ou solicitação...", en: "Describe the problem or request..." })}
           />
         </Field>
-        <Field label="Solução / procedimento realizado" htmlFor="os-edit-solucao" className="md:col-span-2">
+        <Field label={ta({ pt: "Solução / procedimento realizado", en: "Solution / procedure performed" })} htmlFor="os-edit-solucao" className="md:col-span-2">
           <Textarea
             id="os-edit-solucao"
             value={form.solucao}
             onChange={(event) => set("solucao", event.target.value)}
-            placeholder="Descreva a solução aplicada..."
+            placeholder={ta({ pt: "Descreva a solução aplicada...", en: "Describe the fix applied..." })}
           />
         </Field>
       </div>
@@ -180,10 +181,10 @@ export function OrdemEditForm({ os, onSaved, onCancel }: OrdemEditFormProps) {
 
       <div className="flex flex-wrap justify-end gap-2 border-t border-border pt-5">
         <Button variant="outline" onClick={onCancel} disabled={submitting}>
-          Cancelar
+          {ta({ pt: "Cancelar", en: "Cancel" })}
         </Button>
         <Button type="submit" loading={submitting} disabled={loading} icon={<TbDeviceFloppy className="h-4 w-4" />}>
-          Salvar
+          {ta({ pt: "Salvar", en: "Save" })}
         </Button>
       </div>
     </form>

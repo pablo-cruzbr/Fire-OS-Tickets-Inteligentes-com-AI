@@ -1,5 +1,7 @@
 "use client";
 
+import { ta } from "@/i18n/active";
+import { statusLabel } from "@/lib/status";
 import { ReactNode, Ref, useEffect } from "react";
 import type { OrdemdeServicoProps } from "@/lib/getOrdemdeServico.type";
 import { formatDateTime } from "@/lib/format";
@@ -84,7 +86,7 @@ export function OSDocument({ os, fotos, crossOrigin, ref, className }: OSDocumen
     os.informacoesSetor?.cliente?.endereco ||
     os.user?.instituicaoUnidade?.endereco ||
     os.user?.cliente?.endereco;
-  const tecnico = os.tecnico?.name || os.nameTecnico || "Não atribuído";
+  const tecnico = os.tecnico?.name || os.nameTecnico || ta({ pt: "Não atribuído", en: "Unassigned" });
   const concluida = os.statusOrdemdeServico?.name?.toUpperCase() === "CONCLUIDA";
   const atividades = (os.atividades ?? []).filter((item) => item.atividadePadrao);
 
@@ -99,74 +101,74 @@ export function OSDocument({ os, fotos, crossOrigin, ref, className }: OSDocumen
     >
       <header className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-border pb-5">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/fire-os.svg" alt="Fire OS" width={154} height={32} className="h-8 w-auto dark:hidden" />
+        <img src="/brand/fire-os.svg" alt={ta({ pt: "Fire OS", en: "Fire OS" })} width={154} height={32} className="h-8 w-auto dark:hidden" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/fire-os-white.svg" alt="Fire OS" width={154} height={32} className="hidden h-8 w-auto dark:block" />
+        <img src="/brand/fire-os-white.svg" alt={ta({ pt: "Fire OS", en: "Fire OS" })} width={154} height={32} className="hidden h-8 w-auto dark:block" />
         <div className="text-right">
-          <h1 className="text-xl font-semibold text-link">Ordem de serviço</h1>
+          <h1 className="text-xl font-semibold text-link">{ta({ pt: "Ordem de serviço", en: "Work order" })}</h1>
           <p className="text-sm text-bodytext">
-            Nº <span className="font-semibold text-link">{os.numeroOS ?? "—"}</span> · {formatDateTime(os.created_at)}
+            {ta({ pt: "Nº", en: "No." })} <span className="font-semibold text-link">{os.numeroOS ?? "—"}</span> · {formatDateTime(os.created_at)}
           </p>
           {os.statusOrdemdeServico?.name && (
             <p className="text-sm text-bodytext">
-              Status: <span className="font-semibold text-link">{os.statusOrdemdeServico.name}</span>
+              {ta({ pt: "Status:", en: "Status:" })} <span className="font-semibold text-link">{statusLabel(os.statusOrdemdeServico.name)}</span>
             </p>
           )}
         </div>
       </header>
 
-      <Section title="Informações do cliente">
-        <Cell label="Cliente">{cliente}</Cell>
-        <Cell label="CPF/CNPJ">{cnpj}</Cell>
-        <Cell label="Instituição / unidade">{instituicao}</Cell>
-        <Cell label="Solicitante">{os.name}</Cell>
-        <Cell label="Endereço" full>
+      <Section title={ta({ pt: "Informações do cliente", en: "Customer details" })}>
+        <Cell label={ta({ pt: "Cliente", en: "Customer" })}>{cliente}</Cell>
+        <Cell label={ta({ pt: "CPF/CNPJ", en: "CPF/CNPJ" })}>{cnpj}</Cell>
+        <Cell label={ta({ pt: "Instituição / unidade", en: "Institution / unit" })}>{instituicao}</Cell>
+        <Cell label={ta({ pt: "Solicitante", en: "Requester" })}>{os.name}</Cell>
+        <Cell label={ta({ pt: "Endereço", en: "Address" })} full>
           {endereco}
         </Cell>
-        <Cell label="Telefone / ramal" full>
+        <Cell label={ta({ pt: "Telefone / ramal", en: "Phone / extension" })} full>
           {os.informacoesSetor?.ramal}
         </Cell>
       </Section>
 
-      <Section title={`Tarefa #${os.numeroOS ?? "—"}`}>
-        <Cell label="Colaborador responsável">{tecnico}</Cell>
-        <Cell label="Data/hora">{formatDateTime(os.created_at)}</Cell>
-        <Cell label="Tipo de tarefa" full>
+      <Section title={ta({ pt: `Tarefa #${os.numeroOS ?? "—"}`, en: `Task #${os.numeroOS ?? "—"}` })}>
+        <Cell label={ta({ pt: "Colaborador responsável", en: "Staff member in charge" })}>{tecnico}</Cell>
+        <Cell label={ta({ pt: "Data/hora", en: "Date/time" })}>{formatDateTime(os.created_at)}</Cell>
+        <Cell label={ta({ pt: "Tipo de tarefa", en: "Task type" })} full>
           {os.tipodeChamado?.name}
         </Cell>
-        <Cell label="Orientação" full>
+        <Cell label={ta({ pt: "Orientação", en: "Guidance" })} full>
           {os.descricaodoProblemaouSolicitacao}
         </Cell>
-        <Cell label="Início">{formatDateTime(os.startedAt)}</Cell>
-        <Cell label="Finalização">{formatDateTime(os.endedAt)}</Cell>
-        <Cell label="Duração" full>
+        <Cell label={ta({ pt: "Início", en: "Start" })}>{formatDateTime(os.startedAt)}</Cell>
+        <Cell label={ta({ pt: "Finalização", en: "Completion" })}>{formatDateTime(os.endedAt)}</Cell>
+        <Cell label={ta({ pt: "Duração", en: "Duration" })} full>
           {formatDuration(os.duracao, "00:00:00")}
         </Cell>
       </Section>
 
-      <Section title="Ordem de serviço" dark>
-        <Cell label="1) Nome do responsável no local (quem acompanhou)" full>
+      <Section title={ta({ pt: "Ordem de serviço", en: "Work order" })} dark>
+        <Cell label={ta({ pt: "1) Nome do responsável no local (quem acompanhou)", en: "1) Name of the person on site (who was present)" })} full>
           {os.nomedoContatoaserProcuradonoLocal}
         </Cell>
-        <Cell label="2) Fotos do serviço" full>
+        <Cell label={ta({ pt: "2) Fotos do serviço", en: "2) Service photos" })} full>
           {fotos.length > 0 ? (
             <div className="mt-1 grid grid-cols-2 gap-3 sm:grid-cols-3 print:grid-cols-3">
               {fotos.map((foto) => (
                 <div key={foto.id} className="overflow-hidden rounded-md border border-border break-inside-avoid">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={foto.url} alt="Foto do serviço" crossOrigin={cors} className="aspect-[4/3] w-full object-cover" />
+                  <img src={foto.url} alt={ta({ pt: "Foto do serviço", en: "Service photo" })} crossOrigin={cors} className="aspect-[4/3] w-full object-cover" />
                 </div>
               ))}
             </div>
           ) : (
-            <span className="text-muted">Nenhuma foto anexada.</span>
+            <span className="text-muted">{ta({ pt: "Nenhuma foto anexada.", en: "No photos attached." })}</span>
           )}
         </Cell>
-        <Cell label="3) Procedimento realizado (resolução do atendimento)" full>
+        <Cell label={ta({ pt: "3) Procedimento realizado (resolução do atendimento)", en: "3) Procedure performed (how the job was resolved)" })} full>
           {os.solucao || "—"}
           {atividades.length > 0 && (
             <div className="mt-3">
-              <p className="text-xs font-semibold text-bodytext">Atividades realizadas</p>
+              <p className="text-xs font-semibold text-bodytext">{ta({ pt: "Atividades realizadas", en: "Activities performed" })}</p>
               {groupAtividades(atividades.map((item) => ({ ...item.atividadePadrao, key: item.id }))).map(
                 ([categoria, list]) => (
                   <div key={categoria} className="mt-1.5">
@@ -182,19 +184,19 @@ export function OSDocument({ os, fotos, crossOrigin, ref, className }: OSDocumen
             </div>
           )}
         </Cell>
-        <Cell label="4) Serviço concluído?" full>
-          {concluida ? "Sim" : "Não"}
+        <Cell label={ta({ pt: "4) Serviço concluído?", en: "4) Service completed?" })} full>
+          {concluida ? ta({ pt: "Sim", en: "Yes" }) : ta({ pt: "Não", en: "No" })}
         </Cell>
-        <Cell label="5) Assinatura do responsável do local" full>
+        <Cell label={ta({ pt: "5) Assinatura do responsável do local", en: "5) Signature of the person in charge on site" })} full>
           <div className="mt-1 flex min-h-28 items-center justify-center rounded-md border border-border bg-white p-3">
             {os.bannerassinatura ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={os.bannerassinatura} alt="Assinatura" crossOrigin={cors} className="max-h-32 object-contain" />
+              <img src={os.bannerassinatura} alt={ta({ pt: "Assinatura", en: "Signature" })} crossOrigin={cors} className="max-h-32 object-contain" />
             ) : (
-              <span className="text-sm text-muted">Sem assinatura</span>
+              <span className="text-sm text-muted">{ta({ pt: "Sem assinatura", en: "No signature" })}</span>
             )}
           </div>
-          {os.assinante && <p className="mt-2 text-sm text-bodytext">Assinado por: {os.assinante}</p>}
+          {os.assinante && <p className="mt-2 text-sm text-bodytext">{ta({ pt: "Assinado por:", en: "Signed by:" })} {os.assinante}</p>}
         </Cell>
       </Section>
     </div>

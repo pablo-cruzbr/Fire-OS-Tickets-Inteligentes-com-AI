@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { useEffect, useState } from "react";
 import { DetailGrid } from "@/components/data/DetailModal";
 import { api } from "@/services/api";
@@ -39,47 +40,47 @@ export function OrdemAtendimento({ os }: { os: OrdemdeServicoProps }) {
 
   return (
     <div>
-      <SectionTitle>Atendimento</SectionTitle>
+      <SectionTitle>{ta({ pt: "Atendimento", en: "Service" })}</SectionTitle>
       <DetailGrid
         fields={[
-          { label: "Técnico responsável", value: os.tecnico?.name ?? "Não atribuído" },
-          { label: "Quem documentou", value: os.user?.name },
-          { label: "Nº do patrimônio", value: os.patrimoniodoequipamento },
-          { label: "Solução técnica", value: os.solucao || "Sem detalhes técnicos", full: true },
+          { label: ta({ pt: "Técnico responsável", en: "Technician in charge" }), value: os.tecnico?.name ?? "Não atribuído" },
+          { label: ta({ pt: "Quem documentou", en: "Who documented it" }), value: os.user?.name },
+          { label: ta({ pt: "Nº do patrimônio", en: "Asset tag no." }), value: os.patrimoniodoequipamento },
+          { label: ta({ pt: "Solução técnica", en: "Technical solution" }), value: os.solucao || "Sem detalhes técnicos", full: true },
         ]}
       />
 
-      <SectionTitle>Setor (ramal)</SectionTitle>
+      <SectionTitle>{ta({ pt: "Setor (ramal)", en: "Department (extension)" })}</SectionTitle>
       {setor ? (
         <DetailGrid
           fields={[
-            { label: "Local", value: setor.cliente?.name ?? setor.instituicaoUnidade?.name },
-            { label: "Setor", value: setor.setor?.name },
-            { label: "Usuário", value: setor.usuario },
-            { label: "Ramal", value: setor.ramal },
-            { label: "Andar", value: setor.andar },
+            { label: ta({ pt: "Local", en: "Location" }), value: setor.cliente?.name ?? setor.instituicaoUnidade?.name },
+            { label: ta({ pt: "Setor", en: "Department" }), value: setor.setor?.name },
+            { label: ta({ pt: "Usuário", en: "User" }), value: setor.usuario },
+            { label: ta({ pt: "Ramal", en: "Extension" }), value: setor.ramal },
+            { label: ta({ pt: "Andar", en: "Floor" }), value: setor.andar },
           ]}
         />
       ) : (
-        <p className="text-sm text-muted">Sem informações do setor.</p>
+        <p className="text-sm text-muted">{ta({ pt: "Sem informações do setor.", en: "No department details." })}</p>
       )}
 
-      <SectionTitle>Tempo registrado pelo aplicativo</SectionTitle>
+      <SectionTitle>{ta({ pt: "Tempo registrado pelo aplicativo", en: "Time recorded by the app" })}</SectionTitle>
       {tempoError ? (
-        <p className="text-sm text-muted">Não foi possível carregar o tempo da OS.</p>
+        <p className="text-sm text-muted">{ta({ pt: "Não foi possível carregar o tempo da OS.", en: "Couldn't load the work order time." })}</p>
       ) : (
         <DetailGrid
           fields={[
-            { label: "Início", value: pending ? "Carregando..." : formatTime(tempo?.startedAt, "Sem horário") },
-            { label: "Término", value: pending ? "Carregando..." : formatTime(tempo?.endedAt, "Sem horário") },
-            { label: "Duração", value: pending ? "Carregando..." : formatDuration(tempo?.duracao) },
+            { label: ta({ pt: "Início", en: "Start" }), value: pending ? "Carregando..." : formatTime(tempo?.startedAt, "Sem horário") },
+            { label: ta({ pt: "Término", en: "End" }), value: pending ? "Carregando..." : formatTime(tempo?.endedAt, "Sem horário") },
+            { label: ta({ pt: "Duração", en: "Duration" }), value: pending ? "Carregando..." : formatDuration(tempo?.duracao) },
           ]}
         />
       )}
 
-      <SectionTitle>Atividades realizadas</SectionTitle>
+      <SectionTitle>{ta({ pt: "Atividades realizadas", en: "Activities performed" })}</SectionTitle>
       {atividades.length === 0 ? (
-        <p className="text-sm text-muted">Nenhuma atividade registrada.</p>
+        <p className="text-sm text-muted">{ta({ pt: "Nenhuma atividade registrada.", en: "No activities recorded." })}</p>
       ) : (
         <div className="flex flex-col gap-3">
           {groupAtividades(atividades.map((item) => ({ ...item.atividadePadrao, key: item.id }))).map(
