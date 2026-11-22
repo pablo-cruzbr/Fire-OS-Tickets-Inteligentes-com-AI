@@ -1,5 +1,6 @@
 "use client";
 
+import { ta } from "@/i18n/active";
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getCookie } from "cookies-next";
@@ -43,7 +44,7 @@ export default function FormularioAddTickets() {
     api
       .get("/listtipodechamado")
       .then((response) => setTipos(toArray<Option>(response.data)))
-      .catch(() => toast.error("Não foi possível carregar os tipos de chamado."));
+      .catch(() => toast.error(ta({ pt: "Não foi possível carregar os tipos de chamado.", en: "Couldn't load the ticket types." })));
     api
       .get("/users/detail")
       .then((response) => setUsuario(response.data as UsuariosProps))
@@ -59,7 +60,7 @@ export default function FormularioAddTickets() {
 
     const user_id = usuario?.id ?? userIdFromToken();
     if (!user_id) {
-      toast.error("Sessão expirada. Faça login novamente.");
+      toast.error(ta({ pt: "Sessão expirada. Faça login novamente.", en: "Session expired. Please sign in again." }));
       router.push("/AreadeUsuario");
       return;
     }
@@ -83,7 +84,7 @@ export default function FormularioAddTickets() {
       await api.post("/ordemdeservico", payload);
       router.push("/AreadeUsuario/formularioenviado");
     } catch (error) {
-      toast.error(apiErrorMessage(error, "Erro ao enviar. Verifique os campos e tente novamente."));
+      toast.error(apiErrorMessage(error, ta({ pt: "Erro ao enviar. Verifique os campos e tente novamente.", en: "Couldn't send. Check the fields and try again." })));
       setSending(false);
     }
   }
@@ -99,28 +100,28 @@ export default function FormularioAddTickets() {
         />
         <div>
           <span className="inline-flex items-center gap-2 rounded-chip border border-border-accent bg-badge px-2.5 py-1 text-xs font-medium uppercase tracking-[0.02em] text-eyebrow">
-            Novo chamado
+            {ta({ pt: "Novo chamado", en: "New ticket" })}
           </span>
           <h1 className="mt-4 text-2xl font-semibold tracking-[-0.02em] text-link sm:text-[28px]">
-            {usuario ? `Olá, ${usuario.name.split(" ")[0]}!` : "Bem-vindo ao Fire OS"}
+            {usuario ? ta({ pt: `Olá, ${usuario.name.split(" ")[0]}!`, en: `Hi, ${usuario.name.split(" ")[0]}!` }) : ta({ pt: "Bem-vindo ao Fire OS", en: "Welcome to Fire OS" })}
           </h1>
           <p className="mt-2 max-w-xl text-bodytext">
-            Descreva o problema abaixo e nossa equipe técnica entrará em contato para o atendimento.
+            {ta({ pt: "Descreva o problema abaixo e nossa equipe técnica entrará em contato para o atendimento.", en: "Describe the problem below and our technical team will get in touch to schedule the service." })}
           </p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardHeader title="Nova ordem de serviço" subtitle="Campos com * são obrigatórios." />
+          <CardHeader title={ta({ pt: "Nova ordem de serviço", en: "New work order" })} subtitle={ta({ pt: "Campos com * são obrigatórios.", en: "Fields marked with * are required." })} />
           <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-5 md:grid-cols-2">
-            <Field label="Nome do solicitante" htmlFor="name" required>
-              <Input id="name" name="name" placeholder="Nome completo" required defaultValue={usuario?.name} key={usuario?.id} />
+            <Field label={ta({ pt: "Nome do solicitante", en: "Requester name" })} htmlFor="name" required>
+              <Input id="name" name="name" placeholder={ta({ pt: "Nome completo", en: "Full name" })} required defaultValue={usuario?.name} key={usuario?.id} />
             </Field>
-            <Field label="Tipo de chamado" htmlFor="tipodeChamado_id" required>
+            <Field label={ta({ pt: "Tipo de chamado", en: "Ticket type" })} htmlFor="tipodeChamado_id" required>
               <Select id="tipodeChamado_id" name="tipodeChamado_id" required defaultValue="">
                 <option value="" disabled>
-                  {tipos.length ? "Selecione" : "Carregando..."}
+                  {tipos.length ? ta({ pt: "Selecione", en: "Select" }) : ta({ pt: "Carregando...", en: "Loading..." })}
                 </option>
                 {tipos.map((tipo) => (
                   <option key={tipo.id} value={tipo.id}>
@@ -129,36 +130,36 @@ export default function FormularioAddTickets() {
                 ))}
               </Select>
             </Field>
-            <Field label="Descrição do problema ou solicitação" htmlFor="descricao" required className="md:col-span-2">
+            <Field label={ta({ pt: "Descrição do problema ou solicitação", en: "Problem or request description" })} htmlFor="descricao" required className="md:col-span-2">
               <Textarea
                 id="descricao"
                 name="descricaodoProblemaouSolicitacao"
                 rows={5}
-                placeholder="Descreva o problema com o máximo de detalhes possível..."
+                placeholder={ta({ pt: "Descreva o problema com o máximo de detalhes possível...", en: "Describe the problem in as much detail as possible..." })}
                 required
               />
             </Field>
-            <Field label="Patrimônio do equipamento" htmlFor="patrimonio" required hint="Número da etiqueta de patrimônio.">
-              <Input id="patrimonio" name="patrimoniodoequipamento" placeholder="Ex.: 56971" required />
+            <Field label={ta({ pt: "Patrimônio do equipamento", en: "Equipment asset tag" })} htmlFor="patrimonio" required hint={ta({ pt: "Número da etiqueta de patrimônio.", en: "Asset tag number." })}>
+              <Input id="patrimonio" name="patrimoniodoequipamento" placeholder={ta({ pt: "Ex.: 56971", en: "E.g. 56971" })} required />
             </Field>
-            <Field label="Contato no local" htmlFor="contato" hint="Opcional — quem o técnico deve procurar.">
-              <Input id="contato" name="nomedoContatoaserProcuradonoLocal" placeholder="Nome do contato" />
+            <Field label={ta({ pt: "Contato no local", en: "On-site contact" })} htmlFor="contato" hint={ta({ pt: "Opcional — quem o técnico deve procurar.", en: "Optional — who the technician should look for." })}>
+              <Input id="contato" name="nomedoContatoaserProcuradonoLocal" placeholder={ta({ pt: "Nome do contato", en: "Contact name" })} />
             </Field>
             <div className="flex justify-end border-t border-border pt-5 md:col-span-2">
               <Button type="submit" size="lg" loading={sending} icon={<TbSend className="h-4 w-4" />}>
-                Enviar chamado
+                {ta({ pt: "Enviar chamado", en: "Send ticket" })}
               </Button>
             </div>
           </form>
         </Card>
 
         <Card className="h-fit">
-          <CardHeader title="Seus dados" subtitle="Vinculados automaticamente ao chamado." />
+          <CardHeader title={ta({ pt: "Seus dados", en: "Your details" })} subtitle={ta({ pt: "Vinculados automaticamente ao chamado.", en: "Linked to the ticket automatically." })} />
           <ul className="flex flex-col gap-4">
             {[
-              { icon: <TbUser />, label: "Usuário", value: usuario?.name },
-              { icon: <TbUsers />, label: "Setor", value: usuario?.setor?.name },
-              { icon: <TbBuilding />, label: "Local", value: local },
+              { icon: <TbUser />, label: ta({ pt: "Usuário", en: "User" }), value: usuario?.name },
+              { icon: <TbUsers />, label: ta({ pt: "Setor", en: "Department" }), value: usuario?.setor?.name },
+              { icon: <TbBuilding />, label: ta({ pt: "Local", en: "Location" }), value: local },
             ].map((item) => (
               <li key={item.label} className="flex items-center gap-3">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-btn border border-border-accent bg-badge text-lg text-primarytext dark:text-periwinkle-2">
