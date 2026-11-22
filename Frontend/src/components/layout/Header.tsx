@@ -5,13 +5,15 @@ import Link from "next/link";
 import { TbLogout, TbMenu2, TbSparkles, TbTicket, TbUser } from "react-icons/tb";
 import { logoutAction } from "@/actions/logout";
 import { AskPanelModal } from "@/components/ai/AskPanelModal";
+import { type Localized, useT } from "@/i18n/text";
 import type { SessionUser } from "@/lib/session";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { ThemeToggle } from "./ThemeToggle";
 
-const roleLabel: Record<string, string> = {
-  ADMIN: "Administrador",
-  TECNICO: "Técnico",
-  USER: "Usuário",
+const roleLabel: Record<string, Localized> = {
+  ADMIN: { pt: "Administrador", en: "Admin" },
+  TECNICO: { pt: "Técnico", en: "Technician" },
+  USER: { pt: "Usuário", en: "User" },
 };
 
 function initials(name: string) {
@@ -24,6 +26,8 @@ function initials(name: string) {
 }
 
 function ProfileMenu({ user }: { user: SessionUser }) {
+  const t = useT();
+  const role = roleLabel[user.role] ? t(roleLabel[user.role]) : user.role;
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -55,7 +59,7 @@ function ProfileMenu({ user }: { user: SessionUser }) {
         </span>
         <span className="hidden text-left sm:block">
           <span className="block text-sm font-semibold leading-tight text-link">{user.name}</span>
-          <span className="block text-xs text-bodytext">{roleLabel[user.role] ?? user.role}</span>
+          <span className="block text-xs text-bodytext">{role}</span>
         </span>
       </button>
 
@@ -70,7 +74,7 @@ function ProfileMenu({ user }: { user: SessionUser }) {
             </span>
             <div className="min-w-0">
               <p className="truncate font-semibold text-link">{user.name}</p>
-              <p className="text-xs text-bodytext">{roleLabel[user.role] ?? user.role}</p>
+              <p className="text-xs text-bodytext">{role}</p>
               {user.email && <p className="truncate text-xs text-muted">{user.email}</p>}
             </div>
           </div>
@@ -83,7 +87,7 @@ function ProfileMenu({ user }: { user: SessionUser }) {
             <span className="flex h-9 w-9 items-center justify-center rounded-btn bg-lightprimary text-lg text-primarytext">
               <TbTicket />
             </span>
-            Meus chamados
+            {t({ pt: "Meus chamados", en: "My tickets" })}
           </Link>
           <form action={logoutAction} className="mt-3">
             <button
@@ -92,7 +96,7 @@ function ProfileMenu({ user }: { user: SessionUser }) {
               className="flex h-10 w-full items-center justify-center gap-2 rounded-btn border border-border text-sm font-semibold text-link transition-colors hover:border-transparent hover:bg-lighterror hover:text-errortext"
             >
               <TbLogout className="h-4 w-4" />
-              Sair do sistema
+              {t({ pt: "Sair do sistema", en: "Sign out" })}
             </button>
           </form>
         </div>
@@ -107,6 +111,7 @@ type HeaderProps = {
 };
 
 export function Header({ user, onMenuClick }: HeaderProps) {
+  const t = useT();
   const [askOpen, setAskOpen] = useState(false);
 
   return (
@@ -114,7 +119,7 @@ export function Header({ user, onMenuClick }: HeaderProps) {
       <button
         type="button"
         onClick={onMenuClick}
-        aria-label="Abrir menu"
+        aria-label={t({ pt: "Abrir menu", en: "Open menu" })}
         className="flex h-10 w-10 items-center justify-center rounded-full text-xl text-link hover:bg-fill-2 xl:hidden"
       >
         <TbMenu2 />
@@ -126,8 +131,9 @@ export function Header({ user, onMenuClick }: HeaderProps) {
           className="flex h-10 items-center gap-1.5 rounded-full border border-border-accent bg-badge px-3.5 text-sm font-semibold text-eyebrow transition-colors hover:border-transparent hover:bg-primary hover:text-white sm:px-4"
         >
           <TbSparkles className="h-4 w-4" />
-          <span className="hidden sm:inline">Perguntar à Agnis</span>
+          <span className="hidden sm:inline">{t({ pt: "Perguntar à Agnis", en: "Ask Agnis" })}</span>
         </button>
+        <LanguageSwitcher className="max-sm:hidden" />
         <ThemeToggle />
         <ProfileMenu user={user} />
       </div>

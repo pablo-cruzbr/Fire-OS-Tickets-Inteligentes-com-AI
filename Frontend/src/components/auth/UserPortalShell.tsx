@@ -1,12 +1,16 @@
 import { ReactNode } from "react";
 import { TbLogout } from "react-icons/tb";
 import { logoutAction } from "@/actions/logout";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { useAppLocale, useT } from "@/i18n/text";
 import { Logo } from "@/components/brand/Logo";
-import { LANDING_URL } from "@/lib/landingUrl";
+import { landingUrl } from "@/lib/landingUrl";
 
 /** Simple top-bar layout for the end-user area (no admin sidebar), in the landing's look. */
 export function UserPortalShell({ children }: { children: ReactNode }) {
+  const t = useT();
+  const locale = useAppLocale();
   return (
     <div className="relative isolate min-h-dvh overflow-x-clip bg-background">
       {/* Faint grid + blue glow behind the top of the page. */}
@@ -18,14 +22,15 @@ export function UserPortalShell({ children }: { children: ReactNode }) {
 
       <header className="sticky top-0 z-30 border-b border-border bg-header backdrop-blur-[12px]">
         <div className="mx-auto flex h-16 max-w-5xl items-center gap-3 px-4 sm:h-[72px] sm:px-6">
-          <a href={LANDING_URL} aria-label="Fire OS, voltar para a página inicial" className="shrink-0 rounded-md text-link focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-periwinkle">
+          <a href={landingUrl(locale)} aria-label={t({ pt: "Fire OS, voltar para a página inicial", en: "Fire OS, back to the home page" })} className="shrink-0 rounded-md text-link focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-periwinkle">
             <Logo className="h-6" />
           </a>
           <span className="hidden items-center gap-2 rounded-chip border border-border-accent bg-badge px-2.5 py-1 text-xs font-medium uppercase tracking-[0.02em] text-eyebrow sm:inline-flex">
             <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-primary dark:bg-periwinkle-2" />
-            Área do usuário
+            {t({ pt: "Área do usuário", en: "Customer area" })}
           </span>
           <div className="ml-auto flex items-center gap-2">
+            <LanguageSwitcher className="max-sm:hidden" />
             <ThemeToggle />
             <form action={logoutAction}>
               <input type="hidden" name="redirectTo" value="/AreadeUsuario" />
@@ -34,7 +39,7 @@ export function UserPortalShell({ children }: { children: ReactNode }) {
                 className="flex h-9 items-center gap-2 rounded-btn border border-border px-3 text-sm font-medium text-link transition-colors hover:border-border-strong hover:bg-fill-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-periwinkle"
               >
                 <TbLogout className="h-4 w-4" />
-                <span className="hidden sm:inline">Sair</span>
+                <span className="hidden sm:inline">{t({ pt: "Sair", en: "Sign out" })}</span>
               </button>
             </form>
           </div>

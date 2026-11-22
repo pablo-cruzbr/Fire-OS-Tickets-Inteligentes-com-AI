@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { TbChevronDown, TbPointFilled } from "react-icons/tb";
+import { useT } from "@/i18n/text";
 import { cn } from "@/lib/cn";
 import type { NavItem, NavSection } from "./navigation";
 
@@ -18,6 +19,7 @@ const itemClasses =
   "flex w-full items-center gap-3 rounded-btn px-3 py-2.5 text-sm font-medium transition-all duration-200 hover:translate-x-1";
 
 function NavEntry({ item, pathname, onNavigate }: { item: NavItem; pathname: string; onNavigate: () => void }) {
+  const t = useT();
   const childActive = item.children?.some((child) => isActive(pathname, child.href)) ?? false;
   const [open, setOpen] = useState(childActive);
 
@@ -36,7 +38,7 @@ function NavEntry({ item, pathname, onNavigate }: { item: NavItem; pathname: str
         )}
       >
         <span className="text-xl">{item.icon}</span>
-        <span className="truncate">{item.label}</span>
+        <span className="truncate">{t(item.label)}</span>
       </Link>
     );
   }
@@ -55,7 +57,7 @@ function NavEntry({ item, pathname, onNavigate }: { item: NavItem; pathname: str
         )}
       >
         <span className="text-xl">{item.icon}</span>
-        <span className="flex-1 truncate text-left">{item.label}</span>
+        <span className="flex-1 truncate text-left">{t(item.label)}</span>
         <TbChevronDown className={cn("h-4 w-4 transition-transform duration-200", open && "rotate-180")} />
       </button>
       {open && (
@@ -74,7 +76,7 @@ function NavEntry({ item, pathname, onNavigate }: { item: NavItem; pathname: str
                   )}
                 >
                   <TbPointFilled className={cn("h-2.5 w-2.5", active ? "text-primarytext" : "text-muted")} />
-                  {child.label}
+                  {t(child.label)}
                 </Link>
               </li>
             );
@@ -93,6 +95,7 @@ type SidebarProps = {
 
 export function Sidebar({ sections, open, onClose }: SidebarProps) {
   const pathname = usePathname();
+  const t = useT();
 
   return (
     <>
@@ -112,20 +115,20 @@ export function Sidebar({ sections, open, onClose }: SidebarProps) {
         )}
       >
         <div className="flex h-[70px] shrink-0 items-center px-6">
-          <Link href="/dashboard" onClick={onClose} aria-label="Fire OS, painel" className="text-link">
+          <Link href="/dashboard" onClick={onClose} aria-label={t({ pt: "Fire OS, painel", en: "Fire OS, dashboard" })} className="text-link">
             <Logo className="h-6" />
           </Link>
         </div>
 
-        <nav aria-label="Menu principal" className="flex-1 overflow-y-auto px-5 pb-6">
+        <nav aria-label={t({ pt: "Menu principal", en: "Main menu" })} className="flex-1 overflow-y-auto px-5 pb-6">
           {sections.map((section) => (
-            <div key={section.heading} className="mt-4 first:mt-1">
+            <div key={t(section.heading)} className="mt-4 first:mt-1">
               <h6 className="mb-1.5 px-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">
-                {section.heading}
+                {t(section.heading)}
               </h6>
               <ul className="flex flex-col gap-0.5">
                 {section.items.map((item) => (
-                  <li key={item.label}>
+                  <li key={item.href ?? t(item.label)}>
                     <NavEntry item={item} pathname={pathname} onNavigate={onClose} />
                   </li>
                 ))}

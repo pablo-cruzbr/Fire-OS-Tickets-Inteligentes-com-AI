@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { TbMoon, TbSun } from "react-icons/tb";
+import { useT } from "@/i18n/text";
 import { cn } from "@/lib/cn";
 
 const STORAGE_KEY = "ordemnext-theme";
@@ -45,6 +46,9 @@ type ThemeToggleProps = {
  * anywhere (topbar, auth screens): it reads the current theme from <html>.
  */
 export function ThemeToggle({ className, variant = "segmented" }: ThemeToggleProps) {
+  const t = useT();
+  const darkLabel = t({ pt: "Tema escuro", en: "Dark theme" });
+  const lightLabel = t({ pt: "Tema claro", en: "Light theme" });
   const [dark, setDark] = useState(true);
 
   useEffect(() => {
@@ -66,8 +70,8 @@ export function ThemeToggle({ className, variant = "segmented" }: ThemeTogglePro
       <button
         type="button"
         onClick={() => apply(!dark)}
-        aria-label={dark ? "Usar tema claro" : "Usar tema escuro"}
-        title={dark ? "Tema claro" : "Tema escuro"}
+        aria-label={dark ? t({ pt: "Usar tema claro", en: "Use light theme" }) : t({ pt: "Usar tema escuro", en: "Use dark theme" })}
+        title={dark ? lightLabel : darkLabel}
         className={cn(
           "flex h-10 w-10 items-center justify-center rounded-full border border-border text-lg text-link transition-colors hover:border-border-strong hover:bg-fill-2",
           className,
@@ -87,15 +91,15 @@ export function ThemeToggle({ className, variant = "segmented" }: ThemeTogglePro
   return (
     <div
       role="group"
-      aria-label="Tema"
+      aria-label={t({ pt: "Tema", en: "Theme" })}
       className={cn("flex items-center gap-0.5 rounded-full border border-border bg-fill-1 p-0.5", className)}
     >
       <button
         type="button"
         onClick={() => apply(true)}
         aria-pressed={dark}
-        aria-label="Tema escuro"
-        title="Tema escuro"
+        aria-label={darkLabel}
+        title={darkLabel}
         className={option(dark)}
       >
         <TbMoon />
@@ -104,8 +108,8 @@ export function ThemeToggle({ className, variant = "segmented" }: ThemeTogglePro
         type="button"
         onClick={() => apply(false)}
         aria-pressed={!dark}
-        aria-label="Tema claro"
-        title="Tema claro"
+        aria-label={lightLabel}
+        title={lightLabel}
         className={option(!dark)}
       >
         <TbSun />

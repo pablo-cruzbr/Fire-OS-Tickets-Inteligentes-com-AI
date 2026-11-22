@@ -3,15 +3,17 @@ import { TbAlertCircle, TbCheck, TbCircleCheck } from "react-icons/tb";
 import { AuthSlide, AuthSlideshow } from "./AuthSlideshow";
 import { authLink } from "./authStyles";
 import { Logo } from "@/components/brand/Logo";
-import { LANDING_URL } from "@/lib/landingUrl";
+import { landingUrl } from "@/lib/landingUrl";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { useAppLocale, useT } from "@/i18n/text";
 
 /** Stills from the landing videos (copied to /public/auth) for each auth page. */
 const posters = {
-  telecom: { src: "/auth/ethernet-cables.jpg", label: "Internet e telecom" },
-  assistencia: { src: "/auth/laptop-repair.jpg", label: "Assistência técnica" },
-  ti: { src: "/auth/thermal-paste.jpg", label: "Suporte de TI" },
-  solar: { src: "/auth/solar-panels.jpg", label: "Energia solar" },
+  telecom: { src: "/auth/ethernet-cables.jpg", label: { pt: "Internet e telecom", en: "Internet and telecom" } },
+  assistencia: { src: "/auth/laptop-repair.jpg", label: { pt: "Assistência técnica", en: "Electronics repair" } },
+  ti: { src: "/auth/thermal-paste.jpg", label: { pt: "Suporte de TI", en: "IT support" } },
+  solar: { src: "/auth/solar-panels.jpg", label: { pt: "Energia solar", en: "Solar" } },
 } satisfies Record<string, AuthSlide>;
 
 export const authSlides = {
@@ -75,15 +77,29 @@ export function AuthShell({
   title,
   subtitle,
   eyebrow,
-  asideTitle = "Sua central de chamados, rápida e organizada",
+  asideTitle,
   asideHighlight,
-  asideText = "Abra chamados, acompanhe ordens de serviço e controle equipamentos em um só lugar.",
-  asidePoints = ["Chamados e OS em tempo real", "Agenda da equipe técnica", "OS digital com assinatura"],
+  asideText,
+  asidePoints,
   slides = authSlides.staff,
   topLink,
   children,
   footer,
 }: AuthShellProps) {
+  const t = useT();
+  const locale = useAppLocale();
+  const home = landingUrl(locale);
+  const backHome = t({ pt: "Fire OS, voltar para a página inicial", en: "Fire OS, back to the home page" });
+  asideTitle ??= t({ pt: "Sua central de chamados, rápida e organizada", en: "Your ticket hub, fast and organized" });
+  asideText ??= t({
+    pt: "Abra chamados, acompanhe ordens de serviço e controle equipamentos em um só lugar.",
+    en: "Open tickets, track work orders and manage equipment in one place.",
+  });
+  asidePoints ??= [
+    t({ pt: "Chamados e OS em tempo real", en: "Real-time tickets and work orders" }),
+    t({ pt: "Agenda da equipe técnica", en: "Technician team schedule" }),
+    t({ pt: "OS digital com assinatura", en: "Digital work order with signature" }),
+  ];
   return (
     <div className="relative isolate min-h-dvh overflow-x-clip bg-background text-bodytext lg:grid lg:grid-cols-[minmax(0,1.12fr)_minmax(0,1fr)]">
       {/* ── Brand panel (desktop) ─────────────────────────────── */}
@@ -104,8 +120,8 @@ export function AuthShell({
 
         <div className="flex items-start justify-between gap-6">
           <a
-            href={LANDING_URL}
-            aria-label="Fire OS, voltar para a página inicial"
+            href={home}
+            aria-label={backHome}
             className="rounded-md text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9CAEFF]"
           >
             <Logo className="h-7" />
@@ -118,8 +134,8 @@ export function AuthShell({
               <TbCircleCheck />
             </span>
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold">OS #48238 concluída</p>
-              <p className="truncate text-xs text-white/60">Assinada pelo responsável · agora</p>
+              <p className="truncate text-sm font-semibold">{t({ pt: "OS #48238 concluída", en: "WO #48238 completed" })}</p>
+              <p className="truncate text-xs text-white/60">{t({ pt: "Assinada pelo responsável · agora", en: "Signed by the customer · just now" })}</p>
             </div>
           </div>
         </div>
@@ -158,14 +174,15 @@ export function AuthShell({
 
         <div className="flex items-center justify-between gap-4">
           <a
-            href={LANDING_URL}
-            aria-label="Fire OS, voltar para a página inicial"
+            href={home}
+            aria-label={backHome}
             className="rounded-md text-link focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-periwinkle lg:invisible"
           >
             <Logo className="h-6" />
           </a>
           <div className="flex items-center gap-4">
             {topLink && <span className="hidden text-sm text-bodytext sm:inline">{topLink}</span>}
+            <LanguageSwitcher className="bg-card/70 backdrop-blur-[8px]" />
             <ThemeToggle className="bg-card/70 backdrop-blur-[8px]" />
           </div>
         </div>
@@ -186,7 +203,7 @@ export function AuthShell({
         </div>
 
         <p className="text-center text-xs text-muted">
-          © {new Date().getFullYear()} Fire OS · Fundado por{" "}
+          © {new Date().getFullYear()} Fire OS · {t({ pt: "Fundado por", en: "Founded by" })}{" "}
           <a href="https://pablocruz.vercel.app/" target="_blank" rel="noopener noreferrer" className={authLink}>
             Pablo Cruz
           </a>
