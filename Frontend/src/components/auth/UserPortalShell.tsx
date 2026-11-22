@@ -3,6 +3,7 @@ import { TbLogout } from "react-icons/tb";
 import { logoutAction } from "@/actions/logout";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { Logo } from "@/components/brand/Logo";
+import { LANDING_URL } from "@/lib/landingUrl";
 
 /** Simple top-bar layout for the end-user area (no admin sidebar), in the landing's look. */
 export function UserPortalShell({ children }: { children: ReactNode }) {
@@ -17,7 +18,9 @@ export function UserPortalShell({ children }: { children: ReactNode }) {
 
       <header className="sticky top-0 z-30 border-b border-border bg-header backdrop-blur-[12px]">
         <div className="mx-auto flex h-16 max-w-5xl items-center gap-3 px-4 sm:h-[72px] sm:px-6">
-          <Logo className="h-6 text-link" />
+          <a href={LANDING_URL} aria-label="Fire OS, voltar para a página inicial" className="shrink-0 rounded-md text-link focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-periwinkle">
+            <Logo className="h-6" />
+          </a>
           <span className="hidden items-center gap-2 rounded-chip border border-border-accent bg-badge px-2.5 py-1 text-xs font-medium uppercase tracking-[0.02em] text-eyebrow sm:inline-flex">
             <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-primary dark:bg-periwinkle-2" />
             Área do usuário

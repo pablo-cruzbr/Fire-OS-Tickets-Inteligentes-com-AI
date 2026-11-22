@@ -1,9 +1,9 @@
-import Link from "next/link";
 import { ReactNode } from "react";
 import { TbAlertCircle, TbCheck, TbCircleCheck } from "react-icons/tb";
 import { AuthSlide, AuthSlideshow } from "./AuthSlideshow";
 import { authLink } from "./authStyles";
 import { Logo } from "@/components/brand/Logo";
+import { LANDING_URL } from "@/lib/landingUrl";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
 /** Stills from the landing videos (copied to /public/auth) for each auth page. */
@@ -103,13 +103,13 @@ export function AuthShell({
         />
 
         <div className="flex items-start justify-between gap-6">
-          <Link
-            href="/"
-            aria-label="Fire OS, início"
+          <a
+            href={LANDING_URL}
+            aria-label="Fire OS, voltar para a página inicial"
             className="rounded-md text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9CAEFF]"
           >
             <Logo className="h-7" />
-          </Link>
+          </a>
           <div
             aria-hidden
             className="flex max-w-[290px] items-center gap-3 rounded-card border border-white/10 bg-[#000214]/80 p-3 shadow-[0_0_48px_-12px_rgba(64,93,229,0.6)] backdrop-blur-[8px]"
@@ -157,13 +157,13 @@ export function AuthShell({
         </div>
 
         <div className="flex items-center justify-between gap-4">
-          <Link
-            href="/"
-            aria-label="Fire OS, início"
+          <a
+            href={LANDING_URL}
+            aria-label="Fire OS, voltar para a página inicial"
             className="rounded-md text-link focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-periwinkle lg:invisible"
           >
             <Logo className="h-6" />
-          </Link>
+          </a>
           <div className="flex items-center gap-4">
             {topLink && <span className="hidden text-sm text-bodytext sm:inline">{topLink}</span>}
             <ThemeToggle className="bg-card/70 backdrop-blur-[8px]" />
