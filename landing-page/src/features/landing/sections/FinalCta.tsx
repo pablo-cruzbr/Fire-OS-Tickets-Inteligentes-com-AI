@@ -2,6 +2,7 @@ import { TbArrowRight } from "react-icons/tb";
 import { AutoVideo } from "@/components/media/AutoVideo";
 import { ButtonLink } from "@/components/ui";
 import { appUrl } from "@/lib/appUrl";
+import { useAppLocale, useT } from "@/i18n/text";
 import { finalCta } from "../content";
 import { videoById } from "../media";
 
@@ -9,6 +10,8 @@ const background = videoById["solar-panels"];
 
 /** Full-bleed closing CTA over a cinematic looping video (always dark-scoped: `dark` on the root). */
 export function FinalCta() {
+  const t = useT();
+  const locale = useAppLocale();
   return (
     <section aria-labelledby="final-cta-title" className="dark relative isolate overflow-hidden bg-background">
       <AutoVideo src={background.src} poster={background.poster} mode="inview" className="absolute inset-0 -z-10">
@@ -22,21 +25,21 @@ export function FinalCta() {
 
       <div className="container-page flex min-h-[560px] flex-col items-center justify-center py-28 text-center sm:min-h-[680px] sm:py-36">
         <h2 id="final-cta-title" className="max-w-3xl text-[32px] font-semibold leading-[1.15] text-white sm:text-5xl lg:text-[56px]">
-          {finalCta.title}
+          {t(finalCta.title)}
         </h2>
-        <p className="mt-5 max-w-xl text-base leading-normal text-bodytext sm:text-xl">{finalCta.text}</p>
+        <p className="mt-5 max-w-xl text-base leading-normal text-bodytext sm:text-xl">{t(finalCta.text)}</p>
         <div className="mt-10 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
           <ButtonLink
-            href={appUrl(finalCta.primary.path)}
+            href={appUrl(finalCta.primary.path, locale)}
             variant="primary"
             size="xl"
             iconRight={<TbArrowRight aria-hidden />}
             className="w-full sm:w-auto sm:min-w-[240px]"
           >
-            {finalCta.primary.label}
+            {t(finalCta.primary.label)}
           </ButtonLink>
-          <ButtonLink href={appUrl(finalCta.secondary.path)} variant="secondary" size="xl" className="w-full sm:w-auto">
-            {finalCta.secondary.label}
+          <ButtonLink href={appUrl(finalCta.secondary.path, locale)} variant="secondary" size="xl" className="w-full sm:w-auto">
+            {t(finalCta.secondary.label)}
           </ButtonLink>
         </div>
       </div>

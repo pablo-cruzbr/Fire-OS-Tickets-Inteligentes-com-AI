@@ -1,8 +1,10 @@
 import { SectionHeading } from "@/components/ui";
+import { useT } from "@/i18n/text";
 import { workflow, workflowSection } from "../content";
 
 /** "Como funciona": the six workflow steps as a stepper — horizontal on desktop, vertical on mobile. */
 export function Workflow() {
+  const t = useT();
   return (
     <section id="como-funciona" aria-labelledby="como-funciona-title" className="relative overflow-hidden py-24 sm:py-32">
       <div
@@ -15,7 +17,7 @@ export function Workflow() {
         className="pointer-events-none absolute left-1/2 top-0 h-64 w-[80%] -translate-x-1/2 bg-[radial-gradient(50%_60%_at_50%_0%,rgba(28,58,190,0.35),transparent)]"
       />
       <div className="container-page relative">
-        <SectionHeading id="como-funciona-title" eyebrow={workflowSection.eyebrow} title={workflowSection.title} />
+        <SectionHeading id="como-funciona-title" eyebrow={t(workflowSection.eyebrow)} title={t(workflowSection.title)} />
 
         <ol className="relative mt-14 grid grid-cols-1 gap-8 sm:mt-20 lg:grid-cols-6 lg:gap-6">
           {/* Connecting hairline: vertical on mobile, horizontal through the nodes on desktop. */}
@@ -25,7 +27,7 @@ export function Workflow() {
           />
 
           {workflow.map((step, index) => (
-            <li key={step.title} className="relative flex gap-5 lg:flex-col lg:items-center lg:gap-0 lg:text-center">
+            <li key={index} className="relative flex gap-5 lg:flex-col lg:items-center lg:gap-0 lg:text-center">
               {index < workflow.length - 1 ? (
                 <span
                   aria-hidden
@@ -43,8 +45,8 @@ export function Workflow() {
                 <span aria-hidden className="flex h-9 w-9 items-center justify-center rounded-btn border border-border-accent bg-badge text-lg text-periwinkle">
                   {step.icon}
                 </span>
-                <h3 className="mt-1 text-lg font-semibold text-link">{step.title}</h3>
-                <p className="text-sm leading-normal text-bodytext">{step.text}</p>
+                <h3 className="mt-1 text-lg font-semibold text-link">{t(step.title)}</h3>
+                <p className="text-sm leading-normal text-bodytext">{t(step.text)}</p>
               </div>
             </li>
           ))}

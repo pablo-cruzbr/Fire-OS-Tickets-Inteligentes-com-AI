@@ -1,3 +1,5 @@
+import type { Text } from "@/i18n/text";
+
 /*
  * Registry of the landing's looping background videos (public/videos).
  * Posters are frames grabbed at ~1s (public/videos/posters, 1280x720 JPG).
@@ -9,10 +11,10 @@ export type LandingVideo = {
   id: LandingVideoId;
   src: string;
   poster: string;
-  /** Short pt-BR description of what the clip shows (usable as aria-label). */
-  title: string;
+  /** Short description of what the clip shows (usable as aria-label). */
+  title: Text;
   /** Segment label, matching `segments[].short` in ./segments. */
-  segment: string;
+  segment: Text;
   /** Matching `segments[].id` in ./segments. */
   segmentId: string;
 };
@@ -22,32 +24,32 @@ export const videos: LandingVideo[] = [
     id: "ethernet-cables",
     src: "/videos/ethernet-cables.mp4",
     poster: "/videos/posters/ethernet-cables.jpg",
-    title: "Técnico conectando cabos de rede em um rack",
-    segment: "Internet e telecom",
+    title: { pt: "Técnico conectando cabos de rede em um rack", en: "Technician connecting network cables in a rack" },
+    segment: { pt: "Internet e telecom", en: "Internet and telecom" },
     segmentId: "telecom",
   },
   {
     id: "laptop-repair",
     src: "/videos/laptop-repair.mp4",
     poster: "/videos/posters/laptop-repair.jpg",
-    title: "Reparo de placa eletrônica na bancada",
-    segment: "Assistência técnica",
+    title: { pt: "Reparo de placa eletrônica na bancada", en: "Circuit board repair on the bench" },
+    segment: { pt: "Assistência técnica", en: "Electronics repair" },
     segmentId: "assistencia",
   },
   {
     id: "thermal-paste",
     src: "/videos/thermal-paste.mp4",
     poster: "/videos/posters/thermal-paste.jpg",
-    title: "Técnico aplicando pasta térmica em uma placa-mãe",
-    segment: "Suporte de TI",
+    title: { pt: "Técnico aplicando pasta térmica em uma placa-mãe", en: "Technician applying thermal paste to a motherboard" },
+    segment: { pt: "Suporte de TI", en: "IT support" },
     segmentId: "helpdesk",
   },
   {
     id: "solar-panels",
     src: "/videos/solar-panels.mp4",
     poster: "/videos/posters/solar-panels.jpg",
-    title: "Técnico instalando painéis solares em um telhado",
-    segment: "Energia solar",
+    title: { pt: "Técnico instalando painéis solares em um telhado", en: "Technician installing solar panels on a roof" },
+    segment: { pt: "Energia solar", en: "Solar" },
     segmentId: "solar",
   },
 ];
@@ -61,15 +63,15 @@ export const videoById = Object.fromEntries(videos.map((video) => [video.id, vid
 export const dashboardTour = {
   src: "/videos/dashboard-tour.webm",
   poster: "/videos/dashboard-tour.png",
-  title: "Tour pelo painel do Fire OS",
-} as const;
+  title: { pt: "Tour pelo painel do Fire OS", en: "Tour of the Fire OS dashboard" },
+};
 
 /** Agnis panel recording (cropped to the chat), shown in the "Recursos" bento. */
 export const agnisDemo = {
   src: "/videos/agnis-ai.webm",
   poster: "/videos/agnis-ai.png",
-  title: "Agnis respondendo perguntas sobre chamados e técnicos",
-} as const;
+  title: { pt: "Agnis respondendo perguntas sobre chamados e técnicos", en: "Agnis answering questions about tickets and technicians" },
+};
 
 /**
  * Screen recording of the mobile app (portrait, recorded separately). The
@@ -79,5 +81,5 @@ export const agnisDemo = {
 export const appDemo = {
   src: "/videos/app-os.webm",
   poster: "/videos/app-os.png",
-  title: "Técnico preenchendo uma OS no app Fire OS",
-} as const;
+  title: { pt: "Técnico preenchendo uma OS no app Fire OS", en: "Technician filling in a work order in the Fire OS app" },
+};

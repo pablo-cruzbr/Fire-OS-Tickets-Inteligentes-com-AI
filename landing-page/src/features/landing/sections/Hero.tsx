@@ -14,19 +14,23 @@ import { AutoVideo } from "@/components/media/AutoVideo";
 import { hero } from "@/features/landing/content";
 import { videos } from "@/features/landing/media";
 import { appUrl } from "@/lib/appUrl";
+import { useAppLocale, useT } from "@/i18n/text";
 import { cn } from "@/lib/cn";
 
 const INTERVAL_MS = 6000;
 
 /** Splits the hero title around `hero.highlight` so it can get text-gradient. */
 function HeroTitle() {
-  const start = hero.title.indexOf(hero.highlight);
-  if (start < 0) return <>{hero.title}</>;
+  const t = useT();
+  const title = t(hero.title);
+  const highlight = t(hero.highlight);
+  const start = title.indexOf(highlight);
+  if (start < 0) return <>{title}</>;
   return (
     <>
-      {hero.title.slice(0, start)}
-      <span className="text-gradient">{hero.highlight}</span>
-      {hero.title.slice(start + hero.highlight.length)}
+      {title.slice(0, start)}
+      <span className="text-gradient">{highlight}</span>
+      {title.slice(start + highlight.length)}
     </>
   );
 }
@@ -41,6 +45,8 @@ const roundButton =
  * presses pause, and never runs under prefers-reduced-motion.
  */
 export function Hero() {
+  const t = useT();
+  const locale = useAppLocale();
   const count = videos.length;
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -74,7 +80,7 @@ export function Hero() {
     <section
       id="inicio"
       aria-roledescription="carousel"
-      aria-label="Fire OS em diferentes segmentos de serviço"
+      aria-label={t({ pt: "Fire OS em diferentes segmentos de serviço", en: "Fire OS across different service industries" })}
       className="dark relative isolate flex flex-col overflow-hidden bg-background min-h-[max(640px,min(calc(100svh-64px),820px))] lg:min-h-[max(640px,min(calc(100svh-84px),820px))]"
       onPointerEnter={(event) => event.pointerType === "mouse" && setHovered(true)}
       onPointerLeave={() => setHovered(false)}
@@ -103,7 +109,7 @@ export function Hero() {
               key={video.id}
               role="group"
               aria-roledescription="slide"
-              aria-label={`${index + 1} de ${count}: ${video.segment}`}
+              aria-label={`${index + 1} ${t({ pt: "de", en: "of" })} ${count}: ${t(video.segment)}`}
               aria-hidden={!isActive}
               className={cn(
                 "absolute inset-0 transition-opacity duration-1000 ease-out",
@@ -116,7 +122,7 @@ export function Hero() {
                 mode="manual"
                 playing={isActive && !paused}
                 preload={isActive ? "auto" : index === next ? "metadata" : "none"}
-                label={video.title}
+                label={t(video.title)}
                 className="absolute inset-0"
               />
             </div>
@@ -136,7 +142,7 @@ export function Hero() {
           <button
             type="button"
             onClick={() => go(active - 1)}
-            aria-label="Slide anterior"
+            aria-label={t({ pt: "Slide anterior", en: "Previous slide" })}
             className={cn(roundButton, "pointer-events-auto flex h-11 w-11")}
           >
             <TbChevronLeft aria-hidden />
@@ -144,7 +150,7 @@ export function Hero() {
           <button
             type="button"
             onClick={() => go(active + 1)}
-            aria-label="Próximo slide"
+            aria-label={t({ pt: "Próximo slide", en: "Next slide" })}
             className={cn(roundButton, "pointer-events-auto flex h-11 w-11")}
           >
             <TbChevronRight aria-hidden />
@@ -156,7 +162,7 @@ export function Hero() {
       <div className="container-page relative flex flex-1 flex-col justify-end pb-6 pt-28 sm:pb-8 lg:pt-40">
         <div className="grid items-end gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-12">
           <div className="flex animate-fade-up flex-col items-start gap-5">
-            <Eyebrow>{hero.eyebrow}</Eyebrow>
+            <Eyebrow>{t(hero.eyebrow)}</Eyebrow>
             <h1 className="text-[32px] text-white sm:text-5xl lg:text-[56px]">
               <HeroTitle />
             </h1>
@@ -164,29 +170,29 @@ export function Hero() {
 
           <div className="flex animate-fade-up flex-col gap-6 [animation-delay:120ms]">
             <p className="text-base leading-normal text-white/80 sm:text-xl">
-              <strong className="font-semibold text-white">{hero.leadStrong}</strong> {hero.lead}
+              <strong className="font-semibold text-white">{t(hero.leadStrong)}</strong> {t(hero.lead)}
             </p>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
               <ButtonLink
-                href={appUrl(hero.primaryCta.path)}
+                href={appUrl(hero.primaryCta.path, locale)}
                 size="xl"
                 iconRight={<TbArrowRight className="h-5 w-5" aria-hidden />}
               >
-                {hero.primaryCta.label}
+                {t(hero.primaryCta.label)}
               </ButtonLink>
               <ButtonLink
-                href={appUrl(hero.secondaryCta.path)}
+                href={appUrl(hero.secondaryCta.path, locale)}
                 size="xl"
                 variant="secondary"
                 className="text-center sm:max-w-[16rem] sm:leading-tight"
               >
-                {hero.secondaryCta.label}
+                {t(hero.secondaryCta.label)}
               </ButtonLink>
             </div>
             <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-white/75">
-              {hero.checks.map((item) => (
-                <li key={item} className="flex items-center gap-1.5">
-                  <TbCheck className="text-accent-2" aria-hidden /> {item}
+              {hero.checks.map((item, index) => (
+                <li key={index} className="flex items-center gap-1.5">
+                  <TbCheck className="text-accent-2" aria-hidden /> {t(item)}
                 </li>
               ))}
             </ul>
@@ -200,15 +206,15 @@ export function Hero() {
             className="inline-flex min-w-0 items-center gap-2 rounded-chip border border-border bg-glass px-3 py-1.5 text-xs font-medium uppercase tracking-[0.02em] text-eyebrow backdrop-blur-[8px]"
           >
             <span aria-hidden className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent-2" />
-            <span className="sr-only">Segmento em destaque: </span>
-            <span className="truncate">{current.segment}</span>
+            <span className="sr-only">{t({ pt: "Segmento em destaque: ", en: "Featured industry: " })}</span>
+            <span className="truncate">{t(current.segment)}</span>
           </p>
 
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
             <button
               type="button"
               onClick={() => go(active - 1)}
-              aria-label="Slide anterior"
+              aria-label={t({ pt: "Slide anterior", en: "Previous slide" })}
               className={cn(roundButton, "hidden h-9 w-9 sm:flex lg:hidden")}
             >
               <TbChevronLeft aria-hidden />
@@ -219,7 +225,7 @@ export function Hero() {
                   key={video.id}
                   type="button"
                   onClick={() => go(index)}
-                  aria-label={`Ir para o slide ${index + 1}: ${video.segment}`}
+                  aria-label={`${t({ pt: "Ir para o slide", en: "Go to slide" })} ${index + 1}: ${t(video.segment)}`}
                   aria-current={index === active ? "true" : undefined}
                   className="group flex h-9 w-6 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-accent-2"
                 >
@@ -236,7 +242,7 @@ export function Hero() {
             <button
               type="button"
               onClick={() => go(active + 1)}
-              aria-label="Próximo slide"
+              aria-label={t({ pt: "Próximo slide", en: "Next slide" })}
               className={cn(roundButton, "hidden h-9 w-9 sm:flex lg:hidden")}
             >
               <TbChevronRight aria-hidden />
@@ -244,7 +250,11 @@ export function Hero() {
             <button
               type="button"
               onClick={() => setPaused((value) => !value)}
-              aria-label={paused ? "Retomar vídeos e troca automática" : "Pausar vídeos e troca automática"}
+              aria-label={
+                paused
+                  ? t({ pt: "Retomar vídeos e troca automática", en: "Resume videos and autoplay" })
+                  : t({ pt: "Pausar vídeos e troca automática", en: "Pause videos and autoplay" })
+              }
               aria-pressed={paused}
               className={cn(roundButton, "ml-1 flex h-9 w-9 text-sm")}
             >

@@ -8,12 +8,29 @@ import { LaptopFrame } from "@/components/media/LaptopFrame";
 import { heroNotes } from "@/features/landing/content";
 import { dashboardTour } from "@/features/landing/media";
 import { cn } from "@/lib/cn";
+import { useT } from "@/i18n/text";
 
 const tourPoints = [
-  { icon: <TbChartBar />, title: "Painel com indicadores", text: "Chamados, OS e atendimentos do dia em um olhar." },
-  { icon: <TbTicket />, title: "Chamados e OS", text: "Abertura, prioridade, técnico e status de cada ordem." },
-  { icon: <TbCalendarEvent />, title: "Calendário técnico", text: "A agenda da equipe com reagendamento por arrastar." },
-  { icon: <TbSparkles />, title: "Agnis, assistente de IA", text: "Pergunte e receba o próximo passo sugerido." },
+  {
+    icon: <TbChartBar />,
+    title: { pt: "Painel com indicadores", en: "Dashboard with KPIs" },
+    text: { pt: "Chamados, OS e atendimentos do dia em um olhar.", en: "Today's tickets, work orders and jobs at a glance." },
+  },
+  {
+    icon: <TbTicket />,
+    title: { pt: "Chamados e OS", en: "Tickets and work orders" },
+    text: { pt: "Abertura, prioridade, técnico e status de cada ordem.", en: "Opening, priority, technician and status of every order." },
+  },
+  {
+    icon: <TbCalendarEvent />,
+    title: { pt: "Calendário técnico", en: "Technician calendar" },
+    text: { pt: "A agenda da equipe com reagendamento por arrastar.", en: "The team schedule with drag-to-reschedule." },
+  },
+  {
+    icon: <TbSparkles />,
+    title: { pt: "Agnis, assistente de IA", en: "Agnis, AI assistant" },
+    text: { pt: "Pergunte e receba o próximo passo sugerido.", en: "Ask and get the suggested next step." },
+  },
 ];
 
 /**
@@ -169,6 +186,7 @@ function useLaptopMontage() {
  * The laptop itself stays space-grey in both themes.
  */
 export function DashboardTour() {
+  const tr = useT();
   const { screenReady, trackRef, headingRef, liftRef, deviceRef, lidRef, notesRef } = useLaptopMontage();
 
   return (
@@ -234,10 +252,13 @@ export function DashboardTour() {
           >
             <SectionHeading
               id="produto-titulo"
-              eyebrow="Conheça o painel"
+              eyebrow={tr({ pt: "Conheça o painel", en: "Meet the dashboard" })}
               eyebrowIcon={<TbLayoutDashboard />}
-              title="Todo o seu atendimento em um só painel"
-              subtitle="Chamados, ordens de serviço, agenda da equipe e indicadores lado a lado, do jeito que a sua operação trabalha."
+              title={tr({ pt: "Todo o seu atendimento em um só painel", en: "All your service work in one dashboard" })}
+              subtitle={tr({
+                pt: "Chamados, ordens de serviço, agenda da equipe e indicadores lado a lado, do jeito que a sua operação trabalha.",
+                en: "Tickets, work orders, team schedule and KPIs side by side, the way your operation works.",
+              })}
             />
           </div>
 
@@ -253,7 +274,7 @@ export function DashboardTour() {
                   mode="inview"
                   ready={screenReady}
                   showToggle
-                  label={dashboardTour.title}
+                  label={tr(dashboardTour.title)}
                   className="aspect-[16/10]"
                   videoClassName="object-top"
                 />
@@ -267,7 +288,7 @@ export function DashboardTour() {
               >
                 {heroNotes.map((note, index) => (
                   <li
-                    key={note.title}
+                    key={index}
                     className={cn(
                       "glass absolute flex w-56 items-start gap-3 rounded-card p-3.5 shadow-[0_20px_40px_-12px_rgba(11,16,51,0.22)] dark:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.6)] animate-[dashboard-tour-float_6s_ease-in-out_infinite]",
                       notePlacement[index],
@@ -277,8 +298,8 @@ export function DashboardTour() {
                       {note.icon}
                     </span>
                     <span className="min-w-0">
-                      <span className="block truncate text-sm font-semibold text-link">{note.title}</span>
-                      <span className="mt-0.5 block truncate text-xs text-bodytext">{note.text}</span>
+                      <span className="block truncate text-sm font-semibold text-link">{tr(note.title)}</span>
+                      <span className="mt-0.5 block truncate text-xs text-bodytext">{tr(note.text)}</span>
                     </span>
                   </li>
                 ))}
@@ -290,14 +311,14 @@ export function DashboardTour() {
 
       <div className="container-page">
         <ul className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 lg:mt-8 lg:grid-cols-4">
-          {tourPoints.map((point) => (
-            <li key={point.title} className="flex gap-3 rounded-card border border-border bg-glass p-5 backdrop-blur-[8px] dark:bg-fill-1">
+          {tourPoints.map((point, index) => (
+            <li key={index} className="flex gap-3 rounded-card border border-border bg-glass p-5 backdrop-blur-[8px] dark:bg-fill-1">
               <span aria-hidden className="mt-0.5 flex text-xl text-periwinkle">
                 {point.icon}
               </span>
               <span>
-                <span className="block text-base font-semibold text-link">{point.title}</span>
-                <span className="mt-1 block text-sm leading-normal text-bodytext">{point.text}</span>
+                <span className="block text-base font-semibold text-link">{tr(point.title)}</span>
+                <span className="mt-1 block text-sm leading-normal text-bodytext">{tr(point.text)}</span>
               </span>
             </li>
           ))}

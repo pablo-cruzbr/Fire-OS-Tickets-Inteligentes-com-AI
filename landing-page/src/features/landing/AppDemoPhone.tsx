@@ -4,6 +4,7 @@ import Image from "next/image";
 import { TbCamera, TbCheck, TbMapPin, TbPlayerPauseFilled } from "react-icons/tb";
 import { AutoVideo } from "@/components/media/AutoVideo";
 import { PhoneFrame } from "@/components/media/PhoneFrame";
+import { useT } from "@/i18n/text";
 import { appDemo } from "./media";
 
 /** True when `publicPath` (e.g. "/videos/app-os.webm") exists under public/. Runs at build time for static pages. */
@@ -32,6 +33,7 @@ type AppDemoPhoneProps = {
  * recording exists.
  */
 export function AppDemoPhone({ className, width, priority = false }: AppDemoPhoneProps) {
+  const t = useT();
   const hasVideo = publicFileExists(appDemo.src);
   const hasPoster = publicFileExists(appDemo.poster);
 
@@ -43,7 +45,7 @@ export function AppDemoPhone({ className, width, priority = false }: AppDemoPhon
           poster={hasPoster ? appDemo.poster : undefined}
           mode="inview"
           preload="metadata"
-          label={appDemo.title}
+          label={t(appDemo.title)}
           showToggle
           className="h-full w-full"
           videoClassName="h-full w-full object-cover object-top"
@@ -51,7 +53,7 @@ export function AppDemoPhone({ className, width, priority = false }: AppDemoPhon
       ) : hasPoster ? (
         <Image
           src={appDemo.poster}
-          alt={appDemo.title}
+          alt={t(appDemo.title)}
           fill
           priority={priority}
           sizes="320px"
@@ -70,10 +72,11 @@ export function AppDemoPhone({ className, width, priority = false }: AppDemoPhon
  * device. Colours follow the app (navy header, purple actions).
  */
 function AppScreenPlaceholder() {
+  const t = useT();
   return (
     <div
       role="img"
-      aria-label="Tela do app Fire OS com uma ordem de serviço em atendimento"
+      aria-label={t({ pt: "Tela do app Fire OS com uma ordem de serviço em atendimento", en: "Fire OS app screen with a work order in progress" })}
       className="flex h-full w-full flex-col bg-[#f3f4f9] text-[3.6cqw] leading-tight text-[#0f1431]"
     >
       {/* Header with status bar */}
@@ -91,10 +94,10 @@ function AppScreenPlaceholder() {
             </span>
           </span>
         </div>
-        <p className="mt-[7cqw] text-[3.2cqw] text-white/65">Olá, Carlos</p>
+        <p className="mt-[7cqw] text-[3.2cqw] text-white/65">{t({ pt: "Olá, Carlos", en: "Hi, Carlos" })}</p>
         <div className="mt-[1cqw] flex items-center justify-between">
-          <p className="text-[6cqw] font-semibold">Minhas OS</p>
-          <span className="rounded-full bg-white/15 px-[2.6cqw] py-[1cqw] text-[3cqw] font-medium">3 hoje</span>
+          <p className="text-[6cqw] font-semibold">{t({ pt: "Minhas OS", en: "My work orders" })}</p>
+          <span className="rounded-full bg-white/15 px-[2.6cqw] py-[1cqw] text-[3cqw] font-medium">{t({ pt: "3 hoje", en: "3 today" })}</span>
         </div>
       </div>
 
@@ -102,19 +105,19 @@ function AppScreenPlaceholder() {
       <div className="-mt-[4cqw] flex flex-1 flex-col gap-[3cqw] px-[4cqw] pb-[4cqw]">
         <div className="rounded-[4cqw] bg-white p-[4cqw] shadow-[0_1cqw_3cqw_rgba(15,20,49,0.08)]">
           <div className="flex items-center justify-between">
-            <span className="text-[3cqw] font-semibold text-[#4e3182]">OS #1042</span>
+            <span className="text-[3cqw] font-semibold text-[#4e3182]">{t({ pt: "OS", en: "WO" })} #1042</span>
             <span className="flex items-center gap-[1cqw] rounded-full bg-[#27ae60]/12 px-[2.2cqw] py-[0.8cqw] text-[2.7cqw] font-semibold text-[#1e874b]">
               <span className="h-[1.6cqw] w-[1.6cqw] rounded-full bg-[#27ae60]" />
-              Em atendimento
+              {t({ pt: "Em atendimento", en: "In service" })}
             </span>
           </div>
-          <p className="mt-[2cqw] text-[4.4cqw] font-semibold">Clínica Vida Nova</p>
+          <p className="mt-[2cqw] text-[4.4cqw] font-semibold">{t({ pt: "Clínica Vida Nova", en: "Vida Nova Clinic" })}</p>
           <p className="mt-[1cqw] flex items-center gap-[1cqw] text-[3cqw] text-[#6c757d]">
             <TbMapPin aria-hidden className="shrink-0" /> Av. Paulista, 1578 · 2,4 km
           </p>
           <div className="mt-[3cqw] flex items-center justify-between rounded-[3cqw] bg-[#f3f4f9] px-[3cqw] py-[2.4cqw]">
             <div>
-              <p className="text-[2.6cqw] text-[#6c757d]">Tempo de atendimento</p>
+              <p className="text-[2.6cqw] text-[#6c757d]">{t({ pt: "Tempo de atendimento", en: "Service time" })}</p>
               <p className="text-[6cqw] font-semibold tabular-nums tracking-tight">00:42:17</p>
             </div>
             <span className="flex h-[9cqw] w-[9cqw] items-center justify-center rounded-full bg-[#4e3182] text-[4cqw] text-white">
@@ -125,7 +128,7 @@ function AppScreenPlaceholder() {
 
         {/* Photos */}
         <div className="rounded-[4cqw] bg-white p-[4cqw] shadow-[0_1cqw_3cqw_rgba(15,20,49,0.08)]">
-          <p className="text-[3.2cqw] font-semibold">Fotos do atendimento</p>
+          <p className="text-[3.2cqw] font-semibold">{t({ pt: "Fotos do atendimento", en: "Job photos" })}</p>
           <div className="mt-[2.4cqw] grid grid-cols-3 gap-[2cqw]">
             <div className="relative aspect-square overflow-hidden rounded-[2.4cqw]">
               <Image src="/app/tecnico-campo.jpg" alt="" fill sizes="96px" className="object-cover" />
@@ -139,14 +142,14 @@ function AppScreenPlaceholder() {
 
         {/* Checklist */}
         <div className="rounded-[4cqw] bg-white p-[4cqw] shadow-[0_1cqw_3cqw_rgba(15,20,49,0.08)]">
-          <p className="text-[3.2cqw] font-semibold">Checklist do serviço</p>
+          <p className="text-[3.2cqw] font-semibold">{t({ pt: "Checklist do serviço", en: "Service checklist" })}</p>
           <ul className="mt-[2cqw] flex flex-col gap-[1.8cqw] text-[3cqw]">
             {[
-              { item: "Teste do equipamento", done: true },
-              { item: "Limpeza e organização", done: true },
-              { item: "Orientação ao cliente", done: false },
+              { item: { pt: "Teste do equipamento", en: "Equipment test" }, done: true },
+              { item: { pt: "Limpeza e organização", en: "Cleanup" }, done: true },
+              { item: { pt: "Orientação ao cliente", en: "Customer walkthrough" }, done: false },
             ].map(({ item, done }) => (
-              <li key={item} className="flex items-center gap-[2cqw]">
+              <li key={item.pt} className="flex items-center gap-[2cqw]">
                 <span
                   className={
                     done
@@ -156,7 +159,7 @@ function AppScreenPlaceholder() {
                 >
                   {done ? <TbCheck aria-hidden /> : null}
                 </span>
-                <span className={done ? "text-[#6c757d] line-through" : undefined}>{item}</span>
+                <span className={done ? "text-[#6c757d] line-through" : undefined}>{t(item)}</span>
               </li>
             ))}
           </ul>
@@ -164,7 +167,7 @@ function AppScreenPlaceholder() {
 
         {/* Signature */}
         <div className="rounded-[4cqw] bg-white p-[4cqw] shadow-[0_1cqw_3cqw_rgba(15,20,49,0.08)]">
-          <p className="text-[3.2cqw] font-semibold">Assinatura do cliente</p>
+          <p className="text-[3.2cqw] font-semibold">{t({ pt: "Assinatura do cliente", en: "Customer signature" })}</p>
           <svg viewBox="0 0 200 44" className="mt-[1.6cqw] h-[10cqw] w-full text-[#0f1431]" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
             <path d="M8 30 C 18 6, 26 6, 24 28 S 40 40, 48 18 S 60 4, 62 26 C 64 36, 74 34, 82 22 C 88 14, 94 16, 96 26 C 98 34, 110 30, 118 20 C 124 12, 132 14, 130 24 C 128 32, 140 34, 150 26" />
             <path d="M6 40 H 194" stroke="#bdc3c7" strokeWidth={1} strokeDasharray="4 4" />
@@ -172,7 +175,7 @@ function AppScreenPlaceholder() {
         </div>
 
         <span className="mt-auto flex items-center justify-center gap-[1.6cqw] rounded-[3cqw] bg-[#4e3182] py-[3.2cqw] text-[3.6cqw] font-semibold text-white">
-          <TbCheck aria-hidden /> Concluir OS
+          <TbCheck aria-hidden /> {t({ pt: "Concluir OS", en: "Complete work order" })}
         </span>
       </div>
     </div>

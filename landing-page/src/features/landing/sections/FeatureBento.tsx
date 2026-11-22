@@ -1,5 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { useT } from "@/i18n/text";
 import { TbArrowRight, TbArrowUpRight, TbCalendarEvent, TbCamera, TbClockPlay, TbDeviceMobile, TbSignature } from "react-icons/tb";
 import { AutoVideo } from "@/components/media/AutoVideo";
 import { SectionHeading } from "@/components/ui";
@@ -8,14 +9,15 @@ import { AppDemoPhone } from "../AppDemoPhone";
 import { agnisDemo } from "../media";
 
 const appHighlights = [
-  { icon: <TbCalendarEvent />, label: "Agenda do dia" },
-  { icon: <TbClockPlay />, label: "Timer da OS" },
-  { icon: <TbCamera />, label: "Fotos" },
-  { icon: <TbSignature />, label: "Assinatura" },
+  { icon: <TbCalendarEvent />, label: { pt: "Agenda do dia", en: "Today's schedule" } },
+  { icon: <TbClockPlay />, label: { pt: "Timer da OS", en: "Work order timer" } },
+  { icon: <TbCamera />, label: { pt: "Fotos", en: "Photos" } },
+  { icon: <TbSignature />, label: { pt: "Assinatura", en: "Signature" } },
 ];
 
 /** Real recording of the Agnis panel, cropped to the chat, inside a glass frame. */
 function AgnisDemo() {
+  const t = useT();
   return (
     <div className="dark relative mt-8 overflow-hidden rounded-card border border-border bg-background">
       <AutoVideo
@@ -23,7 +25,7 @@ function AgnisDemo() {
         poster={agnisDemo.poster}
         mode="inview"
         preload="metadata"
-        label={agnisDemo.title}
+        label={t(agnisDemo.title)}
         showToggle
         className="aspect-[700/780] w-full"
         videoClassName="h-full w-full object-cover object-top"
@@ -34,10 +36,11 @@ function AgnisDemo() {
 
 /** "Recursos": bento with two large tiles (Agnis, field-technician app) and the 12 feature tiles. */
 export function FeatureBento() {
+  const t = useT();
   return (
     <section id="recursos" aria-labelledby="recursos-title" className="relative overflow-hidden py-24 sm:py-32">
       <div className="container-page relative">
-        <SectionHeading id="recursos-title" eyebrow={featuresSection.eyebrow} title={featuresSection.title} />
+        <SectionHeading id="recursos-title" eyebrow={t(featuresSection.eyebrow)} title={t(featuresSection.title)} />
 
         <div className="mt-12 grid grid-cols-1 gap-4 sm:mt-16 lg:grid-cols-2">
           {/* Agnis tile */}
@@ -48,13 +51,13 @@ export function FeatureBento() {
               <span className="flex h-12 w-12 items-center justify-center rounded-btn border border-border-accent bg-badge text-2xl text-periwinkle">
                 {agnis.icon}
               </span>
-              <h3 className="mt-5 text-2xl font-semibold text-link sm:text-[32px]">{agnis.title}</h3>
-              <p className="mt-3 max-w-md text-base leading-normal text-bodytext sm:text-lg">{agnis.text}</p>
+              <h3 className="mt-5 text-2xl font-semibold text-link sm:text-[32px]">{t(agnis.title)}</h3>
+              <p className="mt-3 max-w-md text-base leading-normal text-bodytext sm:text-lg">{t(agnis.text)}</p>
               <Link
                 href="/agnis"
                 className="group/agnis mt-5 inline-flex items-center gap-1.5 rounded-btn text-sm font-semibold text-link focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-2"
               >
-                Conhecer a Agnis
+                {t({ pt: "Conhecer a Agnis", en: "Meet Agnis" })}
                 <TbArrowRight aria-hidden className="text-periwinkle transition-transform duration-200 group-hover/agnis:translate-x-0.5" />
               </Link>
               <AgnisDemo />
@@ -80,28 +83,31 @@ export function FeatureBento() {
               <span className="flex h-12 w-12 items-center justify-center rounded-btn border border-border-accent bg-badge text-2xl text-periwinkle backdrop-blur-[8px]">
                 <TbDeviceMobile />
               </span>
-              <h3 className="mt-5 text-2xl font-semibold text-white sm:text-[32px]">App do técnico em campo</h3>
+              <h3 className="mt-5 text-2xl font-semibold text-white sm:text-[32px]">{t({ pt: "App do técnico em campo", en: "Field technician app" })}</h3>
               <p className="mt-3 max-w-md text-base leading-normal text-bodytext sm:text-lg">
-                A equipe vê a agenda, atualiza o status da OS, tira fotos e colhe a assinatura direto do celular.
+                {t({
+                  pt: "A equipe vê a agenda, atualiza o status da OS, tira fotos e colhe a assinatura direto do celular.",
+                  en: "The crew sees the schedule, updates the work order status, takes photos and collects the signature right from their phone.",
+                })}
               </p>
               <Link
                 href="/download"
                 className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-white outline-none after:absolute after:inset-0 after:content-['']"
               >
-                Baixar o app
+                {t({ pt: "Baixar o app", en: "Get the app" })}
                 <TbArrowUpRight
                   aria-hidden
                   className="text-periwinkle transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                 />
               </Link>
               <ul className="mt-8 hidden flex-wrap gap-2 sm:mt-auto sm:flex sm:pt-8">
-                {appHighlights.map((item) => (
+                {appHighlights.map((item, index) => (
                   <li
-                    key={item.label}
+                    key={index}
                     className="inline-flex items-center gap-1.5 rounded-full border border-border bg-fill-2 px-3 py-1.5 text-xs font-medium text-bodytext backdrop-blur-[8px]"
                   >
                     <span aria-hidden className="text-sm text-periwinkle">{item.icon}</span>
-                    {item.label}
+                    {t(item.label)}
                   </li>
                 ))}
               </ul>
@@ -113,17 +119,17 @@ export function FeatureBento() {
         </div>
 
         <ul className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {features.map((feature) => (
+          {features.map((feature, index) => (
             <li
-              key={feature.title}
+              key={index}
               className="relative overflow-hidden rounded-card border border-border bg-card p-6 transition-colors duration-200 hover:border-border-strong"
             >
               <div aria-hidden className="absolute -left-10 -top-10 h-32 w-32 rounded-full bg-primary/15 blur-2xl" style={{ opacity: "var(--glow-strength)" }} />
               <span aria-hidden className="relative flex h-11 w-11 items-center justify-center rounded-btn border border-border-accent bg-badge text-xl text-periwinkle">
                 {feature.icon}
               </span>
-              <h3 className="relative mt-5 text-lg font-semibold text-link">{feature.title}</h3>
-              <p className="relative mt-2 text-sm leading-normal text-bodytext sm:text-base">{feature.text}</p>
+              <h3 className="relative mt-5 text-lg font-semibold text-link">{t(feature.title)}</h3>
+              <p className="relative mt-2 text-sm leading-normal text-bodytext sm:text-base">{t(feature.text)}</p>
             </li>
           ))}
         </ul>

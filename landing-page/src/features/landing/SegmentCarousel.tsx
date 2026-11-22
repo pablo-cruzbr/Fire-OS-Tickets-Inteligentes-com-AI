@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { TbArrowUpRight, TbChevronLeft, TbChevronRight } from "react-icons/tb";
 import { cn } from "@/lib/cn";
+import { useT } from "@/i18n/text";
 import { segments } from "./segments";
 
 const withPhoto = segments.filter((segment) => segment.image);
@@ -28,6 +29,7 @@ const arrowClass =
  * prefers-reduced-motion there is no drift, only the arrow/dot glides.
  */
 export function SegmentCarousel() {
+  const t = useT();
   const trackRef = useRef<HTMLUListElement>(null);
   const offset = useRef(0);
   const target = useRef<number | null>(null);
@@ -122,7 +124,7 @@ export function SegmentCarousel() {
       <div className="relative overflow-hidden">
         <ul
           ref={trackRef}
-          aria-label="Segmentos atendidos"
+          aria-label={t({ pt: "Segmentos atendidos", en: "Industries served" })}
           className="flex w-max gap-4 px-4 py-3 will-change-transform md:gap-5 md:px-8 lg:px-[max(48px,calc((100vw-1440px)/2+48px))]"
         >
           {loop.map((segment, index) => {
@@ -137,7 +139,7 @@ export function SegmentCarousel() {
                   href="#segment-showcase"
                   onClick={selectSegment(segment.id)}
                   tabIndex={clone ? -1 : undefined}
-                  aria-label={`Ver como o Fire OS atende ${segment.short}`}
+                  aria-label={`${t({ pt: "Ver como o Fire OS atende", en: "See how Fire OS serves" })} ${t(segment.short)}`}
                   className="relative block h-full w-full focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-accent-2"
                 >
                   <Image
@@ -153,9 +155,9 @@ export function SegmentCarousel() {
                   />
                   <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4 sm:p-5">
                     <span className="min-w-0">
-                      <span className="block text-lg font-semibold leading-tight text-white">{segment.short}</span>
+                      <span className="block text-lg font-semibold leading-tight text-white">{t(segment.short)}</span>
                       <span className="mt-1 block truncate text-xs leading-normal text-bodytext sm:text-sm">
-                        {segment.records[0]}
+                        {t(segment.records[0])}
                       </span>
                     </span>
                     <TbArrowUpRight
@@ -174,7 +176,7 @@ export function SegmentCarousel() {
       </div>
 
       <div className="mt-6 flex items-center justify-center gap-4">
-        <button type="button" onClick={() => glide(-1)} aria-label="Segmento anterior" className={arrowClass}>
+        <button type="button" onClick={() => glide(-1)} aria-label={t({ pt: "Segmento anterior", en: "Previous industry" })} className={arrowClass}>
           <TbChevronLeft className="h-5 w-5" />
         </button>
         <div className="flex flex-wrap items-center justify-center gap-2">
@@ -183,7 +185,7 @@ export function SegmentCarousel() {
               key={segment.id}
               type="button"
               onClick={() => goTo(index)}
-              aria-label={`Ir para ${segment.short}`}
+              aria-label={`${t({ pt: "Ir para", en: "Go to" })} ${t(segment.short)}`}
               aria-current={index === active || undefined}
               className={cn(
                 "h-2 rounded-full transition-all duration-300",
@@ -192,7 +194,7 @@ export function SegmentCarousel() {
             />
           ))}
         </div>
-        <button type="button" onClick={() => glide(1)} aria-label="Próximo segmento" className={arrowClass}>
+        <button type="button" onClick={() => glide(1)} aria-label={t({ pt: "Próximo segmento", en: "Next industry" })} className={arrowClass}>
           <TbChevronRight className="h-5 w-5" />
         </button>
       </div>

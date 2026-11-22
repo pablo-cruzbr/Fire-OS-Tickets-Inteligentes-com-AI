@@ -5,6 +5,7 @@ import { TbArrowUpRight } from "react-icons/tb";
 import { AutoVideo } from "@/components/media/AutoVideo";
 import { SectionHeading } from "@/components/ui";
 import { cn } from "@/lib/cn";
+import { useT } from "@/i18n/text";
 import { segmentsSection } from "../content";
 import { LandingVideo, videos } from "../media";
 import { SegmentShowcase } from "../SegmentShowcase";
@@ -25,6 +26,7 @@ function selectSegment(segmentId: string) {
 }
 
 function SegmentVideoCard({ video, featured = false }: { video: LandingVideo; featured?: boolean }) {
+  const t = useT();
   const segment = segmentById.get(video.segmentId);
 
   return (
@@ -38,7 +40,7 @@ function SegmentVideoCard({ video, featured = false }: { video: LandingVideo; fe
         href="#segment-showcase"
         onClick={selectSegment(video.segmentId)}
         data-video-card
-        aria-label={`Ver como o Fire OS atende ${video.segment}`}
+        aria-label={`${t({ pt: "Ver como o Fire OS atende", en: "See how Fire OS serves" })} ${t(video.segment)}`}
         className={cn(
           "group relative flex h-full flex-col overflow-hidden rounded-card border border-border bg-card transition-colors duration-200 hover:border-border-strong",
           "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-2",
@@ -77,27 +79,27 @@ function SegmentVideoCard({ video, featured = false }: { video: LandingVideo; fe
             </span>
           ) : null}
           <h3 className={cn("text-xl font-semibold text-link sm:text-2xl", featured && "lg:text-[32px]")}>
-            {video.segment}
+            {t(video.segment)}
           </h3>
           {segment ? (
             <p className={cn("line-clamp-3 text-sm leading-normal text-bodytext sm:text-base", featured && "lg:text-lg")}>
-              {segment.description}
+              {t(segment.description)}
             </p>
           ) : null}
           {featured && segment ? (
             <ul className="hidden flex-wrap gap-3 lg:flex">
-              {segment.records.slice(0, 3).map((record) => (
+              {segment.records.slice(0, 3).map((record, index) => (
                 <li
-                  key={record}
+                  key={index}
                   className="rounded-chip border border-border bg-fill-2 px-3 py-2 text-xs uppercase tracking-[0.02em] text-eyebrow backdrop-blur-[8px]"
                 >
-                  {record}
+                  {t(record)}
                 </li>
               ))}
             </ul>
           ) : null}
           <span className="mt-auto inline-flex items-center gap-1.5 pt-2 text-sm font-semibold text-link">
-            Ver na prática
+            {t({ pt: "Ver na prática", en: "See it in action" })}
             <TbArrowUpRight
               aria-hidden
               className="text-periwinkle transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
@@ -111,6 +113,7 @@ function SegmentVideoCard({ video, featured = false }: { video: LandingVideo; fe
 
 /** "Segmentos": video cards per audience, a chip row of the rest, then the interactive showcase. */
 export function VideoSegments() {
+  const t = useT();
   const [featured, ...rest] = videos;
 
   return (
@@ -119,14 +122,14 @@ export function VideoSegments() {
       <div className="container-page relative">
         <SectionHeading
           id="segmentos-title"
-          eyebrow={segmentsSection.eyebrow}
-          title={segmentsSection.title}
-          subtitle={segmentsSection.subtitle}
+          eyebrow={t(segmentsSection.eyebrow)}
+          title={t(segmentsSection.title)}
+          subtitle={t(segmentsSection.subtitle)}
         />
 
         <ul
           className="-mx-4 mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-4 pb-2 sm:mt-16 md:-mx-8 md:scroll-px-8 md:px-8 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0 lg:pb-0"
-          aria-label="Segmentos em destaque"
+          aria-label={t({ pt: "Segmentos em destaque", en: "Featured industries" })}
         >
           <SegmentVideoCard video={featured} featured />
           {rest.map((video) => (
@@ -135,7 +138,7 @@ export function VideoSegments() {
         </ul>
 
         <div className="mt-10 flex flex-col items-center gap-4">
-          <p className="text-xs uppercase tracking-[0.02em] text-muted">E também</p>
+          <p className="text-xs uppercase tracking-[0.02em] text-muted">{t({ pt: "E também", en: "And also" })}</p>
           <ul className="flex flex-wrap justify-center gap-3">
             {otherSegments.map((segment) => (
               <li key={segment.id}>
@@ -147,7 +150,7 @@ export function VideoSegments() {
                   <span aria-hidden className="flex text-base text-periwinkle">
                     {segment.icon}
                   </span>
-                  {segment.short}
+                  {t(segment.short)}
                 </a>
               </li>
             ))}
