@@ -1,6 +1,7 @@
 "use client";
 
 import { TbMoon, TbSun } from "react-icons/tb";
+import { useT } from "@/i18n/text";
 import { cn } from "@/lib/cn";
 import { THEME_COLOR, THEME_STORAGE_KEY } from "./theme";
 
@@ -27,12 +28,14 @@ type ThemeToggleProps = {
  * React state, so server and client markup always match (no hydration flash).
  */
 export function ThemeToggle({ withLabel = false, className }: ThemeToggleProps) {
+  const t = useT();
+  const label = t({ pt: "Alternar tema claro/escuro", en: "Toggle light/dark theme" });
   return (
     <button
       type="button"
       onClick={toggleTheme}
-      aria-label="Alternar tema claro/escuro"
-      title="Alternar tema claro/escuro"
+      aria-label={label}
+      title={label}
       className={cn(
         "flex items-center rounded-btn border border-border bg-fill-2 text-link transition-colors hover:border-border-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-2",
         withLabel ? "h-11 w-full gap-3 px-3 text-sm font-semibold" : "h-10 w-10 justify-center text-xl",
@@ -43,8 +46,8 @@ export function ThemeToggle({ withLabel = false, className }: ThemeToggleProps) 
       <TbMoon aria-hidden className="shrink-0 dark:hidden" />
       {withLabel ? (
         <span aria-hidden>
-          <span className="hidden dark:inline">Usar tema claro</span>
-          <span className="dark:hidden">Usar tema escuro</span>
+          <span className="hidden dark:inline">{t({ pt: "Usar tema claro", en: "Use light theme" })}</span>
+          <span className="dark:hidden">{t({ pt: "Usar tema escuro", en: "Use dark theme" })}</span>
         </span>
       ) : null}
     </button>

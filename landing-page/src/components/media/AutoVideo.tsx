@@ -2,6 +2,7 @@
 
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { TbPlayerPauseFilled, TbPlayerPlayFilled } from "react-icons/tb";
+import { useT } from "@/i18n/text";
 import { cn } from "@/lib/cn";
 
 export type AutoVideoMode = "inview" | "hover" | "manual";
@@ -100,6 +101,7 @@ export function AutoVideo({
   videoClassName,
   children,
 }: AutoVideoProps) {
+  const t = useT();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [limited, setLimited] = useState(false);
   const [canHover, setCanHover] = useState(true);
@@ -343,7 +345,7 @@ export function AutoVideo({
         <button
           type="button"
           onClick={toggle}
-          aria-label={isPlaying ? "Pausar vídeo" : "Reproduzir vídeo"}
+          aria-label={isPlaying ? t({ pt: "Pausar vídeo", en: "Pause video" }) : t({ pt: "Reproduzir vídeo", en: "Play video" })}
           aria-pressed={!isPlaying}
           className="dark absolute bottom-3 right-3 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-border bg-glass text-sm text-white backdrop-blur-[8px] transition-colors hover:border-border-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-2"
         >

@@ -1,8 +1,10 @@
-import Link from "next/link";
 import { TbArrowRight, TbMenu2, TbX } from "react-icons/tb";
 import { ButtonLink } from "@/components/ui";
 import { Logo } from "@/components/brand/Logo";
+import { Link } from "@/i18n/navigation";
+import { type Text, useAppLocale, useT } from "@/i18n/text";
 import { appUrl } from "@/lib/appUrl";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { ThemeToggle } from "./ThemeToggle";
 
 /*
@@ -10,17 +12,7 @@ import { ThemeToggle } from "./ThemeToggle";
  * to "/#secao" instead of "#secao" so they work the same whether you're
  * already on the homepage or navigating in from a subpage.
  */
-type NavItem = { href: string; label: string; badge?: string };
-
-const nav: NavItem[] = [
-  { href: "/#produto", label: "Produto" },
-  { href: "/#segmentos", label: "Segmentos" },
-  { href: "/#como-funciona", label: "Como funciona" },
-  { href: "/#recursos", label: "Recursos" },
-  { href: "/agnis", label: "Agnis", badge: "novo" },
-  { href: "/download", label: "App mobile" },
-  { href: appUrl("/AreadeUsuario"), label: "Área do usuário" },
-];
+type NavItem = { href: string; label: Text; badge?: Text };
 
 function NewBadge({ children }: { children: string }) {
   return (
@@ -31,39 +23,54 @@ function NewBadge({ children }: { children: string }) {
 }
 
 export function Header() {
+  const t = useT();
+  const locale = useAppLocale();
+
+  const nav: NavItem[] = [
+    { href: "/#produto", label: { pt: "Produto", en: "Product" } },
+    { href: "/#segmentos", label: { pt: "Segmentos", en: "Industries" } },
+    { href: "/#como-funciona", label: { pt: "Como funciona", en: "How it works" } },
+    { href: "/#recursos", label: { pt: "Recursos", en: "Features" } },
+    { href: "/agnis", label: "Agnis", badge: { pt: "novo", en: "new" } },
+    { href: "/download", label: { pt: "App mobile", en: "Mobile app" } },
+    { href: appUrl("/AreadeUsuario", locale), label: { pt: "Área do usuário", en: "Customer area" } },
+  ];
+  const signIn = t({ pt: "Entrar", en: "Sign in" });
+
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-header backdrop-blur-[12px]">
       <div className="container-page flex h-16 items-center gap-3 sm:gap-6 lg:h-[84px]">
-        <Link href="/" aria-label="Fire OS, início" className="shrink-0 text-link">
+        <Link href="/" aria-label={t({ pt: "Fire OS, início", en: "Fire OS, home" })} className="shrink-0 text-link">
           <Logo className="h-5 sm:h-6" />
         </Link>
 
-        <nav aria-label="Seções" className="hidden flex-1 items-center justify-center gap-1 xl:flex">
+        <nav aria-label={t({ pt: "Seções", en: "Sections" })} className="hidden flex-1 items-center justify-center gap-1 xl:flex">
           {nav.map((item) => (
             <Link
-              key={item.label}
+              key={item.href}
               href={item.href}
               className="inline-flex items-center gap-1.5 rounded-btn px-3 py-2 text-sm font-semibold tracking-[-0.02em] text-link/85 transition-colors hover:bg-fill-2 hover:text-link"
             >
-              {item.label}
-              {item.badge ? <NewBadge>{item.badge}</NewBadge> : null}
+              {t(item.label)}
+              {item.badge ? <NewBadge>{t(item.badge)}</NewBadge> : null}
             </Link>
           ))}
         </nav>
 
         <div className="ml-auto flex items-center gap-2 xl:ml-0">
+          <LanguageSwitcher className="max-sm:hidden" />
           <ThemeToggle className="max-sm:hidden" />
-          <ButtonLink href={appUrl("/login")} variant="secondary" className="max-sm:hidden">
-            Entrar
+          <ButtonLink href={appUrl("/login", locale)} variant="secondary" className="max-sm:hidden">
+            {signIn}
           </ButtonLink>
-          <ButtonLink href={appUrl("/login")} iconRight={<TbArrowRight className="hidden h-4 w-4 sm:block" aria-hidden />}>
-            Acessar o portal
+          <ButtonLink href={appUrl("/login", locale)} iconRight={<TbArrowRight className="hidden h-4 w-4 sm:block" aria-hidden />}>
+            {t({ pt: "Acessar o portal", en: "Open the portal" })}
           </ButtonLink>
 
           {/* Mobile menu: native <details>, no JS. */}
           <details className="group relative xl:hidden">
             <summary
-              aria-label="Abrir menu"
+              aria-label={t({ pt: "Abrir menu", en: "Open menu" })}
               className="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-btn border border-border bg-fill-2 text-xl text-link [&::-webkit-details-marker]:hidden"
             >
               <TbMenu2 className="group-open:hidden" aria-hidden />
@@ -75,18 +82,19 @@ export function Header() {
             >
               {nav.map((item) => (
                 <Link
-                  key={item.label}
+                  key={item.href}
                   href={item.href}
                   className="flex items-center gap-2 rounded-btn px-3 py-2.5 text-sm font-semibold text-link/85 hover:bg-fill-2 hover:text-link"
                 >
-                  {item.label}
-                  {item.badge ? <NewBadge>{item.badge}</NewBadge> : null}
+                  {t(item.label)}
+                  {item.badge ? <NewBadge>{t(item.badge)}</NewBadge> : null}
                 </Link>
               ))}
-              <ButtonLink href={appUrl("/login")} variant="secondary" className="mt-2 sm:hidden">
-                Entrar
+              <ButtonLink href={appUrl("/login", locale)} variant="secondary" className="mt-2 sm:hidden">
+                {signIn}
               </ButtonLink>
-              <ThemeToggle withLabel className="mt-2" />
+              <LanguageSwitcher withLabel className="mt-2" />
+              <ThemeToggle withLabel />
             </nav>
           </details>
         </div>

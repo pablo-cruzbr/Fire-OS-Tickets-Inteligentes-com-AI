@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { cn } from "@/lib/cn";
+import { pick, type Text, useT } from "@/i18n/text";
 import { statusTone, Tone } from "@/lib/status";
 
 const tones: Record<Tone, string> = {
@@ -55,8 +56,9 @@ export function Eyebrow({ children, icon, className }: EyebrowProps) {
   );
 }
 
-/** Badge whose colour is derived from the status name. */
-export function StatusBadge({ status, fallback = "—" }: { status?: string | null; fallback?: string }) {
+/** Badge whose colour is derived from the (Portuguese) status name. */
+export function StatusBadge({ status, fallback = "—" }: { status?: Text | null; fallback?: string }) {
+  const t = useT();
   if (!status) return <span className="text-muted">{fallback}</span>;
-  return <Badge tone={statusTone(status)}>{status}</Badge>;
+  return <Badge tone={statusTone(pick("pt", status))}>{t(status)}</Badge>;
 }
