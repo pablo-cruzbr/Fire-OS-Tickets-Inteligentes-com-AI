@@ -4,7 +4,6 @@
 
 https://github.com/user-attachments/assets/e92169b7-23c2-4fe3-bc6a-10abf8c70550
 
-
 ### *"Engenharia focada na eficiência: Eliminando a burocracia na gestão de Serviços de Informática."*
 
 <p align="center">
